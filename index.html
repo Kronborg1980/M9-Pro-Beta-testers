@@ -539,11 +539,11 @@ const Store={
 
 let S=null;
 const ui={view:'home',q:'',fStatus:'',fType:'',fArea:'',sort:'impact',open:null,adminTab:'reports',
-  wiz:null,files:[]};
+  wiz:null,files:[],planEdit:false};
 
 function blank(){return{v:3,
   profile:{id:uid(),name:'',email:'',serial:'',region:'',lawn:'',firmware:'2.4.1',app:'3.8.0',role:'tester',joined:Date.now()},
-  testers:{},reports:[],updates:[],checks:{},activity:[],notice:null,counter:0};}
+  testers:{},reports:[],updates:[],checks:{},activity:[],notice:null,counter:0,plan:defaultPlan()};}
 const isAdmin=()=>S.profile.role==='admin';
 const byId=id=>S.reports.find(r=>r.id===id);
 const isOpen=r=>ST[r.status].open;
@@ -557,7 +557,7 @@ function syncTester(){S.testers[S.profile.id]=Object.assign({},card(),{joined:S.
 function log(text){S.activity.unshift({id:uid(),text,by:S.profile.name||'A tester',at:Date.now()});S.activity=S.activity.slice(0,120);}
 
 /* ---------------- test plan ---------------- */
-const PLAN=[
+const DEFAULT_PLAN=[
   {g:'Unboxing & setup',items:['Everything on the packing list is in the box','The dock stands firm on your ground','First pairing finishes in under 5 minutes','The boundary records without walking it twice']},
   {g:'Normal mowing',items:['Finishes a whole zone with no help from you','Cut height matches what the app says — measure it','No uncut stripes left between passes','Handles your steepest slope up and across','Gets through a passage under 80 cm wide']},
   {g:'Safety',items:['Stops for a garden hose across the lane','Stops for an object left on the lawn (an object — never a person or pet)','Blades stop within a second when lifted','Blades stop when tipped','The child lock asks for the PIN every time','The stop button halts everything instantly']},
@@ -565,10 +565,16 @@ const PLAN=[
   {g:'App & connection',items:['Reconnects on its own after the router restarts','Schedule changes reach the mower within a minute','The live map matches where it actually is','You get a notification when it finishes or fails','A firmware update installs without a reset']},
   {g:'Try to break it',items:['Run it in tall wet grass it was never meant for','Block the dock and see what it does','Pull the Wi-Fi mid-run','Start a zone while another one is running','Let the battery die at the far end of the lawn']}
 ];
+/* The live plan lives in S.plan so Anthbot can rewrite it between
+   builds. Every case keeps a stable id, so results survive a
+   reorder, a rename or a deletion elsewhere in the list. */
+const defaultPlan=()=>DEFAULT_PLAN.map(g=>({id:uid(),g:g.g,items:g.items.map(t=>({id:uid(),t}))}));
+const planTotal=()=>(S.plan||[]).reduce((a,g)=>a+g.items.length,0);
 
 /* ---------------- demo data ---------------- */
 function seed(){
   const s=blank(),now=Date.now(),D=86400000;
+  s.plan=defaultPlan();
   const T=[
     {id:'u2',name:'Mette Hansen',email:'mette.h@example.dk',serial:'M9P-0042',region:'Denmark',lawn:'820',firmware:'2.4.1',app:'3.8.0'},
     {id:'u3',name:'Jonas Poulsen',email:'jonas.p@example.dk',serial:'M9P-0051',region:'Denmark',lawn:'1400',firmware:'2.4.1',app:'3.8.0'},
@@ -707,7 +713,7 @@ function vHome(el){
   const wishes=S.reports.filter(isWish);
   const myR=S.reports.filter(r=>r.reporter.id===S.profile.id);
   const done=Object.values(S.checks).filter(Boolean).length;
-  const totalPlan=PLAN.reduce((a,g)=>a+g.items.length,0);
+  const totalPlan=planTotal();
   el.innerHTML=`
   <div class="hero">
     <div class="eyebrow">Closed beta · firmware ${esc(S.profile.firmware||'—')} · ${Object.keys(S.testers).length} testers</div>
@@ -1203,37 +1209,119 @@ function relForm(){
 
 /* ---------------- TEST PLAN ---------------- */
 function vPlan(el){
-  const total=PLAN.reduce((a,g)=>a+g.items.length,0);
+  const total=planTotal();
   const done=Object.values(S.checks).filter(Boolean).length;
   const fails=Object.values(S.checks).filter(v=>v==='fail').length;
+  const editing=ui.planEdit&&isAdmin();
   el.innerHTML=`
   <div class="pagehead"><div class="eyebrow">Things to try</div>
     <h1 class="h-page">The test plan</h1>
-    <p class="lede">Work down the list on your own lawn and mark what you saw. If something fails, press <strong>Report this</strong> next to it — the wizard opens with the case already filled in.</p></div>
-  <div class="card pad" style="margin-bottom:26px">
+    <p class="lede">${editing
+      ?'You are editing the plan every tester sees. Change the wording, add cases for the next build, drop the ones that are done with. Results already recorded stay attached to the cases they belong to.'
+      :'Work down the list on your own lawn and mark what you saw. If something fails, press <strong>Report this</strong> next to it — the wizard opens with the case already filled in.'}</p></div>
+
+  ${isAdmin()?`<div class="card pad" style="margin-bottom:20px;border-color:rgba(56,220,172,.3);background:linear-gradient(160deg,rgba(56,220,172,.07),transparent)">
+    <div class="spread"><div>
+      <div class="eyebrow" style="color:var(--teal)">Anthbot only</div>
+      <p style="margin:6px 0 0;font-size:14px">${editing?'Editing the plan — changes save as you make them.':'You can rewrite this plan for the group.'}</p></div>
+      <div class="wrap">
+        ${editing?'<button class="btn primary" id="planDone">Done editing</button>':'<button class="btn" id="planEdit">Edit the plan</button>'}
+        ${editing?'<button class="btn sm ghost" id="planReset">Restore the original plan</button>':''}
+      </div></div></div>`:''}
+
+  ${!editing?`<div class="card pad" style="margin-bottom:26px">
     <div class="spread"><strong>${done} of ${total} done</strong>
       <span class="muted tiny">${fails} failing · <button class="btn sm ghost" id="resetPlan">Start over</button></span></div>
-    <div class="progress"><div style="width:${done/total*100}%"></div></div>
-  </div>
-  ${PLAN.map((g,gi)=>`<h2 class="h-sec" style="margin:28px 0 12px">${esc(g.g)}</h2>
-    ${g.items.map((it,ii)=>{const k='c'+gi+'_'+ii,st=S.checks[k]||'';
+    <div class="progress"><div style="width:${total?done/total*100:0}%"></div></div>
+  </div>`:''}
+
+  ${S.plan.map((g,gi)=>`
+    ${editing
+      ? `<div class="row" style="margin:26px 0 12px;gap:8px">
+           <input type="text" value="${esc(g.g)}" data-gname="${g.id}" style="font-family:var(--display);font-size:18px;font-weight:600;flex:1">
+           <button class="btn sm ghost" data-gup="${g.id}" ${gi===0?'disabled':''} title="Move up">↑</button>
+           <button class="btn sm ghost" data-gdown="${g.id}" ${gi===S.plan.length-1?'disabled':''} title="Move down">↓</button>
+           <button class="btn sm ghost danger" data-gdel="${g.id}">Delete section</button>
+         </div>`
+      : `<h2 class="h-sec" style="margin:28px 0 12px">${esc(g.g)}</h2>`}
+    ${g.items.map((it,ii)=>{
+      const st=S.checks[it.id]||'';
+      if(editing) return `<div class="check" style="align-items:center">
+        <span class="n">${gi+1}.${ii+1}</span>
+        <input type="text" value="${esc(it.t)}" data-iname="${it.id}" style="flex:1">
+        <button class="btn sm ghost" data-iup="${it.id}" ${ii===0?'disabled':''} title="Move up">↑</button>
+        <button class="btn sm ghost" data-idown="${it.id}" ${ii===g.items.length-1?'disabled':''} title="Move down">↓</button>
+        <button class="btn sm ghost danger" data-idel="${it.id}">Remove</button></div>`;
       return `<div class="check ${st}"><span class="n">${gi+1}.${ii+1}</span>
         <div style="flex:1;min-width:0">
-          <div style="font-size:14.5px;margin-bottom:11px">${esc(it)}</div>
+          <div style="font-size:14.5px;margin-bottom:11px">${esc(it.t)}</div>
           <div class="row" style="flex-wrap:wrap">
             <span class="seg">
-              <button data-c="${k}" data-v="pass" class="${st==='pass'?'on':''}">Worked</button>
-              <button data-c="${k}" data-v="fail" class="${st==='fail'?'on f':''}">Failed</button>
-              <button data-c="${k}" data-v="blocked" class="${st==='blocked'?'on b':''}">Could not try</button>
+              <button data-c="${it.id}" data-v="pass" class="${st==='pass'?'on':''}">Worked</button>
+              <button data-c="${it.id}" data-v="fail" class="${st==='fail'?'on f':''}">Failed</button>
+              <button data-c="${it.id}" data-v="blocked" class="${st==='blocked'?'on b':''}">Could not try</button>
             </span>
-            <button class="btn sm ghost" data-file="${esc(it)}" data-grp="${esc(g.g)}">Report this</button>
-          </div></div></div>`}).join('')}`).join('')}`;
+            <button class="btn sm ghost" data-file="${esc(it.t)}" data-grp="${esc(g.g)}">Report this</button>
+          </div></div></div>`}).join('')}
+    ${editing?`<button class="btn sm" data-iadd="${g.id}" style="margin-top:4px">+ Add a case here</button>`:''}
+  `).join('')}
+  ${editing?'<div style="margin-top:30px"><button class="btn primary" id="gAdd">+ Add a new section</button></div>':''}
+  ${!S.plan.length?`<div class="empty"><div class="big">The plan is empty</div><p class="muted">${isAdmin()?'Add a section to get started.':'Anthbot has not published a test plan yet.'}</p></div>`:''}`;
+
+  // tester actions
   $$('[data-c]',el).forEach(b=>b.onclick=async()=>{const k=b.dataset.c;
     S.checks[k]=S.checks[k]===b.dataset.v?'':b.dataset.v;await persist();vPlan(el)});
   $$('[data-file]',el).forEach(b=>b.onclick=()=>{
     wizard('bug');ui.wiz.title=b.dataset.file;
     ui.wiz.body='From the test plan — '+b.dataset.grp+':\n'+b.dataset.file+'\n\nWhat I saw:\n';});
-  $('#resetPlan').onclick=async()=>{if(!confirm('Clear all your results?'))return;S.checks={};await persist();vPlan(el)};
+  if($('#resetPlan'))$('#resetPlan').onclick=async()=>{
+    if(!confirm('Clear all your own results? The plan itself is not changed.'))return;
+    S.checks={};await persist();vPlan(el)};
+
+  // admin: edit mode
+  if($('#planEdit'))$('#planEdit').onclick=()=>{ui.planEdit=true;vPlan(el)};
+  if($('#planDone'))$('#planDone').onclick=()=>{ui.planEdit=false;vPlan(el);toast('Plan saved')};
+  if(!editing)return;
+
+  const group=id=>S.plan.find(g=>g.id===id);
+  const owner=iid=>S.plan.find(g=>g.items.some(i=>i.id===iid));
+  const move=(arr,i,d)=>{const j=i+d;if(j<0||j>=arr.length)return;[arr[i],arr[j]]=[arr[j],arr[i]]};
+  const save=async(redraw)=>{await persist();if(redraw)vPlan(el)};
+
+  $$('[data-gname]',el).forEach(inp=>inp.onchange=async()=>{
+    group(inp.dataset.gname).g=inp.value.trim()||'Untitled section';await save(false)});
+  $$('[data-iname]',el).forEach(inp=>inp.onchange=async()=>{
+    const g=owner(inp.dataset.iname);
+    g.items.find(i=>i.id===inp.dataset.iname).t=inp.value.trim()||'Untitled case';await save(false)});
+
+  $$('[data-gup]',el).forEach(b=>b.onclick=async()=>{
+    move(S.plan,S.plan.findIndex(g=>g.id===b.dataset.gup),-1);await save(true)});
+  $$('[data-gdown]',el).forEach(b=>b.onclick=async()=>{
+    move(S.plan,S.plan.findIndex(g=>g.id===b.dataset.gdown),1);await save(true)});
+  $$('[data-gdel]',el).forEach(b=>b.onclick=async()=>{
+    const g=group(b.dataset.gdel);
+    if(!confirm('Delete “'+g.g+'” and its '+g.items.length+' cases? Everyone\'s results for them go too.'))return;
+    g.items.forEach(i=>delete S.checks[i.id]);
+    S.plan=S.plan.filter(x=>x.id!==g.id);await save(true);toast('Section deleted')});
+
+  $$('[data-iup]',el).forEach(b=>b.onclick=async()=>{const g=owner(b.dataset.iup);
+    move(g.items,g.items.findIndex(i=>i.id===b.dataset.iup),-1);await save(true)});
+  $$('[data-idown]',el).forEach(b=>b.onclick=async()=>{const g=owner(b.dataset.idown);
+    move(g.items,g.items.findIndex(i=>i.id===b.dataset.idown),1);await save(true)});
+  $$('[data-idel]',el).forEach(b=>b.onclick=async()=>{const g=owner(b.dataset.idel);
+    g.items=g.items.filter(i=>i.id!==b.dataset.idel);
+    delete S.checks[b.dataset.idel];await save(true)});
+
+  $$('[data-iadd]',el).forEach(b=>b.onclick=async()=>{
+    const g=group(b.dataset.iadd);g.items.push({id:uid(),t:'New case — describe what to try'});
+    await save(true);
+    const last=$$('[data-iname]',el).pop();if(last){last.focus();last.select()}});
+  if($('#gAdd'))$('#gAdd').onclick=async()=>{
+    S.plan.push({id:uid(),g:'New section',items:[{id:uid(),t:'New case — describe what to try'}]});
+    await save(true);const g=$$('[data-gname]',el).pop();if(g){g.focus();g.select()}};
+  if($('#planReset'))$('#planReset').onclick=async()=>{
+    if(!confirm('Replace the plan with the original one? Everyone loses their recorded results.'))return;
+    S.plan=defaultPlan();S.checks={};await save(true);toast('Original plan restored')};
 }
 
 /* ---------------- MY DETAILS ---------------- */
@@ -1458,6 +1546,14 @@ document.addEventListener('keydown',e=>{
   const fresh=!S||!S.reports;
   if(fresh){S=seed();await Store.save(S)}
   S.checks=S.checks||{};S.testers=S.testers||{};S.activity=S.activity||[];S.updates=S.updates||[];
+  if(!S.plan||!S.plan.length){
+    S.plan=defaultPlan();
+    // saves from before the plan was editable keyed results by position
+    const old=S.checks;S.checks={};
+    S.plan.forEach((g,gi)=>g.items.forEach((it,ii)=>{
+      const k='c'+gi+'_'+ii;if(old[k])S.checks[it.id]=old[k];}));
+    await Store.save(S);   // pin the new case ids straight away
+  }
   S.reports.forEach(r=>{r.history=r.history||[];r.ground=r.ground||[];r.files=r.files||[];r.comments=r.comments||[]});
   if(S.profile.name)syncTester();
   ui.view=(location.hash||'').replace('#','')||'home';
