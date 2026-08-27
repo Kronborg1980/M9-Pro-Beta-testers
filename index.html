@@ -3,257 +3,509 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Anthbot M9 Pro — Beta Reports</title>
+<title>Anthbot M9 Pro — Beta Test Group</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,600;12..96,700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
 <style>
+/* ==========================================================
+   NIGHT TURF — design tokens
+   ========================================================== */
 :root{
-  --bg:#06120E;--panel:rgba(255,255,255,.045);--panel-2:rgba(255,255,255,.08);
-  --stroke:rgba(255,255,255,.09);--stroke-lit:rgba(180,240,74,.25);
-  --txt:#E9F4EE;--txt-2:#B6CDC1;--muted:#7A9789;
-  --lime:#B4F04A;--teal:#37D6A8;--amber:#FFC24B;--coral:#FF6A5A;--violet:#A78BFA;--sky:#5AC8FA;
-  --r:16px;--rs:10px;
-  --display:'Space Grotesk',system-ui,sans-serif;--body:'Inter',system-ui,sans-serif;--mono:'JetBrains Mono',ui-monospace,monospace;
+  --bg:#050F0C;
+  --glass:rgba(255,255,255,.05);
+  --glass-2:rgba(255,255,255,.085);
+  --line:rgba(255,255,255,.085);
+  --line-lit:rgba(184,244,80,.28);
+  --txt:#ECF6F0; --txt-2:#B9D1C5; --dim:#7C9A8B;
+  --lime:#B8F450; --lime-deep:#8FDB3C;
+  --teal:#38DCAC; --amber:#FFC554; --coral:#FF6E5D; --violet:#AC90FF; --sky:#5FCBFF;
+  --r-xl:22px; --r-l:16px; --r-m:12px; --r-s:9px;
+  --shadow:0 30px 70px -28px rgba(0,0,0,.85);
+  --glow:0 0 0 1px rgba(184,244,80,.25), 0 14px 40px -14px rgba(184,244,80,.45);
+  --display:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --side:246px;
 }
 *{box-sizing:border-box}
-html,body{margin:0}
-body{background:var(--bg);color:var(--txt);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased;overflow-x:hidden}
-body::before{content:"";position:fixed;inset:-20% -10% auto -10%;height:70vh;z-index:-2;pointer-events:none;
-  background:radial-gradient(50% 55% at 20% 10%,rgba(55,214,168,.18),transparent 70%),radial-gradient(45% 50% at 82% 5%,rgba(180,240,74,.13),transparent 70%);filter:blur(20px)}
-body::after{content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;
-  background:repeating-linear-gradient(101deg,rgba(255,255,255,.016) 0 64px,rgba(0,0,0,0) 64px 128px)}
-::selection{background:var(--lime);color:#08150F}
-a{color:var(--teal)}
+html,body{margin:0;padding:0}
+body{
+  background:#050F0C;color:var(--txt);font-family:var(--body);font-size:15px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;overflow-x:hidden;
+}
+/* aurora + mowing stripes: the two things that make this feel like a lawn at dusk */
+body::before{
+  content:"";position:fixed;inset:-30% -20% auto -20%;height:90vh;z-index:-2;pointer-events:none;
+  background:
+    radial-gradient(42% 48% at 14% 8%,rgba(56,220,172,.22),transparent 72%),
+    radial-gradient(38% 44% at 74% 2%,rgba(184,244,80,.16),transparent 72%),
+    radial-gradient(50% 50% at 45% 34%,rgba(95,203,255,.07),transparent 72%);
+  filter:blur(24px);
+}
+body::after{
+  content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;
+  background:repeating-linear-gradient(101deg,rgba(255,255,255,.018) 0 68px,transparent 68px 136px);
+}
+::selection{background:var(--lime);color:#071410}
+a{color:var(--teal);text-decoration:none}
 button,input,select,textarea{font:inherit;color:inherit}
-:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:6px}
-@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+:focus-visible{outline:2px solid var(--lime);outline-offset:3px;border-radius:8px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+h1,h2,h3,h4{font-family:var(--display);letter-spacing:-.02em;margin:0}
 
-header.top{position:sticky;top:0;z-index:60;height:62px;display:flex;align-items:center;gap:14px;padding:0 max(18px,env(safe-area-inset-left));
-  background:rgba(6,18,14,.75);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border-bottom:1px solid var(--stroke)}
-.brand{display:flex;align-items:center;gap:10px}
-.mark{width:32px;height:32px;border-radius:10px;position:relative;background:linear-gradient(150deg,var(--lime),var(--teal));box-shadow:0 8px 20px -8px rgba(55,214,168,.8)}
-.mark::after{content:"";position:absolute;inset:7px;border-radius:3px;background:repeating-linear-gradient(90deg,rgba(6,18,14,.85) 0 2px,transparent 2px 5px)}
-.brand h1{font-family:var(--display);font-size:14.5px;margin:0;font-weight:600;white-space:nowrap}
-.brand .sub{font-family:var(--mono);font-size:9.5px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
-nav{display:flex;gap:3px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
-nav::-webkit-scrollbar{display:none}
-.tab{background:none;border:0;padding:8px 14px;border-radius:9px;cursor:pointer;color:var(--muted);font-size:13.5px;font-weight:500;white-space:nowrap;transition:.15s}
-.tab:hover{color:var(--txt);background:var(--panel)}
-.tab[aria-current=true]{background:var(--lime);color:#08150F;font-weight:600}
-.app{max-width:1180px;margin:0 auto;padding:0 18px 120px}
+/* ==========================================================
+   SHELL — sidebar + content
+   ========================================================== */
+.shell{display:grid;grid-template-columns:var(--side) 1fr;min-height:100vh}
+.side{
+  position:sticky;top:0;height:100vh;display:flex;flex-direction:column;gap:4px;padding:20px 14px;
+  border-right:1px solid var(--line);background:rgba(6,20,15,.6);backdrop-filter:blur(20px);
+  -webkit-backdrop-filter:blur(20px);z-index:50;
+}
+.logo{display:flex;align-items:center;gap:11px;padding:4px 8px 20px}
+.mark{width:38px;height:38px;border-radius:12px;position:relative;flex:none;
+  background:linear-gradient(150deg,var(--lime),var(--teal));box-shadow:0 10px 26px -10px rgba(56,220,172,.9)}
+.mark::after{content:"";position:absolute;inset:8px;border-radius:4px;
+  background:repeating-linear-gradient(90deg,rgba(5,15,12,.88) 0 2px,transparent 2px 5px)}
+.logo b{font-family:var(--display);font-size:15px;font-weight:700;display:block;line-height:1.15}
+.logo span{font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
+.navlabel{font-family:var(--mono);font-size:9.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);padding:16px 10px 6px}
+.navbtn{
+  display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:0;cursor:pointer;
+  padding:10px 11px;border-radius:var(--r-m);color:var(--txt-2);font-size:14px;font-weight:500;transition:.16s;
+}
+.navbtn svg{flex:none;opacity:.8}
+.navbtn:hover{background:var(--glass);color:var(--txt)}
+.navbtn[aria-current=true]{background:linear-gradient(100deg,rgba(184,244,80,.16),rgba(184,244,80,.04));color:var(--lime);box-shadow:inset 0 0 0 1px rgba(184,244,80,.22)}
+.navbtn[aria-current=true] svg{opacity:1}
+.navbtn .n{margin-left:auto;font-family:var(--mono);font-size:11px;background:rgba(255,255,255,.07);padding:1px 7px;border-radius:100px;color:var(--txt-2)}
+.navbtn .n.hot{background:rgba(255,110,93,.2);color:var(--coral)}
+.side-foot{margin-top:auto;padding-top:14px;border-top:1px solid var(--line)}
+.whoami{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r-m);cursor:pointer;transition:.15s}
+.whoami:hover{background:var(--glass)}
+.whoami .nm{font-size:13px;font-weight:600;line-height:1.2;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.whoami .rl{font-size:11px;color:var(--dim)}
+.content{min-width:0;padding:34px 40px 90px;max-width:1180px}
+.mobilebar{display:none}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:var(--panel);border:1px solid var(--stroke);
-  padding:9px 14px;border-radius:var(--rs);cursor:pointer;font-size:13.5px;font-weight:500;transition:.15s;white-space:nowrap}
-.btn:hover{background:var(--panel-2);border-color:var(--stroke-lit)}
-.btn.primary{background:linear-gradient(140deg,var(--lime),#8FDB3C);color:#08150F;border-color:transparent;font-weight:600}
+/* ==========================================================
+   ATOMS
+   ========================================================== */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;background:var(--glass);
+  border:1px solid var(--line);padding:10px 16px;border-radius:var(--r-m);cursor:pointer;font-size:14px;
+  font-weight:500;transition:.16s;white-space:nowrap}
+.btn:hover{background:var(--glass-2);border-color:var(--line-lit);transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn.primary{background:linear-gradient(140deg,var(--lime),var(--lime-deep));color:#071410;border-color:transparent;font-weight:650}
+.btn.primary:hover{box-shadow:0 14px 34px -12px rgba(184,244,80,.8)}
+.btn.big{padding:14px 24px;font-size:15.5px;border-radius:14px}
+.btn.sm{padding:7px 12px;font-size:12.5px;border-radius:var(--r-s)}
 .btn.ghost{background:none}
-.btn.danger{color:var(--coral);border-color:rgba(255,106,90,.3)}
-.btn.sm{padding:6px 11px;font-size:12.5px;border-radius:8px}
-.card{background:var(--panel);border:1px solid var(--stroke);border-radius:var(--r);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
-.pad{padding:18px}
-.chip{display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:100px;font-size:11.5px;font-weight:600;border:1px solid transparent;white-space:nowrap}
-.chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor}
-.key{font-family:var(--mono);font-size:11.5px;color:var(--muted)}
-.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
-h2.sec{font-family:var(--display);font-size:19px;font-weight:600;letter-spacing:-.02em;margin:0}
-.muted{color:var(--muted)}
-.tiny{font-size:12px}
+.btn.danger{color:var(--coral);border-color:rgba(255,110,93,.3)}
+.btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
+.card{background:var(--glass);border:1px solid var(--line);border-radius:var(--r-l);
+  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px)}
+.pad{padding:22px}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:3.5px 10px;border-radius:100px;font-size:11.5px;
+  font-weight:600;border:1px solid transparent;white-space:nowrap;letter-spacing:.005em}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.key{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+.h-page{font-size:30px;font-weight:700;line-height:1.1;margin:8px 0 8px}
+.h-sec{font-size:19px;font-weight:600}
+.lede{color:var(--txt-2);max-width:64ch;margin:0}
+.muted{color:var(--dim)}
+.tiny{font-size:12.5px}
 .row{display:flex;align-items:center;gap:10px}
-.spread{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.wrap{display:flex;flex-wrap:wrap;gap:8px}
-hr.sep{border:0;border-top:1px solid var(--stroke);margin:16px 0}
-label.f{display:block;margin-bottom:14px}
-label.f>span{display:block;font-size:12.5px;font-weight:600;color:var(--txt-2);margin-bottom:6px}
-label.f .hint{font-weight:400;color:var(--muted);font-size:11.5px}
-input[type=text],input[type=email],input[type=date],textarea,select{width:100%;background:rgba(0,0,0,.3);border:1px solid var(--stroke);border-radius:var(--rs);padding:10px 12px;font-size:14px}
-textarea{resize:vertical;min-height:90px;line-height:1.55}
-input:focus,textarea:focus,select:focus{border-color:var(--lime);outline:none}
-select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);
-  background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
-option{background:#0C1F18}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.spread{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+.wrap{display:flex;flex-wrap:wrap;gap:9px}
+.stack{display:flex;flex-direction:column;gap:16px}
+hr.sep{border:0;border-top:1px solid var(--line);margin:18px 0}
+.pagehead{margin-bottom:24px}
+label.f{display:block;margin-bottom:16px}
+label.f>span{display:block;font-size:13px;font-weight:600;color:var(--txt-2);margin-bottom:7px}
+label.f .hint{font-weight:400;color:var(--dim);font-size:12px}
+input[type=text],input[type=email],input[type=date],textarea,select{
+  width:100%;background:rgba(0,0,0,.3);border:1px solid var(--line);border-radius:var(--r-m);
+  padding:12px 14px;font-size:14.5px;transition:.15s}
+textarea{resize:vertical;min-height:104px;line-height:1.6}
+input:focus,textarea:focus,select:focus{border-color:var(--lime);outline:none;background:rgba(0,0,0,.45)}
+input::placeholder,textarea::placeholder{color:#5C7668}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--dim) 50%),linear-gradient(135deg,var(--dim) 50%,transparent 50%);
+  background-position:calc(100% - 17px) 50%,calc(100% - 12px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:34px}
+option{background:#0B1F19}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 16px}
 
-.sev-critical{color:var(--coral);background:rgba(255,106,90,.13);border-color:rgba(255,106,90,.3)}
-.sev-major{color:var(--amber);background:rgba(255,194,75,.12);border-color:rgba(255,194,75,.28)}
-.sev-minor{color:var(--muted);background:rgba(255,255,255,.05);border-color:var(--stroke)}
-.t-bug{color:var(--coral);background:rgba(255,106,90,.12)}
-.t-safety{color:#fff;background:rgba(255,60,60,.38);border-color:rgba(255,106,90,.6)}
-.t-feature{color:var(--violet);background:rgba(167,139,250,.14)}
-.t-other{color:var(--sky);background:rgba(90,200,250,.12)}
-.st-new{color:var(--lime);background:rgba(180,240,74,.13)}
-.st-looking{color:var(--violet);background:rgba(167,139,250,.14)}
-.st-need-info{color:var(--amber);background:rgba(255,194,75,.12)}
-.st-fixed{color:var(--teal);background:rgba(55,214,168,.14)}
-.st-verified{color:#08150F;background:var(--teal)}
-.st-not-planned{color:var(--muted);background:rgba(255,255,255,.05)}
+/* colour language */
+.sev-critical{color:var(--coral);background:rgba(255,110,93,.14);border-color:rgba(255,110,93,.34)}
+.sev-high{color:var(--amber);background:rgba(255,197,84,.13);border-color:rgba(255,197,84,.3)}
+.sev-medium{color:var(--sky);background:rgba(95,203,255,.12);border-color:rgba(95,203,255,.26)}
+.sev-low{color:var(--dim);background:rgba(255,255,255,.05);border-color:var(--line)}
+.t-bug{color:var(--coral);background:rgba(255,110,93,.13)}
+.t-safety{color:#fff;background:rgba(255,64,64,.42);border-color:rgba(255,110,93,.65)}
+.t-hardware{color:var(--amber);background:rgba(255,197,84,.13)}
+.t-feature{color:var(--violet);background:rgba(172,144,255,.15)}
+.t-question{color:var(--sky);background:rgba(95,203,255,.12)}
+.st-new{color:var(--lime);background:rgba(184,244,80,.14)}
+.st-triaged{color:var(--sky);background:rgba(95,203,255,.12)}
+.st-need-info{color:var(--amber);background:rgba(255,197,84,.13)}
+.st-confirmed{color:var(--coral);background:rgba(255,110,93,.13)}
+.st-in-progress{color:var(--violet);background:rgba(172,144,255,.15)}
+.st-fixed{color:var(--teal);background:rgba(56,220,172,.15)}
+.st-verified{color:#071410;background:var(--teal)}
+.st-wont-fix,.st-duplicate{color:var(--dim);background:rgba(255,255,255,.05)}
 
-.hero{position:relative;overflow:hidden;border-radius:20px;margin:20px 0 18px;border:1px solid var(--stroke);
-  background:linear-gradient(160deg,rgba(55,214,168,.10),rgba(6,18,14,.2) 60%);padding:24px}
-.hero::before{content:"";position:absolute;inset:0;z-index:-1;background:repeating-linear-gradient(101deg,rgba(180,240,74,.055) 0 46px,transparent 46px 92px)}
-.hero h2{font-family:var(--display);font-size:clamp(22px,3.6vw,32px);font-weight:700;letter-spacing:-.03em;line-height:1.1;margin:8px 0 6px}
-.hero h2 em{font-style:normal;color:var(--lime)}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:10px;margin-top:18px}
-.stat{background:rgba(0,0,0,.3);border:1px solid var(--stroke);border-radius:12px;padding:12px 13px}
-.stat .n{font-family:var(--display);font-size:24px;font-weight:700;line-height:1}
-.stat .l{font-size:11.5px;color:var(--muted);margin-top:5px}
-.stat.alert{border-color:rgba(255,106,90,.4);background:rgba(255,106,90,.08)}
-.stat.alert .n{color:var(--coral)}
+/* ==========================================================
+   HOME
+   ========================================================== */
+.hero{position:relative;overflow:hidden;border-radius:var(--r-xl);border:1px solid var(--line);
+  background:linear-gradient(155deg,rgba(56,220,172,.13),rgba(5,15,12,.25) 58%);padding:32px 34px}
+.hero::before{content:"";position:absolute;inset:0;z-index:0;
+  background:repeating-linear-gradient(101deg,rgba(184,244,80,.06) 0 50px,transparent 50px 100px)}
+.hero>*{position:relative;z-index:1}
+.hero h1{font-size:clamp(28px,3.4vw,42px);font-weight:700;line-height:1.05;margin:10px 0 10px}
+.hero h1 em{font-style:normal;color:var(--lime)}
+.bignums{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:26px}
+.bignum{background:rgba(0,0,0,.34);border:1px solid var(--line);border-radius:var(--r-l);padding:16px 18px;transition:.16s;cursor:pointer;text-align:left}
+.bignum:hover{border-color:var(--line-lit);transform:translateY(-2px);background:rgba(0,0,0,.5)}
+.bignum .n{font-family:var(--display);font-size:32px;font-weight:700;line-height:1}
+.bignum .l{font-size:12.5px;color:var(--dim);margin-top:7px;line-height:1.35}
+.bignum.alert{border-color:rgba(255,110,93,.42);background:rgba(255,110,93,.09)}
+.bignum.alert .n{color:var(--coral)}
+.bignum.good .n{color:var(--teal)}
 
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin:16px 0 14px}
-.search{position:relative;flex:1;min-width:190px}
-.search input{padding-left:34px}
-.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.45}
-.toolbar select{width:auto;min-width:130px;padding:9px 30px 9px 12px;font-size:13px}
-.list{display:flex;flex-direction:column;gap:10px}
-.item{display:grid;grid-template-columns:56px 1fr auto;gap:14px;padding:14px 16px;cursor:pointer;border-radius:var(--r);
-  border:1px solid var(--stroke);background:var(--panel);transition:.15s}
-.item:hover{background:var(--panel-2);border-color:var(--stroke-lit)}
-.item.pinned{border-color:rgba(180,240,74,.35);background:linear-gradient(100deg,rgba(180,240,74,.07),transparent 45%)}
-.item.crit{box-shadow:inset 3px 0 0 var(--coral)}
-.vote{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:12px;border:1px solid var(--stroke);
-  background:rgba(0,0,0,.3);padding:8px 0;cursor:pointer;transition:.15s}
-.vote:hover{border-color:var(--lime)}
-.vote.on{background:rgba(180,240,74,.15);border-color:var(--lime);color:var(--lime)}
-.vote .v{font-family:var(--display);font-size:16px;font-weight:700;line-height:1}
-.vote .lbl{font-size:8.5px;letter-spacing:.06em;text-transform:uppercase;opacity:.7;margin-top:2px}
-.item h3{font-family:var(--display);font-size:15.5px;font-weight:600;margin:0 0 6px}
-.item .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.item .right{display:flex;flex-direction:column;align-items:flex-end;gap:5px;justify-content:center}
-.empty{text-align:center;padding:52px 20px;color:var(--muted)}
-.empty .big{font-family:var(--display);font-size:18px;color:var(--txt);margin-bottom:6px}
-.avatar{width:24px;height:24px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:10.5px;font-weight:700;font-family:var(--display);color:#08150F}
+.doors{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:16px}
+.door{display:flex;flex-direction:column;gap:10px;text-align:left;padding:24px;border-radius:var(--r-l);
+  border:1px solid var(--line);background:var(--glass);cursor:pointer;transition:.18s}
+.door:hover{transform:translateY(-3px);border-color:var(--line-lit);background:var(--glass-2);box-shadow:0 22px 46px -26px rgba(0,0,0,.9)}
+.door .ic{width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:rgba(184,244,80,.13);color:var(--lime)}
+.door.b .ic{background:rgba(172,144,255,.15);color:var(--violet)}
+.door.c .ic{background:rgba(56,220,172,.14);color:var(--teal)}
+.door.d .ic{background:rgba(95,203,255,.13);color:var(--sky)}
+.door h3{font-size:17px;font-weight:600}
+.door p{margin:0;font-size:13.5px;color:var(--dim);line-height:1.5}
+.notice{border:1px solid rgba(184,244,80,.35);border-radius:var(--r-l);padding:20px 22px;
+  background:linear-gradient(100deg,rgba(184,244,80,.11),transparent 60%);display:flex;gap:16px;align-items:flex-start}
+.notice .ic{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:rgba(184,244,80,.18);color:var(--lime);flex:none}
 
-.scrim{position:fixed;inset:0;background:rgba(2,8,6,.72);backdrop-filter:blur(4px);z-index:90;opacity:0;pointer-events:none;transition:.2s}
+/* ==========================================================
+   LIST
+   ========================================================== */
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.search{position:relative;flex:1;min-width:220px}
+.search input{padding-left:38px}
+.search svg{position:absolute;left:13px;top:50%;transform:translateY(-50%);opacity:.45}
+.toolbar select{width:auto;min-width:140px;padding:10px 32px 10px 13px;font-size:13.5px}
+.quickfilters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px}
+.qf{background:var(--glass);border:1px solid var(--line);padding:7px 14px;border-radius:100px;cursor:pointer;
+  font-size:13px;color:var(--txt-2);transition:.15s}
+.qf:hover{border-color:var(--line-lit);color:var(--txt)}
+.qf[aria-pressed=true]{background:var(--lime);color:#071410;border-color:transparent;font-weight:600}
+.list{display:flex;flex-direction:column;gap:11px}
+.item{display:grid;grid-template-columns:66px 1fr 190px;gap:18px;padding:16px 18px;cursor:pointer;
+  border-radius:var(--r-l);border:1px solid var(--line);background:var(--glass);transition:.16s}
+.item:hover{background:var(--glass-2);border-color:var(--line-lit);transform:translateX(3px)}
+.item.pinned{border-color:rgba(184,244,80,.38);background:linear-gradient(100deg,rgba(184,244,80,.08),transparent 48%)}
+.item.crit{box-shadow:inset 4px 0 0 var(--coral)}
+.vote{display:flex;flex-direction:column;align-items:center;justify-content:center;border-radius:14px;
+  border:1px solid var(--line);background:rgba(0,0,0,.32);padding:9px 0;cursor:pointer;transition:.15s}
+.vote:hover{border-color:var(--lime);background:rgba(184,244,80,.08)}
+.vote.on{background:rgba(184,244,80,.16);border-color:var(--lime);color:var(--lime)}
+.vote .v{font-family:var(--display);font-size:19px;font-weight:700;line-height:1}
+.vote .lbl{font-size:8.5px;letter-spacing:.07em;text-transform:uppercase;opacity:.75;margin-top:3px}
+.item h3{font-size:16px;font-weight:600;margin-bottom:8px;line-height:1.3}
+.item .meta{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+.item .right{display:flex;flex-direction:column;align-items:flex-end;gap:7px;justify-content:center;text-align:right}
+.empty{text-align:center;padding:64px 24px;border:1px dashed var(--line);border-radius:var(--r-l)}
+.empty .big{font-family:var(--display);font-size:20px;margin-bottom:8px}
+.avatar{width:26px;height:26px;border-radius:9px;flex:none;display:grid;place-items:center;
+  font-size:11px;font-weight:700;font-family:var(--display);color:#071410}
+
+/* status track — teaches the workflow without a manual */
+.track{display:flex;align-items:center;gap:0;margin:4px 0 2px}
+.track .s{flex:1;text-align:center;position:relative;font-size:11px;color:var(--dim);padding-top:20px}
+.track .s::before{content:"";position:absolute;top:5px;left:50%;transform:translateX(-50%);width:11px;height:11px;
+  border-radius:50%;background:rgba(255,255,255,.13);z-index:2}
+.track .s::after{content:"";position:absolute;top:10px;left:-50%;width:100%;height:1.5px;background:rgba(255,255,255,.1);z-index:1}
+.track .s:first-child::after{display:none}
+.track .s.done{color:var(--txt-2)}
+.track .s.done::before{background:var(--teal);box-shadow:0 0 0 3px rgba(56,220,172,.16)}
+.track .s.done::after{background:var(--teal)}
+.track .s.at{color:var(--lime);font-weight:600}
+.track .s.at::before{background:var(--lime);box-shadow:0 0 0 4px rgba(184,244,80,.2)}
+
+/* ==========================================================
+   PANEL (detail + wizard)
+   ========================================================== */
+.scrim{position:fixed;inset:0;background:rgba(2,8,6,.74);backdrop-filter:blur(5px);z-index:90;opacity:0;pointer-events:none;transition:.22s}
 .scrim.open{opacity:1;pointer-events:auto}
-.panel{position:fixed;top:0;right:0;bottom:0;width:min(660px,100%);z-index:100;display:flex;flex-direction:column;
-  background:linear-gradient(180deg,#0B1F18,#071510);border-left:1px solid var(--stroke);
-  transform:translateX(102%);transition:transform .26s cubic-bezier(.3,.9,.3,1);box-shadow:0 24px 60px -20px rgba(0,0,0,.8)}
+.panel{position:fixed;top:0;right:0;bottom:0;width:min(760px,100%);z-index:100;display:flex;flex-direction:column;
+  background:linear-gradient(180deg,#0C2119,#061410);border-left:1px solid var(--line);box-shadow:var(--shadow);
+  transform:translateX(102%);transition:transform .3s cubic-bezier(.3,.9,.3,1)}
 .panel.open{transform:none}
-.panel-head{padding:16px 20px;border-bottom:1px solid var(--stroke);display:flex;gap:12px;align-items:flex-start}
-.panel-body{overflow:auto;padding:20px;flex:1;overscroll-behavior:contain}
-.panel-foot{padding:12px 20px;border-top:1px solid var(--stroke);display:flex;gap:8px;flex-wrap:wrap;background:rgba(0,0,0,.25)}
-.close-x{margin-left:auto;background:none;border:0;color:var(--muted);cursor:pointer;font-size:22px;line-height:1;padding:2px 8px;border-radius:8px}
-.close-x:hover{color:var(--txt);background:var(--panel)}
-.block{background:rgba(0,0,0,.25);border:1px solid var(--stroke);border-radius:12px;padding:13px 15px;margin:12px 0}
-.block h4{font-family:var(--display);font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600}
-.pre{white-space:pre-wrap;font-size:13.5px;line-height:1.6;margin:0}
-.kv{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;font-size:13px}
-.kv dt{color:var(--muted);font-size:12px}
+.p-head{padding:22px 26px;border-bottom:1px solid var(--line);display:flex;gap:14px;align-items:flex-start}
+.p-body{overflow:auto;padding:24px 26px;flex:1;overscroll-behavior:contain}
+.p-foot{padding:14px 26px;border-top:1px solid var(--line);display:flex;gap:10px;flex-wrap:wrap;background:rgba(0,0,0,.28)}
+.close-x{margin-left:auto;background:none;border:0;color:var(--dim);cursor:pointer;font-size:24px;line-height:1;padding:2px 9px;border-radius:9px}
+.close-x:hover{color:var(--txt);background:var(--glass)}
+.block{background:rgba(0,0,0,.26);border:1px solid var(--line);border-radius:var(--r-m);padding:16px 18px;margin:14px 0}
+.block h4{font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);margin-bottom:10px;font-weight:600}
+.pre{white-space:pre-wrap;font-size:14px;line-height:1.65;margin:0}
+.kv{display:grid;grid-template-columns:130px 1fr;gap:8px 14px;font-size:13.5px}
+.kv dt{color:var(--dim);font-size:12.5px}
 .kv dd{margin:0}
-.staffbox{border:1px solid rgba(55,214,168,.3);background:linear-gradient(160deg,rgba(55,214,168,.08),transparent);border-radius:14px;padding:15px;margin:14px 0}
-.comment{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
-.badge-staff{background:var(--teal);color:#08150F;font-size:9.5px;padding:1px 6px;border-radius:5px;font-weight:700;text-transform:uppercase;margin-left:6px}
-.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-.thumbs img{width:76px;height:76px;object-fit:cover;border-radius:10px;border:1px solid var(--stroke);cursor:zoom-in}
-.dupwarn{background:rgba(255,194,75,.09);border:1px solid rgba(255,194,75,.35);border-radius:12px;padding:11px 13px;margin-bottom:14px}
-.dupwarn .d{padding:6px 0;cursor:pointer;font-size:13px;border-bottom:1px solid rgba(255,255,255,.06)}
-.dupwarn .d:last-child{border:0}
-.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px}
-.switch input{appearance:none;width:36px;height:20px;border-radius:100px;background:rgba(255,255,255,.12);position:relative;cursor:pointer;transition:.2s;flex:none}
-.switch input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--txt);transition:.2s}
-.switch input:checked{background:var(--lime)}
-.switch input:checked::after{left:18px;background:#08150F}
+.staffbox{border:1px solid rgba(56,220,172,.32);background:linear-gradient(160deg,rgba(56,220,172,.09),transparent);
+  border-radius:var(--r-l);padding:20px;margin:16px 0}
+.comment{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid rgba(255,255,255,.055)}
+.comment:last-of-type{border:0}
+.badge-staff{background:var(--teal);color:#071410;font-size:9.5px;padding:1.5px 7px;border-radius:6px;font-weight:700;text-transform:uppercase;margin-left:7px}
+.thumbs{display:flex;gap:9px;flex-wrap:wrap;margin-top:10px}
+.thumbs img{width:86px;height:86px;object-fit:cover;border-radius:var(--r-m);border:1px solid var(--line);cursor:zoom-in}
+.timeline{list-style:none;margin:0;padding:0 0 0 20px;border-left:1px solid var(--line)}
+.timeline li{position:relative;padding:0 0 15px 16px;font-size:13px}
+.timeline li::before{content:"";position:absolute;left:-25px;top:6px;width:9px;height:9px;border-radius:50%;
+  background:var(--teal);box-shadow:0 0 0 3px rgba(56,220,172,.16)}
+.internal{background:rgba(255,197,84,.07);border:1px dashed rgba(255,197,84,.32)}
 
-.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
-table.data{width:100%;border-collapse:collapse;font-size:13px;min-width:820px}
-table.data th{text-align:left;font-size:10.5px;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);padding:9px 10px;
-  border-bottom:1px solid var(--stroke);font-weight:600;white-space:nowrap;position:sticky;top:0;background:#0A1A14}
-table.data td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top}
+/* wizard */
+.steps{display:flex;gap:8px;margin-bottom:24px}
+.steps span{flex:1;height:4px;border-radius:100px;background:rgba(255,255,255,.1)}
+.steps span.on{background:var(--lime)}
+.stepq{font-family:var(--display);font-size:23px;font-weight:600;margin-bottom:6px;line-height:1.2}
+.stephelp{color:var(--dim);font-size:13.5px;margin:0 0 20px}
+.picks{display:grid;gap:11px}
+.picks.two{grid-template-columns:1fr 1fr}
+.picks.three{grid-template-columns:repeat(3,1fr)}
+.pick{display:flex;gap:14px;align-items:flex-start;text-align:left;padding:17px 18px;border-radius:var(--r-l);
+  border:1px solid var(--line);background:var(--glass);cursor:pointer;transition:.16s;width:100%}
+.pick:hover{border-color:var(--line-lit);background:var(--glass-2);transform:translateY(-2px)}
+.pick[aria-pressed=true]{border-color:var(--lime);background:rgba(184,244,80,.11);box-shadow:inset 0 0 0 1px rgba(184,244,80,.35)}
+.pick .ic{width:42px;height:42px;border-radius:13px;display:grid;place-items:center;flex:none;background:rgba(255,255,255,.06)}
+.pick b{display:block;font-family:var(--display);font-size:15.5px;font-weight:600;margin-bottom:3px}
+.pick small{color:var(--dim);font-size:12.5px;line-height:1.45;display:block}
+.pick.col{flex-direction:column;align-items:center;text-align:center;gap:9px;padding:18px 12px}
+.pick.col b{font-size:13.5px}
+.dupwarn{background:rgba(255,197,84,.09);border:1px solid rgba(255,197,84,.36);border-radius:var(--r-m);padding:14px 16px;margin-bottom:18px}
+.dupwarn .d{padding:8px 0;cursor:pointer;font-size:13.5px;border-bottom:1px solid rgba(255,255,255,.07)}
+.dupwarn .d:last-child{border:0}
+.dupwarn .d:hover{color:var(--lime)}
+
+/* boards, releases, checklist, tables */
+.board{display:grid;grid-template-columns:repeat(5,minmax(190px,1fr));gap:13px;overflow-x:auto;padding-bottom:12px}
+.col{background:rgba(0,0,0,.24);border:1px solid var(--line);border-radius:var(--r-l);padding:13px;min-height:200px}
+.col.over{border-color:var(--lime);background:rgba(184,244,80,.07)}
+.col h3{font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--txt-2);
+  margin-bottom:12px;display:flex;gap:8px;align-items:center}
+.col h3 .n{margin-left:auto;color:var(--dim)}
+.mini{background:var(--glass);border:1px solid var(--line);border-radius:var(--r-m);padding:12px 13px;margin-bottom:9px;cursor:pointer;transition:.15s}
+.mini:hover{background:var(--glass-2);border-color:var(--line-lit)}
+.mini .t{font-size:13.5px;font-weight:500;line-height:1.4;margin-bottom:9px}
+.rank{font-family:var(--display);font-size:14px;font-weight:700;color:var(--lime);margin-right:6px}
+.rel{border-left:2px solid var(--line);padding:0 0 26px 24px;position:relative;margin-left:9px}
+.rel::before{content:"";position:absolute;left:-8px;top:5px;width:14px;height:14px;border-radius:50%;
+  background:var(--lime);box-shadow:0 0 0 5px rgba(184,244,80,.13)}
+.rel.beta::before{background:var(--amber);box-shadow:0 0 0 5px rgba(255,197,84,.13)}
+.ver{font-family:var(--mono);font-size:17px;font-weight:600;color:var(--lime)}
+.fixlist{list-style:none;padding:0;margin:12px 0 0;display:flex;flex-direction:column;gap:7px}
+.fixlist li{display:flex;gap:10px;align-items:center;font-size:13.5px;padding:9px 12px;background:rgba(0,0,0,.26);
+  border-radius:var(--r-s);border:1px solid var(--line)}
+.check{display:flex;gap:14px;padding:15px 17px;border:1px solid var(--line);border-radius:var(--r-l);
+  background:var(--glass);margin-bottom:10px;align-items:flex-start}
+.check.pass{border-color:rgba(56,220,172,.35);background:rgba(56,220,172,.06)}
+.check.fail{border-color:rgba(255,110,93,.42);background:rgba(255,110,93,.07)}
+.check.blocked{border-color:rgba(255,197,84,.42);background:rgba(255,197,84,.06)}
+.check .n{font-family:var(--mono);font-size:11px;color:var(--dim);padding-top:3px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:var(--r-s);overflow:hidden}
+.seg button{background:none;border:0;padding:7px 14px;font-size:12.5px;cursor:pointer;color:var(--dim);transition:.15s}
+.seg button:hover{background:var(--glass-2);color:var(--txt)}
+.seg button.on{background:var(--teal);color:#071410;font-weight:600}
+.seg button.on.f{background:var(--coral);color:#1B0705}
+.seg button.on.b{background:var(--amber);color:#1B1406}
+.progress{height:8px;border-radius:100px;background:rgba(255,255,255,.08);overflow:hidden;margin-top:12px}
+.progress div{height:100%;background:linear-gradient(90deg,var(--teal),var(--lime));transition:width .5s}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:var(--r-l)}
+table.data{width:100%;border-collapse:collapse;font-size:13.5px;min-width:900px}
+table.data th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--dim);padding:11px 12px;border-bottom:1px solid var(--line);font-weight:600;white-space:nowrap;
+  position:sticky;top:0;background:#0A1C16;z-index:2}
+table.data td{padding:11px 12px;border-bottom:1px solid rgba(255,255,255,.05);vertical-align:top}
 table.data tbody tr{cursor:pointer}
 table.data tbody tr:hover td{background:rgba(255,255,255,.04)}
-.subtabs{display:flex;gap:4px;margin:16px 0 14px;flex-wrap:wrap}
-.subtab{background:var(--panel);border:1px solid var(--stroke);padding:7px 13px;border-radius:100px;cursor:pointer;font-size:13px;color:var(--muted)}
-.subtab[aria-current=true]{background:var(--teal);color:#08150F;border-color:transparent;font-weight:600}
-.rel{border-left:2px solid var(--stroke);padding:0 0 20px 20px;position:relative;margin-left:8px}
-.rel::before{content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(180,240,74,.12)}
-.rel.beta::before{background:var(--amber);box-shadow:0 0 0 4px rgba(255,194,75,.12)}
-.ver{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--lime)}
-.fixlist{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:6px}
-.fixlist li{display:flex;gap:9px;align-items:center;font-size:13px;padding:7px 10px;background:rgba(0,0,0,.25);border-radius:9px;border:1px solid var(--stroke)}
+.subtabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.subtab{background:var(--glass);border:1px solid var(--line);padding:9px 16px;border-radius:100px;cursor:pointer;font-size:13.5px;color:var(--txt-2);transition:.15s}
+.subtab:hover{border-color:var(--line-lit)}
+.subtab[aria-current=true]{background:var(--teal);color:#071410;border-color:transparent;font-weight:600}
+.bars{display:flex;flex-direction:column;gap:11px;margin-top:16px}
+.bar-row{display:grid;grid-template-columns:130px 1fr 36px;align-items:center;gap:12px;font-size:13px}
+.bar-track{height:9px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.2,.9,.3,1)}
+.tagpill{background:rgba(255,255,255,.06);border:1px solid var(--line);padding:2.5px 9px;border-radius:8px;font-size:11px;font-family:var(--mono);color:var(--txt-2)}
+.switch{display:inline-flex;align-items:center;gap:9px;cursor:pointer;font-size:13.5px}
+.switch input{appearance:none;width:38px;height:21px;border-radius:100px;background:rgba(255,255,255,.13);position:relative;cursor:pointer;transition:.2s;flex:none}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:17px;height:17px;border-radius:50%;background:var(--txt);transition:.2s}
+.switch input:checked{background:var(--lime)}
+.switch input:checked::after{left:19px;background:#071410}
 
-.fab{position:fixed;right:18px;bottom:18px;z-index:70;border-radius:100px;padding:14px 20px;font-size:14px;box-shadow:0 16px 40px -12px rgba(180,240,74,.7)}
-#toasts{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
-.toast{background:rgba(11,31,24,.97);border:1px solid var(--stroke-lit);border-radius:12px;padding:11px 16px;font-size:13.5px;animation:pop .25s cubic-bezier(.2,1.2,.4,1)}
-.toast.bad{border-color:rgba(255,106,90,.5)}
-@keyframes pop{from{opacity:0;transform:translateY(10px)}}
-.lightbox{position:fixed;inset:0;z-index:150;background:rgba(2,8,6,.94);display:none;place-items:center;padding:20px;cursor:zoom-out}
+/* welcome */
+.welcome{position:fixed;inset:0;z-index:180;display:none;place-items:center;padding:20px;
+  background:rgba(3,10,8,.9);backdrop-filter:blur(10px)}
+.welcome.open{display:grid}
+.wbox{width:min(520px,100%);background:linear-gradient(170deg,#0D2419,#061410);border:1px solid var(--line-lit);
+  border-radius:var(--r-xl);padding:34px;box-shadow:var(--shadow)}
+#toasts{position:fixed;left:50%;bottom:26px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:9px;align-items:center;pointer-events:none}
+.toast{background:rgba(12,33,25,.98);border:1px solid var(--line-lit);border-radius:var(--r-m);padding:12px 18px;
+  font-size:14px;box-shadow:var(--shadow);animation:pop .26s cubic-bezier(.2,1.2,.4,1)}
+.toast.bad{border-color:rgba(255,110,93,.5)}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.96)}}
+.lightbox{position:fixed;inset:0;z-index:150;background:rgba(2,8,6,.95);display:none;place-items:center;padding:24px;cursor:zoom-out}
 .lightbox.open{display:grid}
-.lightbox img{max-width:100%;max-height:100%;border-radius:12px}
-.tagpill{background:rgba(255,255,255,.06);border:1px solid var(--stroke);padding:2px 8px;border-radius:7px;font-size:11px;font-family:var(--mono);color:var(--txt-2)}
-.locked{text-align:center;padding:60px 20px}
+.lightbox img{max-width:100%;max-height:100%;border-radius:var(--r-l)}
 
-@media(max-width:640px){
-  .app{padding:0 14px 120px}
+/* ==========================================================
+   RESPONSIVE — laptop first, then small screens
+   ========================================================== */
+@media(max-width:1180px){
+  .content{padding:30px 28px 90px}
+  .item{grid-template-columns:62px 1fr 150px}
+}
+@media(max-width:940px){
+  :root{--side:0px}
+  .shell{grid-template-columns:1fr}
+  .side{display:none}
+  .content{padding:20px 18px 110px}
+  .mobilebar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:80;background:rgba(6,20,15,.94);
+    backdrop-filter:blur(18px);border-top:1px solid var(--line);padding:8px 6px calc(8px + env(safe-area-inset-bottom))}
+  .mobilebar button{flex:1;background:none;border:0;color:var(--dim);font-size:10.5px;display:flex;
+    flex-direction:column;align-items:center;gap:4px;padding:5px 2px;cursor:pointer;border-radius:10px}
+  .mobilebar button[aria-current=true]{color:var(--lime)}
+  .picks.three{grid-template-columns:1fr 1fr}
+  .board{grid-template-columns:repeat(5,82vw)}
+  .item{grid-template-columns:56px 1fr;gap:13px}
+  .item .right{grid-column:2;flex-direction:row;align-items:center;text-align:left}
   .grid2{grid-template-columns:1fr}
-  .brand h1{display:none}
-  .item{grid-template-columns:48px 1fr}
-  .item .right{grid-column:2;flex-direction:row}
   .kv{grid-template-columns:1fr;gap:2px}
-  .kv dd{margin-bottom:8px}
+  .kv dd{margin-bottom:10px}
+  .p-head,.p-body,.p-foot{padding-left:18px;padding-right:18px}
+  .hero{padding:24px 20px}
+  .h-page{font-size:25px}
+  .homegrid,.yougrid{grid-template-columns:1fr!important}
+}
+@media(max-width:560px){
+  .picks.two,.picks.three{grid-template-columns:1fr}
 }
 </style>
 </head>
 <body>
-<header class="top">
-  <div class="brand">
-    <div class="mark" aria-hidden="true"></div>
-    <div><h1>Anthbot M9 Pro</h1><div class="sub">Beta reports</div></div>
-  </div>
-  <nav id="tabs">
-    <button class="tab" data-view="reports">Reports</button>
-    <button class="tab" data-view="updates">Updates</button>
-    <button class="tab" data-view="you">You</button>
-    <button class="tab" data-view="admin" id="tabAdmin" hidden>Admin</button>
-  </nav>
-</header>
+<div class="shell">
+  <aside class="side">
+    <div class="logo">
+      <div class="mark" aria-hidden="true"></div>
+      <div><b>Anthbot M9 Pro</b><span>Beta test group</span></div>
+    </div>
+    <button class="btn primary" id="newTop" style="margin:0 2px 6px">Report something</button>
+    <div class="navlabel">Test group</div>
+    <nav id="nav"></nav>
+    <div class="side-foot">
+      <div class="whoami" id="whoami"></div>
+    </div>
+  </aside>
+  <main class="content">
+    <section id="v-home" hidden></section>
+    <section id="v-reports" hidden></section>
+    <section id="v-wishes" hidden></section>
+    <section id="v-updates" hidden></section>
+    <section id="v-testplan" hidden></section>
+    <section id="v-you" hidden></section>
+    <section id="v-admin" hidden></section>
+  </main>
+</div>
+<div class="mobilebar" id="mobilebar"></div>
 
-<main class="app">
-  <section id="view-reports" hidden></section>
-  <section id="view-updates" hidden></section>
-  <section id="view-you" hidden></section>
-  <section id="view-admin" hidden></section>
-</main>
-
-<button class="btn primary fab" id="fabNew">+ New report</button>
 <div class="scrim" id="scrim"></div>
 <aside class="panel" id="panel" role="dialog" aria-modal="true">
-  <div class="panel-head" id="pHead"></div>
-  <div class="panel-body" id="pBody"></div>
-  <div class="panel-foot" id="pFoot"></div>
+  <div class="p-head" id="pHead"></div>
+  <div class="p-body" id="pBody"></div>
+  <div class="p-foot" id="pFoot"></div>
 </aside>
+<div class="welcome" id="welcome"><div class="wbox" id="wbox"></div></div>
 <div class="lightbox" id="lightbox"><img id="lightboxImg" alt=""></div>
 <div id="toasts" aria-live="polite"></div>
 
 <script>
 "use strict";
-/* ==================================================================
-   ANTHBOT M9 PRO — BETA REPORTING
-   Single file, no build step. All persistence goes through Store
-   (localStorage today, Firebase later — see the note at the bottom).
-   ================================================================== */
+/* ============================================================
+   ANTHBOT M9 PRO — BETA TEST GROUP
+   Single file, no build step, vanilla JS.
+   All persistence goes through Store (localStorage now,
+   Firebase later — see the note at the very bottom).
+   ============================================================ */
 
+/* ---------------- icons ---------------- */
+const I={
+  home:'M3 11l9-8 9 8M5 9.5V21h14V9.5',
+  bug:'M12 3v3M8 7h8l1 5a5 5 0 0 1-10 0zM3 12h4M17 12h4M5 18l3-2M19 18l-3-2',
+  wish:'M12 3l2.6 5.6 6 .8-4.4 4.2 1.1 6L12 16.8 6.7 19.6l1.1-6L3.4 9.4l6-.8z',
+  update:'M21 12a9 9 0 1 1-3-6.7M21 4v5h-5',
+  check:'M9 11l3 3 7-7M20 12v7H4V5h11',
+  user:'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0',
+  shield:'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z',
+  search:'M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-3.5-3.5',
+  alert:'M12 8v5M12 17h.01M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z',
+  spark:'M12 2v4M12 18v4M4.9 4.9l2.8 2.8M16.3 16.3l2.8 2.8M2 12h4M18 12h4M4.9 19.1l2.8-2.8M16.3 7.7l2.8-2.8',
+  chat:'M21 12a8 8 0 0 1-11.6 7.1L3 21l1.9-6.4A8 8 0 1 1 21 12z',
+  book:'M4 4h9a3 3 0 0 1 3 3v13a2 2 0 0 0-2-2H4zM20 4h-4v14h4z',
+  bolt:'M13 2 4 14h7l-1 8 9-12h-7z'
+};
+const ico=(n,s=18)=>`<svg width="${s}" height="${s}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="${I[n]}"/></svg>`;
+
+/* ---------------- taxonomy, in plain words ---------------- */
 const TYPES={
-  bug     :{label:'Bug',            cls:'t-bug'},
-  safety  :{label:'Safety',         cls:'t-safety'},
-  feature :{label:'Feature request', cls:'t-feature'},
-  other   :{label:'Question / other',cls:'t-other'}
+  bug     :{label:'Something is broken', short:'Broken',   cls:'t-bug',     ic:'bug',
+            help:'It does the wrong thing, stops, or shows an error'},
+  safety  :{label:'Something is unsafe', short:'Safety',   cls:'t-safety',  ic:'alert',
+            help:'Anyone could get hurt, or it damages property'},
+  hardware:{label:'A part is faulty',    short:'Hardware', cls:'t-hardware',ic:'bolt',
+            help:'Something is worn, loose, rattling or physically damaged'},
+  feature :{label:'I wish it could…',    short:'Wish',     cls:'t-feature', ic:'wish',
+            help:'It works fine, you just want it to do more'},
+  question:{label:'I have a question',   short:'Question', cls:'t-question',ic:'chat',
+            help:'You are not sure if it is a fault or normal behaviour'}
 };
 const SEV={
-  critical:{label:'Critical',cls:'sev-critical',w:3,help:'Unusable, damages something, or someone could get hurt'},
-  major   :{label:'Major',   cls:'sev-major',   w:2,help:'A main function fails and there is no way around it'},
-  minor   :{label:'Minor',   cls:'sev-minor',   w:1,help:'Annoying or cosmetic'}
+  critical:{label:'Critical',cls:'sev-critical',w:4,ic:'alert',
+            title:'Stop using it',   help:'Dangerous, or it damages the lawn, itself or your property'},
+  high    :{label:'High',    cls:'sev-high',    w:3,ic:'bolt',
+            title:'Big problem',     help:'A main function fails and there is no way around it'},
+  medium  :{label:'Medium',  cls:'sev-medium',  w:2,ic:'spark',
+            title:'Annoying',        help:'It works, but you have to fiddle with it or do it manually'},
+  low     :{label:'Low',     cls:'sev-low',     w:1,ic:'chat',
+            title:'Small thing',     help:'Cosmetic, a typo, a bit of noise — nothing serious'}
 };
 const ST={
-  'new'        :{label:'New',              cls:'st-new',        open:true},
-  'looking'    :{label:'Anthbot is on it',  cls:'st-looking',    open:true},
-  'need-info'  :{label:'Needs more info',   cls:'st-need-info',  open:true},
-  'fixed'      :{label:'Fixed in update',   cls:'st-fixed',      open:false},
-  'verified'   :{label:'Verified fixed',    cls:'st-verified',   open:false},
-  'not-planned':{label:'Not planned',       cls:'st-not-planned',open:false}
+  'new'        :{label:'Waiting for Anthbot', cls:'st-new',        open:true, step:0},
+  'triaged'    :{label:'Anthbot has read it', cls:'st-triaged',    open:true, step:1},
+  'need-info'  :{label:'Anthbot needs more',  cls:'st-need-info',  open:true, step:1},
+  'confirmed'  :{label:'Anthbot saw it too',  cls:'st-confirmed',  open:true, step:1},
+  'in-progress':{label:'Being fixed now',     cls:'st-in-progress',open:true, step:2},
+  'fixed'      :{label:'Fixed — please check',cls:'st-fixed',      open:false,step:3},
+  'verified'   :{label:'Confirmed fixed',     cls:'st-verified',   open:false,step:4},
+  'wont-fix'   :{label:'Not going to change', cls:'st-wont-fix',   open:false,step:4},
+  'duplicate'  :{label:'Already reported',    cls:'st-duplicate',  open:false,step:4}
 };
-const AREAS=['Mowing & navigation','Cutting deck & blades','Docking & charging','Battery & runtime',
-  'Obstacle & safety sensors','Rain & weather','Mobile app','Wi-Fi & connection','Noise','Manual & setup','Something else'];
+const TRACK=['Reported','Anthbot looking','Being fixed','Fixed','You confirmed'];
+const AREAS=[
+  {n:'Mowing & navigation',ic:'home'},{n:'Cutting deck & blades',ic:'bolt'},
+  {n:'Docking & charging',ic:'update'},{n:'Battery & runtime',ic:'spark'},
+  {n:'Obstacle & safety sensors',ic:'shield'},{n:'Boundary & no-go zones',ic:'check'},
+  {n:'Rain & weather sensor',ic:'spark'},{n:'Wi-Fi, app & connection',ic:'chat'},
+  {n:'Noise & vibration',ic:'bolt'},{n:'Manual, setup & packaging',ic:'book'},
+  {n:'Something else',ic:'search'}
+];
+const HOW_OFTEN=['Every single time','Most runs','Now and then','Only happened once'];
+const GROUND=['Flat lawn','Gentle slope','Steep slope','Wet ground','Narrow passage','Tall grass','Near trees or beds','Gravel or paving'];
+const STAGES={requested:'Asked for',reviewing:'Anthbot is reading',planned:'Planned',building:'Being built',shipped:'Shipped'};
+const PRIO={P0:'P0 — stop everything',P1:'P1 — must fix',P2:'P2 — should fix',P3:'P3 — someday'};
 
 /* ---------------- helpers ---------------- */
 const $=(s,r=document)=>r.querySelector(s);
@@ -262,55 +514,61 @@ const uid=()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const nl=s=>esc(s).replace(/\n/g,'<br>');
 function ago(t){const d=(Date.now()-t)/1000;
-  if(d<60)return'just now';if(d<3600)return Math.floor(d/60)+'m ago';if(d<86400)return Math.floor(d/3600)+'h ago';
-  if(d<604800)return Math.floor(d/86400)+'d ago';return new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
+  if(d<60)return'just now';if(d<3600)return Math.floor(d/60)+' min ago';if(d<86400)return Math.floor(d/3600)+' hours ago';
+  if(d<172800)return'yesterday';if(d<604800)return Math.floor(d/86400)+' days ago';
+  return new Date(t).toLocaleDateString('en-GB',{day:'numeric',month:'short'});}
 function fdate(t){return new Date(t).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
 function hue(s){let h=0;for(const c of String(s))h=(h*31+c.charCodeAt(0))%360;return h;}
 function avatar(n){const i=String(n||'?').split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
-  return `<span class="avatar" style="background:hsl(${hue(n)} 70% 62%)">${esc(i)}</span>`;}
-function chip(c,l,dot){return `<span class="chip ${c}">${dot?'<span class="dot"></span>':''}${esc(l)}</span>`;}
+  return `<span class="avatar" style="background:hsl(${hue(n)} 68% 62%)">${esc(i)}</span>`;}
+const chip=(c,l,dot)=>`<span class="chip ${c}">${dot?'<span class="dot"></span>':''}${esc(l)}</span>`;
 function toast(m,bad){const t=document.createElement('div');t.className='toast'+(bad?' bad':'');
-  t.textContent=(bad?'⚠️ ':'✓ ')+m;$('#toasts').appendChild(t);
-  setTimeout(()=>{t.style.transition='.3s';t.style.opacity=0;setTimeout(()=>t.remove(),300);},2600);}
+  t.textContent=(bad?'⚠  ':'✓  ')+m;$('#toasts').appendChild(t);
+  setTimeout(()=>{t.style.transition='.3s';t.style.opacity=0;setTimeout(()=>t.remove(),300)},2800);}
 
 /* ---------------- store ---------------- */
 const Store={
-  KEY:'anthbot_m9_v2',_mem:null,
+  KEY:'anthbot_m9_v3',_mem:null,
   _ok(){try{localStorage.setItem('__t','1');localStorage.removeItem('__t');return true}catch(e){return false}},
   async load(){if(this._ok()){try{const r=localStorage.getItem(this.KEY);return r?JSON.parse(r):null}catch(e){return null}}return this._mem},
   async save(s){if(this._ok()){try{localStorage.setItem(this.KEY,JSON.stringify(s));return true}
-    catch(e){toast('Storage is full — export your data',true);return false}}this._mem=s;return true},
+    catch(e){toast('Storage is full — export a backup under My details',true);return false}}this._mem=s;return true},
   async clear(){if(this._ok())localStorage.removeItem(this.KEY);this._mem=null},
-  mode(){return this._ok()?'this browser':'this session only'}
+  where(){return this._ok()?'this browser':'this session only'}
 };
 
 let S=null;
-const ui={view:'reports',q:'',fStatus:'',fType:'',sort:'votes',openId:null,files:[],adminTab:'reports'};
+const ui={view:'home',q:'',fStatus:'',fType:'',fArea:'',sort:'impact',open:null,adminTab:'reports',
+  wiz:null,files:[]};
 
-function blank(){return{v:2,profile:{id:uid(),name:'',email:'',serial:'',region:'',lawn:'',firmware:'2.4.1',app:'3.8.0',role:'tester',joined:Date.now(),lastSeen:Date.now()},
-  testers:{},reports:[],updates:[],notice:null,counter:0};}
+function blank(){return{v:3,
+  profile:{id:uid(),name:'',email:'',serial:'',region:'',lawn:'',firmware:'2.4.1',app:'3.8.0',role:'tester',joined:Date.now()},
+  testers:{},reports:[],updates:[],checks:{},activity:[],notice:null,counter:0};}
 const isAdmin=()=>S.profile.role==='admin';
 const byId=id=>S.reports.find(r=>r.id===id);
 const isOpen=r=>ST[r.status].open;
-const myVote=r=>r.votes.includes(S.profile.id);
-const score=r=>(r.votes.length+1)*(SEV[r.severity]?.w||1);
-async function persist(){await Store.save(S);}
+const mine=r=>r.votes.includes(S.profile.id);
+const impact=r=>(r.votes.length+1)*(SEV[r.severity]?.w||1);
+const isWish=r=>r.type==='feature';
+async function persist(){await Store.save(S)}
+function card(){const p=S.profile;return{id:p.id,name:p.name||'Unnamed tester',email:p.email||'',serial:p.serial||'',
+  region:p.region||'',lawn:p.lawn||'',firmware:p.firmware||'',app:p.app||''};}
+function syncTester(){S.testers[S.profile.id]=Object.assign({},card(),{joined:S.profile.joined,lastSeen:Date.now()});}
+function log(text){S.activity.unshift({id:uid(),text,by:S.profile.name||'A tester',at:Date.now()});S.activity=S.activity.slice(0,120);}
 
-/* every report carries a snapshot of who filed it, so admins never
-   have to join two tables by hand */
-function reporterCard(){
-  const p=S.profile;
-  return {id:p.id,name:p.name||'Unnamed tester',email:p.email||'',serial:p.serial||'',
-          region:p.region||'',lawn:p.lawn||'',firmware:p.firmware||'',app:p.app||''};
-}
-function syncTester(){
-  const p=S.profile;
-  S.testers[p.id]=Object.assign({},reporterCard(),{joined:p.joined||Date.now(),lastSeen:Date.now()});
-}
+/* ---------------- test plan ---------------- */
+const PLAN=[
+  {g:'Unboxing & setup',items:['Everything on the packing list is in the box','The dock stands firm on your ground','First pairing finishes in under 5 minutes','The boundary records without walking it twice']},
+  {g:'Normal mowing',items:['Finishes a whole zone with no help from you','Cut height matches what the app says — measure it','No uncut stripes left between passes','Handles your steepest slope up and across','Gets through a passage under 80 cm wide']},
+  {g:'Safety',items:['Stops for a garden hose across the lane','Stops for an object left on the lawn (an object — never a person or pet)','Blades stop within a second when lifted','Blades stop when tipped','The child lock asks for the PIN every time','The stop button halts everything instantly']},
+  {g:'Docking & power',items:['Finds the dock from the far corner','Docks in low sun and after dark','Charges to full and reports the right percentage','Carries on with the zone it left','Survives a wet night with no fault']},
+  {g:'App & connection',items:['Reconnects on its own after the router restarts','Schedule changes reach the mower within a minute','The live map matches where it actually is','You get a notification when it finishes or fails','A firmware update installs without a reset']},
+  {g:'Try to break it',items:['Run it in tall wet grass it was never meant for','Block the dock and see what it does','Pull the Wi-Fi mid-run','Start a zone while another one is running','Let the battery die at the far end of the lawn']}
+];
 
 /* ---------------- demo data ---------------- */
 function seed(){
-  const s=blank(), now=Date.now(), D=86400000;
+  const s=blank(),now=Date.now(),D=86400000;
   const T=[
     {id:'u2',name:'Mette Hansen',email:'mette.h@example.dk',serial:'M9P-0042',region:'Denmark',lawn:'820',firmware:'2.4.1',app:'3.8.0'},
     {id:'u3',name:'Jonas Poulsen',email:'jonas.p@example.dk',serial:'M9P-0051',region:'Denmark',lawn:'1400',firmware:'2.4.1',app:'3.8.0'},
@@ -319,47 +577,74 @@ function seed(){
     {id:'u6',name:'Sara Lind',email:'sara.lind@example.se',serial:'M9P-0088',region:'Sweden',lawn:'1100',firmware:'2.4.1',app:'3.8.0'},
     {id:'u7',name:'Rune Kjær',email:'rune.k@example.dk',serial:'M9P-0091',region:'Denmark',lawn:'700',firmware:'2.4.0',app:'3.8.0'}
   ];
-  T.forEach(t=>s.testers[t.id]=Object.assign({},t,{joined:now-30*D,lastSeen:now-Math.random()*5*D}));
+  T.forEach(t=>s.testers[t.id]=Object.assign({},t,{joined:now-30*D,lastSeen:now-Math.floor(Math.random()*4)*D}));
   const mk=o=>{s.counter++;return Object.assign({
     id:uid(),key:'M9-'+String(s.counter).padStart(3,'0'),title:'',body:'',steps:'',
-    type:'bug',severity:'major',status:'new',area:'Something else',
-    votes:[],comments:[],files:[],reporter:T[0],createdAt:now,updatedAt:now,
-    pinned:false,fixedIn:'',reply:''},o);};
+    type:'bug',severity:'medium',status:'new',area:'Something else',often:'Now and then',ground:[],
+    votes:[],comments:[],files:[],history:[],reporter:T[0],createdAt:now,updatedAt:now,
+    pinned:false,fixedIn:'',reply:'',internal:'',priority:'',owner:'',stage:''},o)};
   s.reports=[
-    mk({title:'Mower drives over the flower bed edge in zone 2',body:'On the last turn before the bed it goes about 12 cm too far and clips the tulips. Happens most runs.',
+    mk({title:'It drives over the flower bed edge in zone 2',
+      body:'On the last turn before the bed the front left wheel goes about 12 cm too far. Lost three tulips this week.',
       steps:'1. Start zone 2\n2. Wait for the north turn\n3. Watch the front left wheel',
-      type:'bug',severity:'critical',status:'looking',area:'Mowing & navigation',reporter:T[0],
-      createdAt:now-9*D,updatedAt:now-2*D,votes:['u2','u3','u4','u5','u7','u6'],
-      reply:'Reproduced on three units when the RTK signal is weak. Fix is in the 2.5.0 test build.'}),
-    mk({title:'Blade motor stops in wet grass with error E-217',body:'Damp mornings only. After about 20 minutes the deck stops and it parks where it stands. Restart clears it until the next wet run.',
-      type:'bug',severity:'critical',status:'looking',area:'Cutting deck & blades',reporter:T[1],
-      createdAt:now-14*D,updatedAt:now-1*D,votes:['u3','u2','u4','u6','u5','u7'],
-      reply:'Clippings pack the deck and the motor pulls too much current. Testing a new blade profile — please tell us how clean your deck was.'}),
-    mk({title:'Child lock can be skipped by holding STOP while pressing dock',body:'My 7-year-old found this, not me. The blades arm without asking for the PIN.',
-      type:'safety',severity:'critical',status:'fixed',area:'Obstacle & safety sensors',reporter:T[2],
-      createdAt:now-21*D,updatedAt:now-4*D,votes:['u4','u2','u3','u5','u6','u7'],fixedIn:'2.4.1',
+      type:'bug',severity:'critical',status:'in-progress',area:'Boundary & no-go zones',often:'Most runs',
+      ground:['Near trees or beds'],reporter:T[0],createdAt:now-9*D,updatedAt:now-2*D,
+      votes:['u2','u3','u4','u5','u6','u7'],priority:'P0',owner:'Firmware team',
+      reply:'Reproduced on three units when the RTK signal is weak. The fix is in the 2.5.0 test build.',
+      history:[{at:now-9*D,text:'Reported',by:'Mette Hansen'},{at:now-7*D,text:'Anthbot has read it',by:'Anthbot'},
+               {at:now-5*D,text:'Anthbot saw it too',by:'Anthbot'},{at:now-2*D,text:'Being fixed now',by:'Anthbot'}]}),
+    mk({title:'Blade motor stops in wet grass with error E-217',
+      body:'Damp mornings only. After about 20 minutes the deck stops and it parks where it stands. A restart clears it until the next wet run.',
+      type:'hardware',severity:'critical',status:'in-progress',area:'Cutting deck & blades',often:'Most runs',
+      ground:['Wet ground'],reporter:T[1],createdAt:now-14*D,updatedAt:now-1*D,
+      votes:['u3','u2','u4','u5','u6','u7'],priority:'P1',owner:'Hardware',
+      reply:'Clippings pack the deck and the motor pulls too much current. We are testing a new blade profile — please tell us how clean your deck was.'}),
+    mk({title:'Child lock can be skipped by holding STOP while pressing dock',
+      body:'My 7-year-old found this, not me. The blades arm without asking for the PIN.',
+      type:'safety',severity:'critical',status:'fixed',area:'Obstacle & safety sensors',often:'Every single time',
+      reporter:T[2],createdAt:now-21*D,updatedAt:now-4*D,votes:['u4','u2','u3','u5','u6','u7'],
+      fixedIn:'2.4.1',priority:'P0',
       reply:'Thank you for catching this. Patched in 2.4.1 — please update and confirm it is gone on your unit.',
-      comments:[{id:uid(),by:'Anthbot Support',role:'admin',text:'Escalated to the safety team the same hour. Please keep children away from the unit until you are on 2.4.1.',at:now-20*D}]}),
-    mk({title:'App loses the mower after the router restarts',body:'Every time. The mower is online but the app cannot find it until I re-pair.',
-      type:'bug',severity:'major',status:'new',area:'Wi-Fi & connection',reporter:T[3],
-      createdAt:now-6*D,updatedAt:now-6*D,votes:['u5','u2','u6']}),
-    mk({title:'Add a “skip today” button to the widget',body:'If it rained all night I want one tap to skip, without opening the schedule.',
-      type:'feature',severity:'minor',status:'new',area:'Mobile app',reporter:T[4],
-      createdAt:now-11*D,updatedAt:now-11*D,votes:['u6','u2','u3','u4','u5','u7']}),
-    mk({title:'Runtime is 38 minutes, the box says 60',body:'Full charge, 800 m² flat lawn, medium grass. Never past 40 minutes.',
-      type:'bug',severity:'major',status:'need-info',area:'Battery & runtime',reporter:T[5],
-      createdAt:now-16*D,updatedAt:now-5*D,votes:['u7','u2','u5','u6'],
-      reply:'Could you send the runtime shown in the app right after a full charge, and your cut height?'}),
-    mk({title:'Rain sensor triggers on morning dew',body:'Not rain, just dew, and it sits in the dock until noon.',
-      type:'bug',severity:'minor',status:'new',area:'Rain & weather',reporter:T[0],
-      createdAt:now-2*D,updatedAt:now-2*D,votes:['u2','u5']}),
-    mk({title:'Show cut height in millimetres instead of steps 1–9',body:'Nobody knows what step 4 means.',
-      type:'feature',severity:'minor',status:'new',area:'Mobile app',reporter:T[1],
-      createdAt:now-5*D,updatedAt:now-5*D,votes:['u3','u6','u4']}),
-    mk({title:'Quick-start card shows the wrong blade screw direction',body:'It says clockwise to loosen. It is the other way on this deck.',
-      type:'other',severity:'minor',status:'fixed',area:'Manual & setup',reporter:T[2],
-      createdAt:now-19*D,updatedAt:now-7*D,votes:['u4'],fixedIn:'app 3.8.0',
-      reply:'Corrected in the digital manual, reprinted cards ship with the next batch.'})
+      comments:[{id:uid(),by:'Anthbot Support',role:'admin',at:now-20*D,
+        text:'Escalated to the safety team within the hour. Please keep children away from the unit until you are on 2.4.1.'}]}),
+    mk({title:'The app loses the mower after the router restarts',
+      body:'Every time. The mower is online but the app cannot find it until I re-pair.',
+      type:'bug',severity:'high',status:'triaged',area:'Wi-Fi, app & connection',often:'Every single time',
+      reporter:T[3],createdAt:now-6*D,updatedAt:now-4*D,votes:['u5','u2','u6'],priority:'P1'}),
+    mk({title:'Runtime is 38 minutes, the box says 60',
+      body:'Full charge, 800 m² flat lawn, medium grass. Never past 40 minutes.',
+      type:'bug',severity:'high',status:'need-info',area:'Battery & runtime',often:'Every single time',
+      ground:['Flat lawn'],reporter:T[5],createdAt:now-16*D,updatedAt:now-5*D,votes:['u7','u2','u5','u6'],
+      reply:'Could you send the runtime the app shows right after a full charge, plus your cut height?'}),
+    mk({title:'The rain sensor triggers on morning dew',
+      body:'Not rain, just heavy dew, and it sits in the dock until noon.',
+      type:'bug',severity:'medium',status:'new',area:'Rain & weather sensor',often:'Most runs',
+      reporter:T[0],createdAt:now-2*D,updatedAt:now-2*D,votes:['u2','u5']}),
+    mk({title:'Docking misses when the sun is low down the driveway',
+      body:'Late afternoon it noses in at an angle and gives up after three tries.',
+      type:'bug',severity:'high',status:'new',area:'Docking & charging',often:'Now and then',
+      ground:['Gravel or paving'],reporter:T[3],createdAt:now-3*D,updatedAt:now-3*D,votes:['u5','u4']}),
+    mk({title:'Wheel motors whine at 62 dB on slopes',
+      body:'Measured with a phone app at one metre. My neighbour noticed before I did.',
+      type:'bug',severity:'low',status:'new',area:'Noise & vibration',often:'Most runs',
+      ground:['Steep slope'],reporter:T[4],createdAt:now-1*D,updatedAt:now-1*D,votes:['u6']}),
+    mk({title:'Quick-start card shows the wrong blade screw direction',
+      body:'It says clockwise to loosen. It is the other way on this deck. Nearly stripped it.',
+      type:'question',severity:'medium',status:'fixed',area:'Manual, setup & packaging',
+      reporter:T[2],createdAt:now-19*D,updatedAt:now-7*D,votes:['u4','u3'],fixedIn:'app 3.8.0',
+      reply:'Corrected in the digital manual. Reprinted cards ship with the next batch.'}),
+    mk({title:'A “skip today” button on the phone widget',
+      body:'If it rained all night I want one tap to skip the day without opening the schedule.',
+      type:'feature',severity:'low',status:'triaged',area:'Wi-Fi, app & connection',stage:'planned',
+      reporter:T[4],createdAt:now-11*D,updatedAt:now-6*D,votes:['u6','u2','u3','u4','u5','u7']}),
+    mk({title:'Quiet hours per zone, not for the whole lawn',
+      body:'The zone by the bedroom window should never run before 10. The rest can start at 07.',
+      type:'feature',severity:'low',status:'new',area:'Mowing & navigation',stage:'reviewing',
+      reporter:T[5],createdAt:now-4*D,updatedAt:now-4*D,votes:['u7','u3','u6','u2']}),
+    mk({title:'Show cut height in millimetres instead of steps 1–9',
+      body:'Nobody knows what step 4 means. Give me millimetres.',
+      type:'feature',severity:'low',status:'new',area:'Wi-Fi, app & connection',stage:'requested',
+      reporter:T[1],createdAt:now-5*D,updatedAt:now-5*D,votes:['u3','u6','u4']})
   ];
   s.updates=[
     {id:uid(),version:'2.5.0',channel:'firmware',status:'beta',date:now+3*D,
@@ -370,497 +655,836 @@ function seed(){
      notes:'Corrected blade service instructions, faster pairing screen.',fixes:[s.reports[8].id]}
   ];
   s.notice={title:'Install firmware 2.4.1 before your next mow',
-    body:'It closes the child lock bypass in M9-003. Do not let the mower run unattended until you are on it.'};
+    body:'It closes the child lock bypass in M9-003. Please do not let the mower run unattended until you are on it.'};
+  s.activity=[
+    {id:uid(),text:'marked M9-003 fixed in 2.4.1',by:'Anthbot',at:now-4*D},
+    {id:uid(),text:'reported M9-008 Wheel motors whine on slopes',by:'Sara Lind',at:now-1*D},
+    {id:uid(),text:'said “same here” on M9-002',by:'Rune Kjær',at:now-1*D}
+  ];
   return s;
 }
 
-/* ---------------- router ---------------- */
+/* ---------------- navigation ---------------- */
+const NAV=[
+  {v:'home',    label:'Start here',    ic:'home'},
+  {v:'reports', label:'Problems',      ic:'bug',   count:()=>S.reports.filter(r=>!isWish(r)&&isOpen(r)).length,
+                hot:()=>S.reports.some(r=>r.severity==='critical'&&isOpen(r))},
+  {v:'wishes',  label:'Wishes',        ic:'wish',  count:()=>S.reports.filter(isWish).length},
+  {v:'updates', label:'Fixes shipped', ic:'update'},
+  {v:'testplan',label:'Things to try', ic:'check'},
+  {v:'you',     label:'My details',    ic:'user'},
+  {v:'admin',   label:'Anthbot admin', ic:'shield', admin:true}
+];
+function paintNav(){
+  $('#nav').innerHTML=NAV.filter(n=>!n.admin||isAdmin()).map(n=>{
+    const c=n.count?n.count():null;
+    return `<button class="navbtn" data-v="${n.v}" aria-current="${ui.view===n.v}">${ico(n.ic)}
+      <span>${n.label}</span>${c?`<span class="n ${n.hot&&n.hot()?'hot':''}">${c}</span>`:''}</button>`;}).join('');
+  $$('#nav .navbtn').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  $('#mobilebar').innerHTML=NAV.filter(n=>!n.admin||isAdmin()).slice(0,isAdmin()?6:5).map(n=>
+    `<button data-v="${n.v}" aria-current="${ui.view===n.v}">${ico(n.ic,20)}<span>${n.label.split(' ')[0]}</span></button>`).join('');
+  $$('#mobilebar button').forEach(b=>b.onclick=()=>go(b.dataset.v));
+  const p=S.profile;
+  $('#whoami').innerHTML=`${avatar(p.name||'?')}<div style="min-width:0">
+    <div class="nm">${esc(p.name||'Not signed in')}</div>
+    <div class="rl">${isAdmin()?'Anthbot staff':(p.serial?esc(p.serial):'Tap to add your details')}</div></div>`;
+}
 function go(v){
   ui.view=v;
-  $$('#tabs .tab').forEach(t=>t.setAttribute('aria-current',String(t.dataset.view===v)));
   $$('main > section').forEach(s=>s.hidden=true);
-  const el=$('#view-'+v); el.hidden=false;
-  ({reports:viewReports,updates:viewUpdates,you:viewYou,admin:viewAdmin}[v])(el);
-  location.hash=v;
+  const el=$('#v-'+v);if(!el)return go('home');
+  el.hidden=false;
+  ({home:vHome,reports:vReports,wishes:vWishes,updates:vUpdates,testplan:vPlan,you:vYou,admin:vAdmin}[v])(el);
+  paintNav();location.hash=v;window.scrollTo(0,0);
 }
-function refresh(){ $('#tabAdmin').hidden=!isAdmin(); go(ui.view); }
+const refresh=()=>go(ui.view);
 
-/* ---------------- reports ---------------- */
-function itemHTML(r){
+/* ---------------- HOME ---------------- */
+function vHome(el){
+  const R=S.reports.filter(r=>!isWish(r));
+  const open=R.filter(isOpen),crit=open.filter(r=>r.severity==='critical');
+  const toCheck=R.filter(r=>r.status==='fixed');
+  const wishes=S.reports.filter(isWish);
+  const myR=S.reports.filter(r=>r.reporter.id===S.profile.id);
+  const done=Object.values(S.checks).filter(Boolean).length;
+  const totalPlan=PLAN.reduce((a,g)=>a+g.items.length,0);
+  el.innerHTML=`
+  <div class="hero">
+    <div class="eyebrow">Closed beta · firmware ${esc(S.profile.firmware||'—')} · ${Object.keys(S.testers).length} testers</div>
+    <h1>${crit.length?`<em>${crit.length}</em> serious ${crit.length===1?'problem needs':'problems need'} attention`:`Nothing serious open right now. <em>Go break it.</em>`}</h1>
+    <p class="lede">This is where the test group collects everything the M9 Pro does wrong, does oddly, or does not do yet. If someone already reported your problem, press <strong>Same</strong> on it instead of writing it again — that is what tells Anthbot how many of us are affected.</p>
+    <div class="bignums">
+      <button class="bignum ${crit.length?'alert':'good'}" data-go="reports"><div class="n">${crit.length}</div><div class="l">Serious problems open</div></button>
+      <button class="bignum" data-go="reports"><div class="n">${open.length}</div><div class="l">Problems still open</div></button>
+      <button class="bignum" data-go="reports"><div class="n">${toCheck.length}</div><div class="l">Fixed — waiting for you to check</div></button>
+      <button class="bignum" data-go="wishes"><div class="n">${wishes.length}</div><div class="l">Wishes on the list</div></button>
+      <button class="bignum" data-go="testplan"><div class="n">${done}/${totalPlan}</div><div class="l">Test cases you have run</div></button>
+    </div>
+  </div>
+
+  ${S.notice?`<div class="notice" style="margin-top:20px"><div class="ic">${ico('alert',20)}</div>
+    <div><h3 style="font-size:16.5px;margin-bottom:5px">${esc(S.notice.title)}</h3>
+    <p class="lede" style="font-size:14px">${nl(S.notice.body)}</p></div></div>`:''}
+
+  <h2 class="h-sec" style="margin:34px 0 14px">What do you want to do?</h2>
+  <div class="doors">
+    <button class="door" data-new="bug"><div class="ic">${ico('bug',22)}</div>
+      <h3>Report a problem</h3><p>Four quick questions and you are done. Photos welcome.</p></button>
+    <button class="door b" data-new="feature"><div class="ic">${ico('wish',22)}</div>
+      <h3>Ask for a feature</h3><p>Something it should be able to do. Others can vote it up.</p></button>
+    <button class="door c" data-go="updates"><div class="ic">${ico('update',22)}</div>
+      <h3>See what got fixed</h3><p>Every firmware and app build, and which reports it closed.</p></button>
+    <button class="door d" data-go="testplan"><div class="ic">${ico('check',22)}</div>
+      <h3>Work through the test plan</h3><p>${totalPlan} things worth trying. Tick them off as you go.</p></button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:1.5fr 1fr;gap:20px;margin-top:34px;align-items:start" class="homegrid">
+    <div class="stack">
+      ${crit.length?`<div>
+        <div class="spread" style="margin-bottom:12px"><h2 class="h-sec">Needs attention now</h2>
+          <button class="btn sm ghost" data-go="reports">See all problems</button></div>
+        <div class="list">${crit.slice(0,3).map(row).join('')}</div></div>`:''}
+      ${toCheck.length?`<div>
+        <div class="spread" style="margin-bottom:6px"><h2 class="h-sec">Anthbot says these are fixed</h2></div>
+        <p class="muted tiny" style="margin:0 0 12px">Run the same thing again and tell them whether it worked.</p>
+        <div class="list">${toCheck.slice(0,3).map(row).join('')}</div></div>`:''}
+      <div>
+        <div class="spread" style="margin-bottom:6px"><h2 class="h-sec">Most testers affected</h2></div>
+        <p class="muted tiny" style="margin:0 0 12px">Votes counted, weighted by how serious it is.</p>
+        <div class="list">${open.slice().sort((a,b)=>impact(b)-impact(a)).slice(0,4).map(row).join('')}</div>
+      </div>
+    </div>
+    <div class="stack">
+      <div class="card pad">
+        <h2 class="h-sec">Your part</h2>
+        <div class="bars">
+          <div class="bar-row"><span class="muted">Reports filed</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${Math.min(100,myR.length*20)}%;background:var(--lime)"></span></span>
+            <span class="key" style="text-align:right">${myR.length}</span></div>
+          <div class="bar-row"><span class="muted">Test plan</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${done/totalPlan*100}%;background:linear-gradient(90deg,var(--teal),var(--lime))"></span></span>
+            <span class="key" style="text-align:right">${Math.round(done/totalPlan*100)}%</span></div>
+        </div>
+        ${!S.profile.name?`<p class="tiny" style="margin:14px 0 0;color:var(--amber)">Add your name and serial under My details so Anthbot can match your reports to your unit.</p>`:''}
+      </div>
+      <div class="card pad">
+        <h2 class="h-sec">Latest in the group</h2>
+        <div style="margin-top:12px;display:flex;flex-direction:column;gap:11px">
+          ${S.activity.slice(0,8).map(a=>`<div class="row" style="align-items:flex-start;font-size:13px">
+            ${avatar(a.by)}<span style="flex:1"><strong>${esc(a.by)}</strong> ${esc(a.text)}</span>
+            <span class="key" style="white-space:nowrap">${ago(a.at)}</span></div>`).join('')||'<p class="muted tiny">Nothing yet.</p>'}
+        </div>
+      </div>
+    </div>
+  </div>`;
+  wire(el);
+}
+
+/* ---------------- shared row ---------------- */
+function row(r){
   return `<article class="item ${r.pinned?'pinned':''} ${r.severity==='critical'&&isOpen(r)?'crit':''}" data-id="${r.id}" tabindex="0">
-    <button class="vote ${myVote(r)?'on':''}" data-vote="${r.id}" aria-pressed="${myVote(r)}" title="I have this too">
-      <span class="v">${r.votes.length}</span><span class="lbl">same</span></button>
+    <button class="vote ${mine(r)?'on':''}" data-vote="${r.id}" aria-pressed="${mine(r)}" title="I have this too">
+      <span class="v">${r.votes.length}</span><span class="lbl">${isWish(r)?'want':'same'}</span></button>
     <div style="min-width:0">
       <h3>${r.pinned?'📌 ':''}${esc(r.title)}</h3>
       <div class="meta">
         <span class="key">${esc(r.key)}</span>
-        ${chip(TYPES[r.type].cls,TYPES[r.type].label)}
-        ${r.type!=='feature'?chip(SEV[r.severity].cls,SEV[r.severity].label,true):''}
+        ${chip(TYPES[r.type].cls,TYPES[r.type].short)}
+        ${!isWish(r)?chip(SEV[r.severity].cls,SEV[r.severity].label,true):''}
         ${chip(ST[r.status].cls,ST[r.status].label)}
         ${r.fixedIn?`<span class="tagpill">in ${esc(r.fixedIn)}</span>`:''}
-        <span class="muted tiny">${esc(r.area)}</span>
       </div>
     </div>
     <div class="right">
-      <span class="muted tiny">${esc(r.reporter.name)}</span>
-      <span class="muted tiny">${ago(r.createdAt)}${r.comments.length?' · 💬 '+r.comments.length:''}</span>
+      <span class="muted tiny">${esc(r.area)}</span>
+      <span class="muted tiny">${esc(r.reporter.name)} · ${ago(r.createdAt)}</span>
+      ${r.comments.length?`<span class="muted tiny">${r.comments.length} ${r.comments.length===1?'reply':'replies'}</span>`:''}
     </div></article>`;
-}
-function listFiltered(){
-  let l=S.reports.slice();
-  const q=ui.q.toLowerCase().trim();
-  if(q)l=l.filter(r=>(r.title+' '+r.body+' '+r.key+' '+r.area+' '+r.reporter.name).toLowerCase().includes(q));
-  if(ui.fStatus==='__open')l=l.filter(isOpen); else if(ui.fStatus==='__closed')l=l.filter(r=>!isOpen(r));
-  else if(ui.fStatus)l=l.filter(r=>r.status===ui.fStatus);
-  if(ui.fType)l=l.filter(r=>r.type===ui.fType);
-  const s={votes:(a,b)=>score(b)-score(a),new:(a,b)=>b.createdAt-a.createdAt,
-    activity:(a,b)=>b.updatedAt-a.updatedAt,mine:(a,b)=>b.createdAt-a.createdAt}[ui.sort];
-  l.sort(s); l.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
-  return l;
-}
-function viewReports(el){
-  const open=S.reports.filter(isOpen), crit=open.filter(r=>r.severity==='critical');
-  const waiting=S.reports.filter(r=>r.status==='fixed');
-  const mine=S.reports.filter(r=>r.reporter.id===S.profile.id);
-  const list=listFiltered();
-  el.innerHTML=`
-  <div class="hero">
-    <div class="eyebrow">Closed beta · firmware ${esc(S.profile.firmware)}</div>
-    <h2>${crit.length?`<em>${crit.length}</em> critical ${crit.length===1?'issue is':'issues are'} still open`:`Nothing critical open. <em>Keep breaking it.</em>`}</h2>
-    <p class="muted" style="margin:0;max-width:58ch">Anything odd, annoying, dangerous or missing goes in here. If someone already reported it, hit <strong>same</strong> instead of writing it again.</p>
-    <div class="stats">
-      <div class="stat ${crit.length?'alert':''}"><div class="n">${crit.length}</div><div class="l">Critical open</div></div>
-      <div class="stat"><div class="n">${open.length}</div><div class="l">Open reports</div></div>
-      <div class="stat"><div class="n">${waiting.length}</div><div class="l">Fixed — please verify</div></div>
-      <div class="stat"><div class="n">${mine.length}</div><div class="l">Filed by you</div></div>
-    </div>
-  </div>
-  ${S.notice?`<div class="card pad" style="border-color:rgba(180,240,74,.35);background:linear-gradient(100deg,rgba(180,240,74,.08),transparent);margin-bottom:16px">
-    <div class="eyebrow">From Anthbot</div><h2 class="sec" style="margin:6px 0">${esc(S.notice.title)}</h2>
-    <p class="muted" style="margin:0">${nl(S.notice.body)}</p></div>`:''}
-  <div class="toolbar">
-    <div class="search"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
-      <input type="text" id="q" placeholder="Search reports" value="${esc(ui.q)}"></div>
-    <select id="fStatus">
-      <option value="">Any status</option><option value="__open" ${ui.fStatus==='__open'?'selected':''}>Open only</option>
-      <option value="__closed" ${ui.fStatus==='__closed'?'selected':''}>Closed only</option>
-      ${Object.entries(ST).map(([k,v])=>`<option value="${k}" ${ui.fStatus===k?'selected':''}>${v.label}</option>`).join('')}</select>
-    <select id="flType"><option value="">Any kind</option>
-      ${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${ui.fType===k?'selected':''}>${v.label}</option>`).join('')}</select>
-    <select id="sort">
-      <option value="votes" ${ui.sort==='votes'?'selected':''}>Most affected</option>
-      <option value="new" ${ui.sort==='new'?'selected':''}>Newest</option>
-      <option value="activity" ${ui.sort==='activity'?'selected':''}>Last activity</option></select>
-  </div>
-  <div class="list">${list.map(itemHTML).join('')||`<div class="empty"><div class="big">Nothing here yet</div>File the thing you were about to search for.</div>`}</div>`;
-  $('#q').oninput=e=>{ui.q=e.target.value;const l=listFiltered();
-    $('.list',el).innerHTML=l.map(itemHTML).join('')||`<div class="empty"><div class="big">Nothing matches</div>Try fewer filters.</div>`;wire(el);};
-  $('#fStatus').onchange=e=>{ui.fStatus=e.target.value;viewReports(el);};
-  $('#flType').onchange=e=>{ui.fType=e.target.value;viewReports(el);};
-  $('#sort').onchange=e=>{ui.sort=e.target.value;viewReports(el);};
-  wire(el);
 }
 function wire(root){
   $$('.item',root).forEach(n=>{
-    n.onclick=e=>{if(!e.target.closest('[data-vote]'))openReport(n.dataset.id);};
-    n.onkeydown=e=>{if(e.key==='Enter')openReport(n.dataset.id);};
+    n.onclick=e=>{if(!e.target.closest('[data-vote]'))openReport(n.dataset.id)};
+    n.onkeydown=e=>{if(e.key==='Enter')openReport(n.dataset.id)};
   });
-  $$('[data-vote]',root).forEach(b=>b.onclick=e=>{e.stopPropagation();vote(b.dataset.vote);});
+  $$('[data-vote]',root).forEach(b=>b.onclick=e=>{e.stopPropagation();vote(b.dataset.vote)});
+  $$('[data-go]',root).forEach(b=>b.onclick=()=>go(b.dataset.go));
+  $$('[data-new]',root).forEach(b=>b.onclick=()=>wizard(b.dataset.new));
 }
 async function vote(id){
   const r=byId(id);if(!r)return;
   const i=r.votes.indexOf(S.profile.id);
-  if(i>=0)r.votes.splice(i,1);else{r.votes.push(S.profile.id);toast(r.key+' now has '+r.votes.length+' testers on it');}
+  if(i>=0)r.votes.splice(i,1);
+  else{r.votes.push(S.profile.id);log('said “same here” on '+r.key);
+       toast(r.votes.length+' testers now have '+r.key);}
   r.updatedAt=Date.now();await persist();
-  if(ui.openId===id)openReport(id);
-  go(ui.view);
+  if(ui.open===id)openReport(id);
+  refresh();
 }
 
-/* ---------------- report detail ---------------- */
+/* ---------------- PROBLEMS ---------------- */
+function listOf(wishes){
+  let l=S.reports.filter(r=>isWish(r)===wishes);
+  const q=ui.q.toLowerCase().trim();
+  if(q)l=l.filter(r=>(r.title+' '+r.body+' '+r.key+' '+r.area+' '+r.reporter.name).toLowerCase().includes(q));
+  if(ui.fStatus==='__open')l=l.filter(isOpen);
+  else if(ui.fStatus==='__closed')l=l.filter(r=>!isOpen(r));
+  else if(ui.fStatus==='__mine')l=l.filter(r=>r.reporter.id===S.profile.id);
+  else if(ui.fStatus==='__voted')l=l.filter(mine);
+  else if(ui.fStatus)l=l.filter(r=>r.status===ui.fStatus);
+  if(ui.fType)l=l.filter(r=>r.type===ui.fType);
+  if(ui.fArea)l=l.filter(r=>r.area===ui.fArea);
+  const s={impact:(a,b)=>impact(b)-impact(a),votes:(a,b)=>b.votes.length-a.votes.length,
+    new:(a,b)=>b.createdAt-a.createdAt,activity:(a,b)=>b.updatedAt-a.updatedAt}[ui.sort];
+  l.sort(s);l.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  return l;
+}
+function vReports(el){
+  const l=listOf(false);
+  const quick=[['','Everything'],['__open','Still open'],['fixed','Fixed, needs checking'],['__mine','Mine'],['__voted','I voted on']];
+  el.innerHTML=`
+  <div class="pagehead">
+    <div class="eyebrow">Problems</div>
+    <h1 class="h-page">Everything that has gone wrong</h1>
+    <p class="lede">Press <strong>Same</strong> on the left of a report if it happens to you too. Click anywhere else on it to read the details and add what you saw.</p>
+  </div>
+  <div class="toolbar">
+    <div class="search">${ico('search',16)}<input type="text" id="q" placeholder="Search problems" value="${esc(ui.q)}"></div>
+    <select id="fArea"><option value="">Any part of the mower</option>
+      ${AREAS.map(a=>`<option ${ui.fArea===a.n?'selected':''}>${a.n}</option>`).join('')}</select>
+    <select id="sort">
+      <option value="impact" ${ui.sort==='impact'?'selected':''}>Most important first</option>
+      <option value="new" ${ui.sort==='new'?'selected':''}>Newest first</option>
+      <option value="activity" ${ui.sort==='activity'?'selected':''}>Recently active</option>
+      <option value="votes" ${ui.sort==='votes'?'selected':''}>Most testers affected</option></select>
+  </div>
+  <div class="quickfilters">${quick.map(([v,t])=>
+    `<button class="qf" data-qf="${v}" aria-pressed="${ui.fStatus===v}">${t}</button>`).join('')}</div>
+  <div class="list">${l.map(row).join('')||`<div class="empty"><div class="big">Nothing here</div>
+    <p class="muted">Either nobody has hit this yet, or your filters are too narrow.</p>
+    <button class="btn primary" style="margin-top:14px" data-new="bug">Report a problem</button></div>`}</div>`;
+  $('#q').oninput=e=>{ui.q=e.target.value;const n=listOf(false);
+    $('.list',el).innerHTML=n.map(row).join('')||'<div class="empty"><div class="big">Nothing matches that</div></div>';wire(el)};
+  $('#fArea').onchange=e=>{ui.fArea=e.target.value;vReports(el)};
+  $('#sort').onchange=e=>{ui.sort=e.target.value;vReports(el)};
+  $$('[data-qf]',el).forEach(b=>b.onclick=()=>{ui.fStatus=b.dataset.qf;vReports(el)});
+  wire(el);
+}
+
+/* ---------------- WISHES ---------------- */
+function vWishes(el){
+  const w=S.reports.filter(isWish);
+  const ranked=[...w].sort((a,b)=>b.votes.length-a.votes.length);
+  el.innerHTML=`
+  <div class="pagehead">
+    <div class="eyebrow">Wishes</div>
+    <h1 class="h-page">What we want it to do next</h1>
+    <p class="lede">Nothing is broken here — these are things the group wants added. Vote for the ones you would use. Anthbot works down from the top.</p>
+  </div>
+  <div class="spread" style="margin-bottom:16px">
+    <h2 class="h-sec">Ranked by votes</h2>
+    <button class="btn primary" data-new="feature">Add a wish</button>
+  </div>
+  <div class="list">${ranked.map((r,i)=>row(r).replace('<h3>','<h3><span class="rank">#'+(i+1)+'</span>')).join('')
+    ||'<div class="empty"><div class="big">No wishes yet</div><p class="muted">Ask for the thing you keep wishing it did.</p></div>'}</div>
+  <h2 class="h-sec" style="margin:34px 0 6px">Where each wish stands</h2>
+  <p class="muted tiny" style="margin:0 0 14px">${isAdmin()?'Drag a card between columns to move it.':'Anthbot moves these as they work through them.'}</p>
+  <div class="board">${Object.entries(STAGES).map(([k,label])=>{
+    const list=w.filter(r=>(r.stage||'requested')===k).sort((a,b)=>b.votes.length-a.votes.length);
+    return `<div class="col" data-stage="${k}"><h3>${label}<span class="n">${list.length}</span></h3>
+      ${list.map(r=>`<div class="mini" data-id="${r.id}" ${isAdmin()?'draggable="true"':''}>
+        <div class="t">${esc(r.title)}</div>
+        <div class="row"><span class="key">${esc(r.key)}</span>
+          <span class="chip t-feature" style="margin-left:auto">▲ ${r.votes.length}</span></div></div>`).join('')}
+    </div>`}).join('')}</div>`;
+  wire(el);
+  $$('.mini',el).forEach(m=>{
+    m.onclick=()=>openReport(m.dataset.id);
+    m.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',m.dataset.id));
+  });
+  $$('.col',el).forEach(c=>{
+    c.addEventListener('dragover',e=>{if(!isAdmin())return;e.preventDefault();c.classList.add('over')});
+    c.addEventListener('dragleave',()=>c.classList.remove('over'));
+    c.addEventListener('drop',async e=>{e.preventDefault();c.classList.remove('over');
+      if(!isAdmin())return;
+      const r=byId(e.dataTransfer.getData('text/plain'));if(!r)return;
+      r.stage=c.dataset.stage;r.updatedAt=Date.now();
+      r.history.push({at:Date.now(),text:'Moved to “'+STAGES[r.stage]+'”',by:'Anthbot'});
+      await persist();vWishes(el);toast(r.key+' → '+STAGES[r.stage]);});
+  });
+}
+
+/* ---------------- REPORT DETAIL ---------------- */
 function openReport(id){
   const r=byId(id);if(!r)return;
-  ui.openId=id;
-  const admin=isAdmin();
-  $('#pHead').innerHTML=`<div style="min-width:0">
-    <div class="row" style="gap:7px;margin-bottom:7px;flex-wrap:wrap">
-      <span class="key">${esc(r.key)}</span>${chip(TYPES[r.type].cls,TYPES[r.type].label)}
-      ${r.type!=='feature'?chip(SEV[r.severity].cls,SEV[r.severity].label,true):''}${chip(ST[r.status].cls,ST[r.status].label)}</div>
-    <h2 class="sec" style="font-size:19px;line-height:1.25">${esc(r.title)}</h2>
-    <div class="muted tiny" style="margin-top:6px">${esc(r.reporter.name)} · ${fdate(r.createdAt)}</div>
+  ui.open=id;const admin=isAdmin();const at=ST[r.status].step;
+  const upd=S.updates.find(u=>u.fixes.includes(r.id));
+  $('#pHead').innerHTML=`<div style="min-width:0;flex:1">
+    <div class="row" style="gap:8px;margin-bottom:9px;flex-wrap:wrap">
+      <span class="key">${esc(r.key)}</span>${chip(TYPES[r.type].cls,TYPES[r.type].short)}
+      ${!isWish(r)?chip(SEV[r.severity].cls,SEV[r.severity].label,true):''}
+      ${chip(ST[r.status].cls,ST[r.status].label)}${r.priority?`<span class="tagpill">${esc(r.priority)}</span>`:''}</div>
+    <h2 style="font-size:21px;font-weight:600;line-height:1.25">${esc(r.title)}</h2>
+    <p class="muted tiny" style="margin:8px 0 0">Reported by ${esc(r.reporter.name)} · ${fdate(r.createdAt)}</p>
   </div><button class="close-x" id="pClose" aria-label="Close">×</button>`;
 
   $('#pBody').innerHTML=`
-    ${r.reply?`<div class="block" style="border-color:rgba(55,214,168,.4);background:rgba(55,214,168,.07)">
-      <h4>Anthbot says</h4><p class="pre">${nl(r.reply)}</p>
-      ${r.fixedIn?`<div style="margin-top:9px">${chip('st-fixed','Fixed in '+r.fixedIn)}</div>`:''}</div>`:''}
+    ${!isWish(r)?`<div class="block"><h4>Where it is in the queue</h4>
+      <div class="track">${TRACK.map((t,i)=>
+        `<div class="s ${i<at?'done':''} ${i===at?'at':''}">${t}</div>`).join('')}</div></div>`:''}
+
+    ${r.reply?`<div class="block" style="border-color:rgba(56,220,172,.4);background:rgba(56,220,172,.08)">
+      <h4>Anthbot's answer</h4><p class="pre">${nl(r.reply)}</p>
+      ${r.fixedIn?`<div style="margin-top:11px">${chip('st-fixed','Fixed in '+r.fixedIn)}
+        ${upd?`<span class="muted tiny"> — released ${new Date(upd.date).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span>`:''}</div>`:''}</div>`:''}
+
     ${r.body?`<div class="block"><h4>What happened</h4><p class="pre">${nl(r.body)}</p></div>`:''}
-    ${r.steps?`<div class="block"><h4>How to trigger it</h4><p class="pre">${nl(r.steps)}</p></div>`:''}
+    ${r.steps?`<div class="block"><h4>How to make it happen again</h4><p class="pre">${nl(r.steps)}</p></div>`:''}
     ${r.files.length?`<div class="block"><h4>Photos</h4><div class="thumbs">${r.files.map(f=>`<img src="${f.data}" alt="${esc(f.name)}">`).join('')}</div></div>`:''}
-    <div class="block"><h4>Details</h4><dl class="kv">
-      <dt>Area</dt><dd>${esc(r.area)}</dd>
+
+    <div class="block"><h4>The details</h4><dl class="kv">
+      <dt>Part of the mower</dt><dd>${esc(r.area)}</dd>
+      <dt>How often</dt><dd>${esc(r.often||'—')}</dd>
+      ${r.ground.length?`<dt>Ground</dt><dd>${esc(r.ground.join(', '))}</dd>`:''}
       <dt>Firmware</dt><dd class="key">${esc(r.reporter.firmware||'—')}</dd>
-      <dt>App</dt><dd class="key">${esc(r.reporter.app||'—')}</dd>
-      ${admin?`<dt>Serial</dt><dd class="key">${esc(r.reporter.serial||'—')}</dd>
-      <dt>Email</dt><dd class="key">${esc(r.reporter.email||'—')}</dd>
-      <dt>Region</dt><dd>${esc(r.reporter.region||'—')}</dd>
-      <dt>Lawn</dt><dd>${esc(r.reporter.lawn||'—')} m²</dd>`:''}
+      <dt>App version</dt><dd class="key">${esc(r.reporter.app||'—')}</dd>
+      ${admin?`<dt>Unit serial</dt><dd class="key">${esc(r.reporter.serial||'—')}</dd>
+        <dt>Email</dt><dd class="key">${esc(r.reporter.email||'—')}</dd>
+        <dt>Country</dt><dd>${esc(r.reporter.region||'—')}</dd>
+        <dt>Lawn size</dt><dd>${esc(r.reporter.lawn||'—')} m²</dd>`:''}
     </dl></div>
 
-    ${admin?`<div class="staffbox"><div class="eyebrow" style="color:var(--teal)">Anthbot controls</div>
-      <div class="grid2" style="margin-top:12px">
-        <label class="f"><span>Status</span><select id="aStatus">${Object.entries(ST).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v.label}</option>`).join('')}</select></label>
-        <label class="f"><span>Fixed in update</span><input type="text" id="aFixed" value="${esc(r.fixedIn)}" placeholder="2.5.0"></label>
+    ${admin?`<div class="staffbox"><div class="eyebrow" style="color:var(--teal)">Anthbot controls — testers cannot see this box</div>
+      <div class="grid2" style="margin-top:16px">
+        <label class="f"><span>Status</span><select id="aStatus">${Object.entries(ST).map(([k,v])=>
+          `<option value="${k}" ${r.status===k?'selected':''}>${v.label}</option>`).join('')}</select></label>
+        <label class="f"><span>Priority</span><select id="aPrio"><option value="">Not set</option>
+          ${Object.entries(PRIO).map(([k,v])=>`<option value="${k}" ${r.priority===k?'selected':''}>${v}</option>`).join('')}</select></label>
+        <label class="f"><span>Who owns it</span><input type="text" id="aOwner" value="${esc(r.owner)}" placeholder="Firmware team"></label>
+        <label class="f"><span>Fixed in build</span><input type="text" id="aFixed" value="${esc(r.fixedIn)}" placeholder="2.5.0"></label>
       </div>
-      <label class="f"><span>Reply to the group <span class="hint">— shown at the top of this report</span></span>
+      <label class="f"><span>Answer the group <span class="hint">— shown at the top of this report for everyone</span></span>
         <textarea id="aReply" placeholder="What you found, what changed, what you need from testers.">${esc(r.reply)}</textarea></label>
+      <label class="f"><span>Internal note <span class="hint">— Anthbot only</span></span>
+        <textarea class="internal" id="aInternal" style="min-height:72px">${esc(r.internal)}</textarea></label>
       <div class="row" style="flex-wrap:wrap">
-        <button class="btn primary sm" id="aSave">Save</button>
-        <label class="switch"><input type="checkbox" id="aPin" ${r.pinned?'checked':''}> Pin to top</label>
+        <button class="btn primary" id="aSave">Save changes</button>
+        <label class="switch"><input type="checkbox" id="aPin" ${r.pinned?'checked':''}> Pin to the top</label>
       </div></div>`:''}
+
+    <div class="block"><h4>What happened next</h4>
+      <ul class="timeline">${(r.history.length?r.history:[{at:r.createdAt,text:'Reported',by:r.reporter.name}])
+        .slice().reverse().map(h=>`<li><strong>${esc(h.text)}</strong>
+          <div class="muted tiny">${esc(h.by)} · ${fdate(h.at)}</div></li>`).join('')}</ul></div>
 
     <div class="block"><h4>Replies (${r.comments.length})</h4>
       ${r.comments.map(c=>`<div class="comment">${avatar(c.by)}<div style="flex:1;min-width:0">
-        <div style="font-weight:600;font-size:13px">${esc(c.by)}${c.role==='admin'?'<span class="badge-staff">Anthbot</span>':''}
-          <span class="muted tiny" style="font-weight:400"> · ${ago(c.at)}</span></div>
-        <p class="pre" style="margin-top:4px">${nl(c.text)}</p></div></div>`).join('')
-        ||'<p class="muted tiny">No replies yet. Even “happens to me too, on flat ground” helps.</p>'}
-      <textarea id="cText" placeholder="Add what you saw or a workaround" style="margin-top:12px"></textarea>
-      <button class="btn primary sm" id="cAdd" style="margin-top:8px">Post reply</button>
+        <div style="font-weight:600;font-size:13.5px">${esc(c.by)}${c.role==='admin'?'<span class="badge-staff">Anthbot</span>':''}
+        <span class="muted tiny" style="font-weight:400"> · ${ago(c.at)}</span></div>
+        <p class="pre" style="margin-top:5px">${nl(c.text)}</p></div></div>`).join('')
+        ||'<p class="muted tiny">No replies yet. Even “happens to me too, on flat ground” is useful.</p>'}
+      <textarea id="cText" placeholder="Add what you saw, or a workaround you found" style="margin-top:14px"></textarea>
+      <button class="btn primary sm" id="cAdd" style="margin-top:10px">Post reply</button>
     </div>`;
 
   $('#pFoot').innerHTML=`
-    <button class="btn ${myVote(r)?'primary':''}" id="vBtn">${myVote(r)?'✓ You have this too':'I have this too'} · ${r.votes.length}</button>
-    ${r.status==='fixed'?`<button class="btn" id="okBtn">It's fixed for me</button><button class="btn danger" id="badBtn">Still broken</button>`:''}
-    ${(r.reporter.id===S.profile.id||admin)?`<button class="btn ghost sm danger" id="delBtn">Delete</button>`:''}`;
+    <button class="btn ${mine(r)?'primary':''}" id="vBtn">${mine(r)?'✓ You have this too':(isWish(r)?'I want this too':'Same happens to me')} · ${r.votes.length}</button>
+    ${r.status==='fixed'?`<button class="btn" id="okBtn">It works now</button>
+      <button class="btn danger" id="badBtn">Still broken</button>`:''}
+    ${(r.reporter.id===S.profile.id||admin)?`<button class="btn ghost sm danger" id="delBtn" style="margin-left:auto">Delete</button>`:''}`;
 
-  open_();
-  $('#pClose').onclick=closeAll;
+  openPanel();
+  $('#pClose').onclick=closePanel;
   $('#vBtn').onclick=()=>vote(r.id);
-  $$('#pBody img').forEach(i=>i.onclick=()=>{$('#lightboxImg').src=i.src;$('#lightbox').classList.add('open');});
-  if($('#okBtn'))$('#okBtn').onclick=async()=>{r.status='verified';r.updatedAt=Date.now();await persist();openReport(id);go(ui.view);toast('Marked verified — thank you');};
-  if($('#badBtn'))$('#badBtn').onclick=async()=>{r.status='looking';r.updatedAt=Date.now();
-    r.comments.push({id:uid(),by:S.profile.name||'A tester',role:'tester',text:'Still happening after the fix.',at:Date.now()});
-    await persist();openReport(id);go(ui.view);toast('Reopened — Anthbot will see it');};
-  if($('#delBtn'))$('#delBtn').onclick=async()=>{if(!confirm('Delete '+r.key+'?'))return;
-    S.reports=S.reports.filter(x=>x.id!==r.id);await persist();closeAll();go(ui.view);toast(r.key+' deleted');};
-  $('#cAdd').onclick=async()=>{
-    const t=$('#cText').value.trim();if(!t)return;
-    r.comments.push({id:uid(),by:S.profile.name||'A tester',role:S.profile.role,text:t,at:Date.now()});
-    r.updatedAt=Date.now();await persist();openReport(id);toast('Reply posted');};
+  $$('#pBody .thumbs img').forEach(i=>i.onclick=()=>{$('#lightboxImg').src=i.src;$('#lightbox').classList.add('open')});
+  if($('#okBtn'))$('#okBtn').onclick=async()=>{r.status='verified';r.updatedAt=Date.now();
+    r.history.push({at:Date.now(),text:'Confirmed fixed by a tester',by:S.profile.name||'A tester'});
+    log('confirmed '+r.key+' is fixed');await persist();openReport(id);refresh();toast('Thank you — marked as confirmed')};
+  if($('#badBtn'))$('#badBtn').onclick=async()=>{r.status='confirmed';r.updatedAt=Date.now();
+    r.history.push({at:Date.now(),text:'Reopened — still happening after the fix',by:S.profile.name||'A tester'});
+    r.comments.push({id:uid(),by:S.profile.name||'A tester',role:'tester',at:Date.now(),text:'Still happening after the fix.'});
+    await persist();openReport(id);refresh();toast('Reopened — Anthbot will see it')};
+  if($('#delBtn'))$('#delBtn').onclick=async()=>{if(!confirm('Delete '+r.key+'? This cannot be undone.'))return;
+    S.reports=S.reports.filter(x=>x.id!==r.id);await persist();closePanel();refresh();toast(r.key+' deleted')};
+  $('#cAdd').onclick=async()=>{const t=$('#cText').value.trim();if(!t)return;
+    r.comments.push({id:uid(),by:S.profile.name||'A tester',role:S.profile.role,at:Date.now(),text:t});
+    r.updatedAt=Date.now();log('replied on '+r.key);await persist();openReport(id);toast('Reply posted')};
   if(admin)$('#aSave').onclick=async()=>{
-    r.status=$('#aStatus').value;r.fixedIn=$('#aFixed').value.trim();
-    r.reply=$('#aReply').value.trim();r.pinned=$('#aPin').checked;r.updatedAt=Date.now();
-    await persist();openReport(id);go(ui.view);toast(r.key+' updated');};
+    const was=r.status;r.status=$('#aStatus').value;
+    r.priority=$('#aPrio').value;r.owner=$('#aOwner').value.trim();r.fixedIn=$('#aFixed').value.trim();
+    r.reply=$('#aReply').value.trim();r.internal=$('#aInternal').value.trim();r.pinned=$('#aPin').checked;
+    r.history.push({at:Date.now(),text:was!==r.status?ST[r.status].label:'Updated by Anthbot',by:'Anthbot'});
+    r.updatedAt=Date.now();log('updated '+r.key);await persist();openReport(id);refresh();toast(r.key+' updated')};
 }
 
-/* ---------------- new report ---------------- */
-function openForm(){
+/* ---------------- REPORT WIZARD ---------------- */
+function wizard(type){
+  ui.wiz={step:0,type:type||'',severity:'',area:'',often:'Now and then',ground:[],title:'',body:'',steps:''};
   ui.files=[];
-  $('#pHead').innerHTML=`<div><div class="eyebrow">New report</div>
-    <h2 class="sec" style="margin-top:6px">Tell Anthbot what you found</h2></div>
+  if(type)ui.wiz.step=type==='feature'||type==='question'?2:1;
+  drawWiz();openPanel();
+}
+function drawWiz(){
+  const w=ui.wiz;
+  const total=4;
+  const stepIndex=Math.min(w.step,3);
+  $('#pHead').innerHTML=`<div style="flex:1">
+    <div class="eyebrow">New report · step ${stepIndex+1} of ${total}</div>
+    <h2 style="font-size:20px;font-weight:600;margin-top:6px">Tell Anthbot what you found</h2></div>
     <button class="close-x" id="pClose" aria-label="Close">×</button>`;
-  $('#pBody').innerHTML=`
-    <div id="dup"></div>
-    <label class="f"><span>In one line, what happened?</span>
-      <input type="text" id="fTitle" maxlength="110" placeholder="Blade stops in wet grass after 20 minutes"></label>
-    <div class="grid2">
-      <label class="f"><span>What kind of report</span><select id="fType">
-        ${Object.entries(TYPES).map(([k,v])=>`<option value="${k}">${v.label}</option>`).join('')}</select></label>
-      <label class="f"><span>How bad is it</span><select id="fSev">
-        ${Object.entries(SEV).map(([k,v])=>`<option value="${k}" ${k==='major'?'selected':''}>${v.label}</option>`).join('')}</select></label>
-    </div>
-    <p class="muted tiny" id="sevHelp" style="margin:-8px 0 14px"></p>
-    <label class="f"><span>Which part of the mower</span><select id="fArea">${AREAS.map(a=>`<option>${a}</option>`).join('')}</select></label>
-    <label class="f"><span>Describe it <span class="hint">— where you were, what you saw or heard</span></span>
-      <textarea id="fBody" placeholder="Plain words are fine."></textarea></label>
-    <label class="f"><span>How can Anthbot trigger it? <span class="hint">— optional, but it speeds up a fix a lot</span></span>
-      <textarea id="fSteps" style="min-height:70px" placeholder="1. Start zone 2&#10;2. Wait for the north turn"></textarea></label>
-    <label class="f"><span>Photos <span class="hint">— optional, under 1.5 MB each</span></span>
-      <input type="file" id="fFiles" accept="image/*" multiple></label>
-    <div class="thumbs" id="fThumbs"></div>
-    <p class="muted tiny">Filed as <strong>${esc(S.profile.name||'Unnamed tester')}</strong>${S.profile.serial?' · unit '+esc(S.profile.serial):''} · firmware ${esc(S.profile.firmware||'—')}. Anthbot sees your name, email and serial with every report. Change it under <strong>You</strong>.</p>`;
-  $('#pFoot').innerHTML=`<button class="btn ghost" id="fCancel">Cancel</button><button class="btn primary" id="fSave">Send report</button>`;
-  open_();
-  const help=()=>$('#sevHelp').textContent=SEV[$('#fSev').value].help;
-  help();$('#fSev').onchange=help;
-  $('#fType').onchange=()=>{if($('#fType').value==='safety'){$('#fSev').value='critical';help();}};
-  $('#pClose').onclick=$('#fCancel').onclick=closeAll;
-  const draw=()=>$('#fThumbs').innerHTML=ui.files.map((f,i)=>`<img src="${f.data}" title="Click to remove" data-rm="${i}">`).join('');
-  $('#fThumbs').onclick=e=>{const i=e.target.dataset.rm;if(i!=null){ui.files.splice(+i,1);draw();}};
-  $('#fFiles').onchange=async e=>{
-    for(const f of [...e.target.files].slice(0,4)){
-      if(f.size>1.6e6){toast(f.name+' is too big',true);continue;}
-      ui.files.push({name:f.name,data:await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f);})});
-    }
-    draw();e.target.value='';};
-  $('#fTitle').oninput=()=>{
-    const w=$('#fTitle').value.toLowerCase().split(/\s+/).filter(x=>x.length>3);
-    if(w.length<2){$('#dup').innerHTML='';return;}
-    const hits=S.reports.map(r=>({r,n:w.filter(x=>(r.title+' '+r.body).toLowerCase().includes(x)).length}))
-      .filter(h=>h.n>=2).sort((a,b)=>b.n-a.n).slice(0,3);
-    $('#dup').innerHTML=hits.length?`<div class="dupwarn"><strong>Someone may have this already</strong>
-      <div class="muted tiny" style="margin:2px 0 6px">Voting on an existing report counts for more than a second copy.</div>
-      ${hits.map(h=>`<div class="d" data-d="${h.r.id}">${esc(h.r.key)} — ${esc(h.r.title)} <span class="muted">· ${h.r.votes.length} testers</span></div>`).join('')}</div>`:'';
-    $$('[data-d]').forEach(d=>d.onclick=()=>openReport(d.dataset.d));};
-  $('#fSave').onclick=async()=>{
-    const title=$('#fTitle').value.trim();
-    if(!title){toast('One line about what happened, first',true);$('#fTitle').focus();return;}
-    S.counter++;
-    const r={id:uid(),key:'M9-'+String(S.counter).padStart(3,'0'),title,
-      body:$('#fBody').value.trim(),steps:$('#fSteps').value.trim(),
-      type:$('#fType').value,severity:$('#fSev').value,area:$('#fArea').value,
-      status:'new',votes:[S.profile.id],comments:[],files:ui.files.slice(),
-      reporter:reporterCard(),createdAt:Date.now(),updatedAt:Date.now(),
-      pinned:false,fixedIn:'',reply:''};
-    S.reports.unshift(r);syncTester();await persist();closeAll();go('reports');
-    toast(r.key+' sent — thank you');setTimeout(()=>openReport(r.id),250);};
-  setTimeout(()=>$('#fTitle').focus(),120);
+  let body='',foot='';
+  const steps=`<div class="steps">${[0,1,2,3].map(i=>`<span class="${i<=stepIndex?'on':''}"></span>`).join('')}</div>`;
+
+  if(w.step===0){
+    body=steps+`<div class="stepq">What kind of thing is it?</div>
+      <p class="stephelp">Pick the one that fits best. You can change it later.</p>
+      <div class="picks">${Object.entries(TYPES).map(([k,t])=>
+        `<button class="pick" data-type="${k}" aria-pressed="${w.type===k}">
+          <span class="ic ${t.cls}" style="border:0">${ico(t.ic,20)}</span>
+          <span><b>${t.label}</b><small>${t.help}</small></span></button>`).join('')}</div>`;
+  }
+  else if(w.step===1){
+    body=steps+`<div class="stepq">How bad is it?</div>
+      <p class="stephelp">Be honest — this is what decides whether Anthbot looks at it today or next month.</p>
+      <div class="picks two">${Object.entries(SEV).map(([k,s])=>
+        `<button class="pick" data-sev="${k}" aria-pressed="${w.severity===k}">
+          <span class="ic ${s.cls}" style="border:0">${ico(s.ic,20)}</span>
+          <span><b>${s.title}</b><small>${s.help}</small></span></button>`).join('')}</div>`;
+  }
+  else if(w.step===2){
+    body=steps+`<div class="stepq">Which part of the mower?</div>
+      <p class="stephelp">Roughly is fine. Pick “Something else” if nothing fits.</p>
+      <div class="picks three">${AREAS.map(a=>
+        `<button class="pick col" data-area="${esc(a.n)}" aria-pressed="${w.area===a.n}">
+          <span class="ic">${ico(a.ic,20)}</span><b>${esc(a.n)}</b></button>`).join('')}</div>`;
+  }
+  else{
+    body=steps+`<div class="stepq">Now describe it</div>
+      <p class="stephelp">Plain words are perfect. The first line is what everyone sees in the list.</p>
+      <div id="dup"></div>
+      <label class="f"><span>In one line, what happened?</span>
+        <input type="text" id="wTitle" maxlength="110" value="${esc(w.title)}" placeholder="The blade stops in wet grass after 20 minutes"></label>
+      <label class="f"><span>Tell the story <span class="hint">— where you were, what you saw or heard</span></span>
+        <textarea id="wBody" placeholder="I started zone 2 at nine in the morning. The grass was still damp...">${esc(w.body)}</textarea></label>
+      ${w.type!=='feature'?`
+      <label class="f"><span>How can Anthbot make it happen again? <span class="hint">— optional, but this is what gets it fixed fastest</span></span>
+        <textarea id="wSteps" style="min-height:78px" placeholder="1. Start zone 2&#10;2. Wait for the north turn&#10;3. Watch the front left wheel">${esc(w.steps)}</textarea></label>
+      <label class="f"><span>How often does it happen?</span>
+        <select id="wOften">${HOW_OFTEN.map(o=>`<option ${w.often===o?'selected':''}>${o}</option>`).join('')}</select></label>
+      <label class="f"><span>What was the ground like? <span class="hint">— tap any that apply</span></span>
+        <div class="wrap" id="wGround">${GROUND.map(g=>
+          `<button type="button" class="qf" data-g="${esc(g)}" aria-pressed="${w.ground.includes(g)}">${esc(g)}</button>`).join('')}</div></label>`:''}
+      <label class="f"><span>Photos <span class="hint">— optional, under 1.5 MB each</span></span>
+        <input type="file" id="wFiles" accept="image/*" multiple></label>
+      <div class="thumbs" id="wThumbs"></div>
+      <p class="muted tiny">Filed as <strong>${esc(S.profile.name||'Unnamed tester')}</strong>${S.profile.serial?' · unit '+esc(S.profile.serial):''} · firmware ${esc(S.profile.firmware||'—')}. Anthbot sees your name, email and serial with every report.</p>`;
+  }
+
+  foot=`${w.step>0?'<button class="btn ghost" id="wBack">Back</button>':'<button class="btn ghost" id="wCancel">Cancel</button>'}
+    ${w.step<3?`<button class="btn primary" id="wNext" style="margin-left:auto">Next</button>`
+              :`<button class="btn primary big" id="wSend" style="margin-left:auto">Send report</button>`}`;
+  $('#pBody').innerHTML=body;$('#pFoot').innerHTML=foot;
+  $('#pClose').onclick=closePanel;
+  if($('#wCancel'))$('#wCancel').onclick=closePanel;
+  if($('#wBack'))$('#wBack').onclick=()=>{w.step--;if(w.step===1&&(w.type==='feature'||w.type==='question'))w.step=0;drawWiz()};
+  const next=()=>{
+    if(w.step===0&&!w.type)return toast('Pick one first',true);
+    if(w.step===1&&!w.severity)return toast('Pick how bad it is',true);
+    if(w.step===2&&!w.area)return toast('Pick a part of the mower',true);
+    w.step++;
+    if(w.step===1&&(w.type==='feature'||w.type==='question')){w.severity='low';w.step=2;}
+    drawWiz();
+  };
+  if($('#wNext'))$('#wNext').onclick=next;
+  $$('[data-type]').forEach(b=>b.onclick=()=>{w.type=b.dataset.type;next()});
+  $$('[data-sev]').forEach(b=>b.onclick=()=>{w.severity=b.dataset.sev;next()});
+  $$('[data-area]').forEach(b=>b.onclick=()=>{w.area=b.dataset.area;next()});
+  $$('#wGround [data-g]').forEach(b=>b.onclick=()=>{
+    const g=b.dataset.g,i=w.ground.indexOf(g);
+    i>=0?w.ground.splice(i,1):w.ground.push(g);
+    b.setAttribute('aria-pressed',String(i<0));});
+  if(w.step===3){
+    const keep=()=>{w.title=$('#wTitle').value;w.body=$('#wBody').value;
+      if($('#wSteps'))w.steps=$('#wSteps').value;if($('#wOften'))w.often=$('#wOften').value;};
+    $('#wBody').oninput=keep;
+    const draw=()=>$('#wThumbs').innerHTML=ui.files.map((f,i)=>`<img src="${f.data}" title="Click to remove" data-rm="${i}">`).join('');
+    draw();
+    $('#wThumbs').onclick=e=>{const i=e.target.dataset.rm;if(i!=null){ui.files.splice(+i,1);draw()}};
+    $('#wFiles').onchange=async e=>{
+      for(const f of [...e.target.files].slice(0,4)){
+        if(f.size>1.6e6){toast(f.name+' is too big — under 1.5 MB please',true);continue}
+        ui.files.push({name:f.name,data:await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(f)})});
+      }draw();e.target.value=''};
+    $('#wTitle').oninput=()=>{keep();
+      const words=$('#wTitle').value.toLowerCase().split(/\s+/).filter(x=>x.length>3);
+      if(words.length<2){$('#dup').innerHTML='';return}
+      const hits=S.reports.map(r=>({r,n:words.filter(x=>(r.title+' '+r.body).toLowerCase().includes(x)).length}))
+        .filter(h=>h.n>=2).sort((a,b)=>b.n-a.n).slice(0,3);
+      $('#dup').innerHTML=hits.length?`<div class="dupwarn"><strong>Wait — someone may have this already</strong>
+        <p class="muted tiny" style="margin:3px 0 8px">Pressing “Same” on an existing report counts for far more than a second copy.</p>
+        ${hits.map(h=>`<div class="d" data-d="${h.r.id}">${esc(h.r.key)} — ${esc(h.r.title)}
+          <span class="muted">· ${h.r.votes.length} testers</span></div>`).join('')}</div>`:'';
+      $$('[data-d]').forEach(d=>d.onclick=()=>openReport(d.dataset.d))};
+    $('#wSend').onclick=async()=>{
+      keep();
+      if(!w.title.trim()){toast('One line about what happened, first',true);$('#wTitle').focus();return}
+      S.counter++;
+      const r={id:uid(),key:'M9-'+String(S.counter).padStart(3,'0'),title:w.title.trim(),body:w.body.trim(),
+        steps:w.steps.trim(),type:w.type,severity:w.severity||'low',area:w.area,often:w.often,ground:w.ground.slice(),
+        status:'new',votes:[S.profile.id],comments:[],files:ui.files.slice(),
+        history:[{at:Date.now(),text:'Reported',by:S.profile.name||'A tester'}],
+        reporter:card(),createdAt:Date.now(),updatedAt:Date.now(),
+        pinned:false,fixedIn:'',reply:'',internal:'',priority:'',owner:'',
+        stage:w.type==='feature'?'requested':''};
+      S.reports.unshift(r);syncTester();log('reported '+r.key+' '+r.title.slice(0,40));
+      await persist();closePanel();go(w.type==='feature'?'wishes':'reports');
+      toast(r.key+' sent — thank you');setTimeout(()=>openReport(r.id),260)};
+    setTimeout(()=>$('#wTitle').focus(),140);
+  }
 }
 
-/* ---------------- updates ---------------- */
-function viewUpdates(el){
-  const rels=[...S.updates].sort((a,b)=>b.date-a.date);
+/* ---------------- UPDATES ---------------- */
+function vUpdates(el){
+  const list=[...S.updates].sort((a,b)=>b.date-a.date);
   el.innerHTML=`
-    <div style="margin:22px 0 18px"><div class="eyebrow">Build log</div>
-      <h2 class="sec" style="margin-top:6px">What Anthbot has shipped</h2>
-      <p class="muted" style="margin:8px 0 0;max-width:60ch">When a report is fixed here, it turns up in Reports with a “Fixed in update” badge and a button for you to confirm it worked.</p></div>
-    ${rels.map(u=>{
-      const fx=u.fixes.map(byId).filter(Boolean);
-      return `<div class="rel ${u.status==='beta'?'beta':''}">
-        <div class="row" style="gap:9px;flex-wrap:wrap">
-          <span class="ver">${u.channel==='app'?'App ':'Firmware '}${esc(u.version)}</span>
-          ${chip(u.status==='released'?'st-fixed':'st-need-info',u.status==='released'?'Released':'Beta channel')}
-          <span class="muted tiny">${new Date(u.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span>
-          ${isAdmin()?`<button class="btn sm ghost" data-del="${u.id}">Remove</button>`:''}
-        </div>
-        <p class="pre muted" style="margin:8px 0 0">${nl(u.notes)}</p>
-        ${fx.length?`<ul class="fixlist">${fx.map(f=>`<li><span class="key">${esc(f.key)}</span>
-          <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.title)}</span>
-          ${chip(ST[f.status].cls,ST[f.status].label)}<button class="btn sm ghost" data-o="${f.id}">Open</button></li>`).join('')}</ul>`:''}
-      </div>`;}).join('')||'<div class="empty"><div class="big">No updates yet</div>Anthbot posts firmware and app releases here.</div>'}`;
+  <div class="pagehead"><div class="eyebrow">Fixes shipped</div>
+    <h1 class="h-page">What Anthbot has changed</h1>
+    <p class="lede">Every firmware and app build, and exactly which of our reports it closed. When one of yours turns up here, open it and tell them whether it actually worked.</p></div>
+  ${isAdmin()?'<button class="btn primary" id="newRel" style="margin-bottom:24px">Publish a build</button>':''}
+  ${list.map(u=>{const fx=u.fixes.map(byId).filter(Boolean);
+    return `<div class="rel ${u.status==='beta'?'beta':''}">
+      <div class="row" style="gap:10px;flex-wrap:wrap">
+        <span class="ver">${u.channel==='app'?'App ':'Firmware '}${esc(u.version)}</span>
+        ${chip(u.status==='released'?'st-fixed':'st-need-info',u.status==='released'?'Out now':'Beta channel')}
+        <span class="muted tiny">${new Date(u.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span>
+        ${isAdmin()?`<button class="btn sm ghost" data-del="${u.id}">Remove</button>`:''}</div>
+      <p class="pre muted" style="margin:10px 0 0;max-width:64ch">${nl(u.notes)}</p>
+      ${fx.length?`<ul class="fixlist">${fx.map(f=>`<li><span class="key">${esc(f.key)}</span>
+        <span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.title)}</span>
+        ${chip(ST[f.status].cls,ST[f.status].label)}
+        <button class="btn sm ghost" data-o="${f.id}">Open</button></li>`).join('')}</ul>`
+        :'<p class="muted tiny" style="margin-top:10px">No reports linked to this build.</p>'}
+    </div>`}).join('')||'<div class="empty"><div class="big">No builds yet</div><p class="muted">Anthbot posts firmware and app releases here.</p></div>'}`;
   $$('[data-o]',el).forEach(b=>b.onclick=()=>openReport(b.dataset.o));
-  $$('[data-del]',el).forEach(b=>b.onclick=async()=>{if(!confirm('Remove this update?'))return;
-    S.updates=S.updates.filter(u=>u.id!==b.dataset.del);await persist();viewUpdates(el);});
+  $$('[data-del]',el).forEach(b=>b.onclick=async()=>{if(!confirm('Remove this build?'))return;
+    S.updates=S.updates.filter(u=>u.id!==b.dataset.del);await persist();vUpdates(el)});
+  if($('#newRel'))$('#newRel').onclick=relForm;
+}
+function relForm(){
+  const cands=S.reports.filter(isOpen);
+  $('#pHead').innerHTML=`<div style="flex:1"><div class="eyebrow">Anthbot</div>
+    <h2 style="font-size:20px;font-weight:600;margin-top:6px">Publish a build</h2></div>
+    <button class="close-x" id="pClose">×</button>`;
+  $('#pBody').innerHTML=`
+    <div class="grid2">
+      <label class="f"><span>Version</span><input type="text" id="uVer" placeholder="2.5.0"></label>
+      <label class="f"><span>Channel</span><select id="uCh"><option value="firmware">Firmware</option><option value="app">Mobile app</option></select></label>
+      <label class="f"><span>State</span><select id="uSt"><option value="beta">Beta channel</option><option value="released">Out now</option></select></label>
+      <label class="f"><span>Date</span><input type="date" id="uDate" value="${new Date().toISOString().slice(0,10)}"></label>
+    </div>
+    <label class="f"><span>Release notes</span><textarea id="uNotes" placeholder="What changed, and what testers should re-check."></textarea></label>
+    <label class="f"><span>Reports this build fixes <span class="hint">— each one flips to “Fixed — please check” and the reporter is asked to confirm</span></span>
+      <div style="max-height:280px;overflow:auto;border:1px solid var(--line);border-radius:var(--r-m);padding:12px">
+        ${cands.map(r=>`<label class="switch" style="display:flex;padding:6px 0"><input type="checkbox" class="ufix" value="${r.id}">
+          <span class="key">${esc(r.key)}</span><span style="flex:1">${esc(r.title)}</span></label>`).join('')||'<span class="muted tiny">Nothing open.</span>'}
+      </div></label>`;
+  $('#pFoot').innerHTML=`<button class="btn ghost" id="uCancel">Cancel</button>
+    <button class="btn primary" id="uSave" style="margin-left:auto">Publish</button>`;
+  openPanel();
+  $('#pClose').onclick=$('#uCancel').onclick=closePanel;
+  $('#uSave').onclick=async()=>{
+    const v=$('#uVer').value.trim();if(!v)return toast('Version number first',true);
+    const fixes=$$('.ufix:checked').map(c=>c.value);
+    S.updates.push({id:uid(),version:v,channel:$('#uCh').value,status:$('#uSt').value,
+      date:new Date($('#uDate').value).getTime()||Date.now(),notes:$('#uNotes').value.trim(),fixes});
+    fixes.forEach(id=>{const r=byId(id);if(!r)return;r.status='fixed';r.fixedIn=v;r.updatedAt=Date.now();
+      r.history.push({at:Date.now(),text:'Fixed in '+v,by:'Anthbot'})});
+    log('published build '+v);await persist();closePanel();go('updates');toast('Build '+v+' published')};
 }
 
-/* ---------------- you ---------------- */
-function viewYou(el){
+/* ---------------- TEST PLAN ---------------- */
+function vPlan(el){
+  const total=PLAN.reduce((a,g)=>a+g.items.length,0);
+  const done=Object.values(S.checks).filter(Boolean).length;
+  const fails=Object.values(S.checks).filter(v=>v==='fail').length;
+  el.innerHTML=`
+  <div class="pagehead"><div class="eyebrow">Things to try</div>
+    <h1 class="h-page">The test plan</h1>
+    <p class="lede">Work down the list on your own lawn and mark what you saw. If something fails, press <strong>Report this</strong> next to it — the wizard opens with the case already filled in.</p></div>
+  <div class="card pad" style="margin-bottom:26px">
+    <div class="spread"><strong>${done} of ${total} done</strong>
+      <span class="muted tiny">${fails} failing · <button class="btn sm ghost" id="resetPlan">Start over</button></span></div>
+    <div class="progress"><div style="width:${done/total*100}%"></div></div>
+  </div>
+  ${PLAN.map((g,gi)=>`<h2 class="h-sec" style="margin:28px 0 12px">${esc(g.g)}</h2>
+    ${g.items.map((it,ii)=>{const k='c'+gi+'_'+ii,st=S.checks[k]||'';
+      return `<div class="check ${st}"><span class="n">${gi+1}.${ii+1}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14.5px;margin-bottom:11px">${esc(it)}</div>
+          <div class="row" style="flex-wrap:wrap">
+            <span class="seg">
+              <button data-c="${k}" data-v="pass" class="${st==='pass'?'on':''}">Worked</button>
+              <button data-c="${k}" data-v="fail" class="${st==='fail'?'on f':''}">Failed</button>
+              <button data-c="${k}" data-v="blocked" class="${st==='blocked'?'on b':''}">Could not try</button>
+            </span>
+            <button class="btn sm ghost" data-file="${esc(it)}" data-grp="${esc(g.g)}">Report this</button>
+          </div></div></div>`}).join('')}`).join('')}`;
+  $$('[data-c]',el).forEach(b=>b.onclick=async()=>{const k=b.dataset.c;
+    S.checks[k]=S.checks[k]===b.dataset.v?'':b.dataset.v;await persist();vPlan(el)});
+  $$('[data-file]',el).forEach(b=>b.onclick=()=>{
+    wizard('bug');ui.wiz.title=b.dataset.file;
+    ui.wiz.body='From the test plan — '+b.dataset.grp+':\n'+b.dataset.file+'\n\nWhat I saw:\n';});
+  $('#resetPlan').onclick=async()=>{if(!confirm('Clear all your results?'))return;S.checks={};await persist();vPlan(el)};
+}
+
+/* ---------------- MY DETAILS ---------------- */
+function vYou(el){
   const p=S.profile;
   el.innerHTML=`
-  <div style="margin:22px 0 16px"><div class="eyebrow">Your details</div>
-    <h2 class="sec" style="margin-top:6px">Set this once — every report carries it</h2>
-    <p class="muted" style="margin:8px 0 0;max-width:60ch">Anthbot needs your email and serial to match a report to a unit and get back to you. Other testers only see your name.</p></div>
-  <div class="card pad" style="max-width:640px">
-    <div class="grid2">
-      <label class="f"><span>Name</span><input type="text" id="pName" value="${esc(p.name)}" placeholder="Lasse K."></label>
-      <label class="f"><span>Email</span><input type="email" id="pEmail" value="${esc(p.email)}" placeholder="you@example.com"></label>
-      <label class="f"><span>Unit serial number</span><input type="text" id="pSerial" value="${esc(p.serial)}" placeholder="M9P-0042"></label>
-      <label class="f"><span>Country</span><input type="text" id="pRegion" value="${esc(p.region)}" placeholder="Denmark"></label>
-      <label class="f"><span>Firmware</span><input type="text" id="pFw" value="${esc(p.firmware)}"></label>
-      <label class="f"><span>App version</span><input type="text" id="pApp" value="${esc(p.app)}"></label>
-      <label class="f"><span>Lawn size (m²)</span><input type="text" id="pLawn" value="${esc(p.lawn)}" placeholder="800"></label>
+  <div class="pagehead"><div class="eyebrow">My details</div>
+    <h1 class="h-page">Your tester card</h1>
+    <p class="lede">Fill this in once. Every report you file carries it, so Anthbot can match a problem to a unit and get back to you. Other testers only ever see your name.</p></div>
+  <div style="display:grid;grid-template-columns:1.3fr 1fr;gap:22px;align-items:start" class="yougrid">
+    <div class="card pad">
+      <div class="grid2">
+        <label class="f"><span>Your name</span><input type="text" id="pName" value="${esc(p.name)}" placeholder="Lasse K."></label>
+        <label class="f"><span>Email <span class="hint">— Anthbot only</span></span><input type="email" id="pEmail" value="${esc(p.email)}" placeholder="you@example.com"></label>
+        <label class="f"><span>Unit serial number</span><input type="text" id="pSerial" value="${esc(p.serial)}" placeholder="M9P-0042"></label>
+        <label class="f"><span>Country</span><input type="text" id="pRegion" value="${esc(p.region)}" placeholder="Denmark"></label>
+        <label class="f"><span>Firmware on your mower</span><input type="text" id="pFw" value="${esc(p.firmware)}"></label>
+        <label class="f"><span>App version</span><input type="text" id="pApp" value="${esc(p.app)}"></label>
+        <label class="f"><span>Lawn size in m²</span><input type="text" id="pLawn" value="${esc(p.lawn)}" placeholder="800"></label>
+      </div>
+      <button class="btn primary big" id="pSave">Save my details</button>
     </div>
-    <button class="btn primary" id="pSave">Save my details</button>
-  </div>
-  <div class="card pad" style="max-width:640px;margin-top:16px">
-    <h2 class="sec">Anthbot staff</h2>
-    <p class="muted tiny" style="margin:6px 0 12px">Saved on ${esc(Store.mode())}. Staff access unlocks the admin console.</p>
-    <div class="row" style="flex-wrap:wrap">
-      <span class="chip ${isAdmin()?'st-verified':'st-new'}">${isAdmin()?'Anthbot staff':'Tester'}</span>
-      <button class="btn sm" id="roleBtn">${isAdmin()?'Sign out of admin':'Sign in as Anthbot'}</button>
-      <button class="btn sm ghost" id="reseed">Reload demo data</button>
+    <div class="stack">
+      <div class="card pad">
+        <h2 class="h-sec">Where your data lives</h2>
+        <p class="muted tiny" style="margin:8px 0 14px">Saved on <strong>${Store.where()}</strong> — nothing has left this device yet. Take a backup before you clear your browser.</p>
+        <div class="wrap">
+          <button class="btn sm" id="expJson">Download a backup</button>
+          <button class="btn sm" id="impBtn">Restore a backup</button>
+          <input type="file" id="impFile" accept="application/json" hidden>
+        </div>
+        <hr class="sep">
+        <div class="wrap">
+          <button class="btn sm ghost" id="reseed">Reload the demo data</button>
+          <button class="btn sm danger" id="wipe">Erase everything</button>
+        </div>
+      </div>
+      <div class="card pad">
+        <h2 class="h-sec">Anthbot staff</h2>
+        <p class="muted tiny" style="margin:8px 0 14px">Staff sign-in unlocks the admin console: every report with the reporter's email and serial, plus publishing builds.</p>
+        <div class="row" style="flex-wrap:wrap">
+          <span class="chip ${isAdmin()?'st-verified':'st-new'}">${isAdmin()?'Anthbot staff':'Tester'}</span>
+          <button class="btn sm" id="roleBtn">${isAdmin()?'Sign out of staff':'Sign in as Anthbot'}</button>
+        </div>
+      </div>
     </div>
   </div>`;
   $('#pSave').onclick=async()=>{
     Object.assign(p,{name:$('#pName').value.trim(),email:$('#pEmail').value.trim(),serial:$('#pSerial').value.trim(),
       region:$('#pRegion').value.trim(),firmware:$('#pFw').value.trim(),app:$('#pApp').value.trim(),lawn:$('#pLawn').value.trim()});
-    // keep older reports of mine in sync with my current details
-    S.reports.forEach(r=>{if(r.reporter.id===p.id)r.reporter=reporterCard();});
-    syncTester();await persist();refresh();toast('Saved');};
+    S.reports.forEach(r=>{if(r.reporter.id===p.id)r.reporter=card()});
+    syncTester();await persist();refresh();toast('Saved')};
   $('#roleBtn').onclick=async()=>{
-    if(!isAdmin()){
-      const c=prompt('Anthbot staff code:');if(c===null)return;
-      if(c.trim().toLowerCase()!=='anthbot'){toast('That code is not right',true);return;}
-      p.role='admin';toast('Admin tab unlocked');
-    }else{p.role='tester';ui.view='reports';}
-    await persist();refresh();};
+    if(!isAdmin()){const c=prompt('Anthbot staff code:');if(c===null)return;
+      if(c.trim().toLowerCase()!=='anthbot')return toast('That code is not right',true);
+      p.role='admin';toast('Admin console unlocked')}
+    else{p.role='tester';ui.view='home'}
+    await persist();refresh()};
+  $('#expJson').onclick=()=>dl('m9-beta-backup-'+today()+'.json',JSON.stringify(S,null,2),'application/json');
+  $('#impBtn').onclick=()=>$('#impFile').click();
+  $('#impFile').onchange=async e=>{const f=e.target.files[0];if(!f)return;
+    try{const d=JSON.parse(await f.text());if(!d.reports)throw 0;
+      if(!confirm('Replace everything on this device with the backup?'))return;
+      S=d;await persist();refresh();toast('Restored '+d.reports.length+' reports')}
+    catch(err){toast('That file is not a valid backup',true)}};
   $('#reseed').onclick=async()=>{if(!confirm('Replace everything with the demo data?'))return;
-    const keep=p;S=seed();S.profile=keep;syncTester();await persist();refresh();toast('Demo data reloaded');};
+    const keep=p;S=seed();S.profile=keep;syncTester();await persist();refresh();toast('Demo data reloaded')};
+  $('#wipe').onclick=async()=>{if(!confirm('Erase every report and result on this device?'))return;
+    const keep=p;await Store.clear();S=blank();S.profile=keep;await persist();refresh();toast('Everything erased')};
 }
 
-/* ---------------- admin ---------------- */
-function viewAdmin(el){
-  if(!isAdmin()){el.innerHTML='<div class="locked"><div class="empty"><div class="big">Admin only</div>Sign in as Anthbot under “You”.</div></div>';return;}
+/* ---------------- ADMIN ---------------- */
+function vAdmin(el){
+  if(!isAdmin()){el.innerHTML='<div class="empty"><div class="big">Staff only</div><p class="muted">Sign in as Anthbot under My details.</p></div>';return}
   const T=Object.values(S.testers);
-  const open=S.reports.filter(isOpen), crit=open.filter(r=>r.severity==='critical');
+  const open=S.reports.filter(isOpen),crit=open.filter(r=>r.severity==='critical');
   const stale=open.filter(r=>Date.now()-r.updatedAt>7*86400000);
+  const unanswered=open.filter(r=>!r.reply);
   el.innerHTML=`
-  <div class="spread" style="margin:22px 0 4px">
-    <div><div class="eyebrow">Anthbot console</div><h2 class="sec" style="margin-top:6px">Every report, every tester</h2></div>
-    <div class="wrap">
-      <button class="btn sm" id="xRep">Reports CSV</button>
-      <button class="btn sm" id="xTest">Testers CSV</button>
-      <button class="btn sm" id="xJson">Full backup</button>
-    </div>
-  </div>
-  <div class="stats" style="margin:16px 0">
-    <div class="stat ${crit.length?'alert':''}"><div class="n">${crit.length}</div><div class="l">Critical open</div></div>
-    <div class="stat"><div class="n">${open.length}</div><div class="l">Open</div></div>
-    <div class="stat"><div class="n">${S.reports.length}</div><div class="l">Total reports</div></div>
-    <div class="stat"><div class="n">${T.length}</div><div class="l">Testers</div></div>
-    <div class="stat"><div class="n">${stale.length}</div><div class="l">Untouched 7+ days</div></div>
+  <div class="pagehead"><div class="eyebrow">Anthbot console</div>
+    <h1 class="h-page">Every report, every tester</h1>
+    <p class="lede">Testers see their own reports and each other's names. You see the full table, with email, serial and firmware on every row.</p></div>
+  <div class="bignums" style="margin-bottom:26px">
+    <button class="bignum ${crit.length?'alert':'good'}" data-atab="reports"><div class="n">${crit.length}</div><div class="l">Critical open</div></button>
+    <button class="bignum" data-atab="reports"><div class="n">${open.length}</div><div class="l">Open reports</div></button>
+    <button class="bignum" data-atab="reports"><div class="n">${unanswered.length}</div><div class="l">No answer yet</div></button>
+    <button class="bignum" data-atab="reports"><div class="n">${stale.length}</div><div class="l">Untouched 7+ days</div></button>
+    <button class="bignum" data-atab="testers"><div class="n">${T.length}</div><div class="l">Testers</div></button>
   </div>
   <div class="subtabs">
-    <button class="subtab" data-s="reports" ${ui.adminTab==='reports'?'aria-current=true':''}>All reports</button>
-    <button class="subtab" data-s="testers" ${ui.adminTab==='testers'?'aria-current=true':''}>Testers &amp; units</button>
-    <button class="subtab" data-s="publish" ${ui.adminTab==='publish'?'aria-current=true':''}>Publish an update</button>
-    <button class="subtab" data-s="notice" ${ui.adminTab==='notice'?'aria-current=true':''}>Group notice</button>
+    ${[['reports','All reports'],['testers','Testers & units'],['insight','Where it breaks'],['notice','Group notice']]
+      .map(([k,l])=>`<button class="subtab" data-atab="${k}" aria-current="${ui.adminTab===k}">${l}</button>`).join('')}
+    <button class="btn sm" id="xRep" style="margin-left:auto">Reports CSV</button>
+    <button class="btn sm" id="xTest">Testers CSV</button>
   </div>
-  <div id="adminBody"></div>`;
-  $$('.subtab',el).forEach(b=>b.onclick=()=>{ui.adminTab=b.dataset.s;viewAdmin(el);});
-  const body=$('#adminBody',el);
-  if(ui.adminTab==='reports')adminReports(body);
-  if(ui.adminTab==='testers')adminTesters(body);
-  if(ui.adminTab==='publish')adminPublish(body);
-  if(ui.adminTab==='notice')adminNotice(body);
-  $('#xRep').onclick=exportReports;
-  $('#xTest').onclick=exportTesters;
-  $('#xJson').onclick=()=>dl('m9-backup-'+today()+'.json',JSON.stringify(S,null,2),'application/json');
+  <div id="abody"></div>`;
+  $$('[data-atab]',el).forEach(b=>b.onclick=()=>{ui.adminTab=b.dataset.atab;vAdmin(el)});
+  $('#xRep').onclick=exportReports;$('#xTest').onclick=exportTesters;
+  const b=$('#abody',el);
+  ({reports:aReports,testers:aTesters,insight:aInsight,notice:aNotice}[ui.adminTab]||aReports)(b);
 }
-function adminReports(el){
-  const rows=[...S.reports].sort((a,b)=>score(b)-score(a));
-  el.innerHTML=`<div class="card" style="overflow:hidden"><div class="tablewrap"><table class="data">
-    <thead><tr><th>ID</th><th>Title</th><th>Kind</th><th>Severity</th><th>Status</th><th>Same</th>
-      <th>Tester</th><th>Email</th><th>Serial</th><th>Firmware</th><th>App</th><th>Region</th><th>Filed</th></tr></thead>
+function aReports(el){
+  const rows=[...S.reports].sort((a,b)=>impact(b)-impact(a));
+  el.innerHTML=`<div class="card"><div class="tablewrap"><table class="data">
+    <thead><tr><th>ID</th><th>Title</th><th>Kind</th><th>Severity</th><th>Status</th><th>Same</th><th>Priority</th>
+      <th>Tester</th><th>Email</th><th>Serial</th><th>Firmware</th><th>App</th><th>Country</th><th>Filed</th></tr></thead>
     <tbody>${rows.map(r=>`<tr data-id="${r.id}">
-      <td class="key">${esc(r.key)}</td>
-      <td style="max-width:280px">${esc(r.title)}</td>
-      <td>${chip(TYPES[r.type].cls,TYPES[r.type].label)}</td>
+      <td class="key">${esc(r.key)}</td><td style="max-width:290px">${esc(r.title)}</td>
+      <td>${chip(TYPES[r.type].cls,TYPES[r.type].short)}</td>
       <td>${chip(SEV[r.severity].cls,SEV[r.severity].label)}</td>
       <td>${chip(ST[r.status].cls,ST[r.status].label)}</td>
-      <td><strong>${r.votes.length}</strong></td>
-      <td>${esc(r.reporter.name)}</td>
-      <td class="key">${esc(r.reporter.email||'—')}</td>
-      <td class="key">${esc(r.reporter.serial||'—')}</td>
-      <td class="key">${esc(r.reporter.firmware||'—')}</td>
-      <td class="key">${esc(r.reporter.app||'—')}</td>
-      <td>${esc(r.reporter.region||'—')}</td>
+      <td><strong>${r.votes.length}</strong></td><td class="key">${esc(r.priority||'—')}</td>
+      <td>${esc(r.reporter.name)}</td><td class="key">${esc(r.reporter.email||'—')}</td>
+      <td class="key">${esc(r.reporter.serial||'—')}</td><td class="key">${esc(r.reporter.firmware||'—')}</td>
+      <td class="key">${esc(r.reporter.app||'—')}</td><td>${esc(r.reporter.region||'—')}</td>
       <td class="muted tiny">${ago(r.createdAt)}</td></tr>`).join('')}</tbody></table></div></div>
-    <p class="muted tiny" style="margin-top:10px">Click any row to open it and set status, reply or mark it fixed.</p>`;
+    <p class="muted tiny" style="margin-top:12px">Click a row to open it and set status, priority, an answer, or mark it fixed.</p>`;
   $$('tbody tr',el).forEach(tr=>tr.onclick=()=>openReport(tr.dataset.id));
 }
-function adminTesters(el){
+function aTesters(el){
   const T=Object.values(S.testers).sort((a,b)=>(a.name||'').localeCompare(b.name||''));
-  const count=id=>S.reports.filter(r=>r.reporter.id===id).length;
-  el.innerHTML=`<div class="card" style="overflow:hidden"><div class="tablewrap"><table class="data">
-    <thead><tr><th>Name</th><th>Email</th><th>Serial</th><th>Region</th><th>Lawn m²</th><th>Firmware</th><th>App</th><th>Reports</th><th>Last seen</th></tr></thead>
-    <tbody>${T.map(t=>`<tr>
-      <td><div class="row">${avatar(t.name)} ${esc(t.name||'Unnamed')}</div></td>
+  const n=id=>S.reports.filter(r=>r.reporter.id===id).length;
+  el.innerHTML=`<div class="card"><div class="tablewrap"><table class="data">
+    <thead><tr><th>Name</th><th>Email</th><th>Serial</th><th>Country</th><th>Lawn m²</th><th>Firmware</th><th>App</th><th>Reports</th><th>Last seen</th></tr></thead>
+    <tbody>${T.map(t=>`<tr><td><div class="row">${avatar(t.name)} ${esc(t.name||'Unnamed')}</div></td>
       <td class="key">${esc(t.email||'—')}</td><td class="key">${esc(t.serial||'—')}</td>
       <td>${esc(t.region||'—')}</td><td>${esc(t.lawn||'—')}</td>
       <td class="key">${esc(t.firmware||'—')}</td><td class="key">${esc(t.app||'—')}</td>
-      <td><strong>${count(t.id)}</strong></td><td class="muted tiny">${t.lastSeen?ago(t.lastSeen):'—'}</td></tr>`).join('')}</tbody>
-    </table></div></div>
-    <p class="muted tiny" style="margin-top:10px">Testers appear here once they save their details or file a report.</p>`;
+      <td><strong>${n(t.id)}</strong></td><td class="muted tiny">${t.lastSeen?ago(t.lastSeen):'—'}</td></tr>`).join('')}
+    </tbody></table></div></div>
+    <p class="muted tiny" style="margin-top:12px">A tester appears here as soon as they save their details or file their first report.</p>`;
 }
-function adminPublish(el){
-  const cands=S.reports.filter(r=>isOpen(r));
-  el.innerHTML=`<div class="card pad" style="max-width:640px">
-    <div class="grid2">
-      <label class="f"><span>Version</span><input type="text" id="uVer" placeholder="2.5.0"></label>
-      <label class="f"><span>Channel</span><select id="uCh"><option value="firmware">Firmware</option><option value="app">Mobile app</option></select></label>
-      <label class="f"><span>State</span><select id="uSt"><option value="beta">Beta channel</option><option value="released">Released</option></select></label>
-      <label class="f"><span>Date</span><input type="date" id="uDate" value="${new Date().toISOString().slice(0,10)}"></label>
-    </div>
-    <label class="f"><span>Release notes</span><textarea id="uNotes" placeholder="What changed, and what testers should re-check."></textarea></label>
-    <label class="f"><span>Reports fixed in this update <span class="hint">— they flip to “Fixed in update” and testers get asked to confirm</span></span>
-      <div style="max-height:230px;overflow:auto;border:1px solid var(--stroke);border-radius:12px;padding:10px">
-        ${cands.map(r=>`<label class="switch" style="display:flex;padding:5px 0"><input type="checkbox" class="ufix" value="${r.id}">
-          <span class="key">${esc(r.key)}</span><span style="flex:1">${esc(r.title)}</span></label>`).join('')||'<span class="muted tiny">Nothing open.</span>'}
-      </div></label>
-    <button class="btn primary" id="uSave">Publish update</button></div>`;
-  $('#uSave').onclick=async()=>{
-    const v=$('#uVer').value.trim();if(!v){toast('Version number first',true);return;}
-    const fixes=$$('.ufix:checked').map(c=>c.value);
-    S.updates.push({id:uid(),version:v,channel:$('#uCh').value,status:$('#uSt').value,
-      date:new Date($('#uDate').value).getTime()||Date.now(),notes:$('#uNotes').value.trim(),fixes});
-    fixes.forEach(id=>{const r=byId(id);if(r){r.status='fixed';r.fixedIn=v;r.updatedAt=Date.now();}});
-    await persist();ui.adminTab='reports';refresh();toast('Update '+v+' published');};
+function aInsight(el){
+  const byArea=AREAS.map(a=>({n:a.n,c:S.reports.filter(r=>r.area===a.n).length})).filter(x=>x.c).sort((a,b)=>b.c-a.c);
+  const byBuild={};S.reports.forEach(r=>{const b=r.reporter.firmware||'unknown';byBuild[b]=(byBuild[b]||0)+1});
+  const byStatus=Object.entries(ST).map(([k,v])=>({k,l:v.label,c:S.reports.filter(r=>r.status===k).length})).filter(x=>x.c);
+  const untouched=AREAS.filter(a=>!S.reports.some(r=>r.area===a.n));
+  const bar=(rows,max,colour)=>`<div class="bars">${rows.map(r=>`<div class="bar-row">
+    <span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(r.l||r.n)}">${esc(r.l||r.n)}</span>
+    <span class="bar-track"><span class="bar-fill" style="width:${r.c/max*100}%;background:${colour}"></span></span>
+    <span class="key" style="text-align:right">${r.c}</span></div>`).join('')}</div>`;
+  el.innerHTML=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px" class="yougrid">
+    <div class="card pad"><h2 class="h-sec">Which part breaks most</h2>
+      ${bar(byArea,Math.max(...byArea.map(x=>x.c)),'linear-gradient(90deg,var(--teal),var(--lime))')}</div>
+    <div class="card pad"><h2 class="h-sec">Reports per firmware</h2>
+      ${bar(Object.entries(byBuild).map(([n,c])=>({n,c})),Math.max(...Object.values(byBuild)),'var(--sky)')}</div>
+    <div class="card pad"><h2 class="h-sec">Where everything sits</h2>
+      ${bar(byStatus,Math.max(...byStatus.map(x=>x.c)),'var(--violet)')}</div>
+    <div class="card pad"><h2 class="h-sec">Nobody has touched these</h2>
+      <p class="muted tiny" style="margin:8px 0 12px">No reports at all against these parts. Either they are solid, or nobody has tried them.</p>
+      <div class="wrap">${untouched.map(a=>`<span class="tagpill">${esc(a.n)}</span>`).join('')||'<span class="muted tiny">Every part has at least one report.</span>'}</div></div>
+  </div>`;
 }
-function adminNotice(el){
+function aNotice(el){
   const n=S.notice||{title:'',body:''};
   el.innerHTML=`<div class="card pad" style="max-width:640px">
-    <p class="muted tiny" style="margin:0 0 14px">Shown at the top of Reports for everyone. Leave the title empty to remove it.</p>
+    <p class="muted tiny" style="margin:0 0 16px">This appears at the top of Start here for every tester. Clear the headline to remove it.</p>
     <label class="f"><span>Headline</span><input type="text" id="nT" value="${esc(n.title)}"></label>
     <label class="f"><span>Message</span><textarea id="nB">${esc(n.body)}</textarea></label>
     <button class="btn primary" id="nSave">Save notice</button></div>`;
-  $('#nSave').onclick=async()=>{
-    const t=$('#nT').value.trim();
-    S.notice=t?{title:t,body:$('#nB').value.trim()}:null;
-    await persist();refresh();toast(t?'Notice posted':'Notice removed');};
+  $('#nSave').onclick=async()=>{const t=$('#nT').value.trim();
+    S.notice=t?{title:t,body:$('#nB').value.trim()}:null;await persist();refresh();toast(t?'Notice posted':'Notice removed')};
 }
 
 /* ---------------- export ---------------- */
 const today=()=>new Date().toISOString().slice(0,10);
 function dl(name,text,type){const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href);}
+  a.href=URL.createObjectURL(new Blob([text],{type}));a.download=name;a.click();URL.revokeObjectURL(a.href)}
 const cell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
 function exportReports(){
-  const head=['ID','Title','Kind','Severity','Status','Area','Same votes','Fixed in','Tester','Email','Serial','Region','Lawn m2','Firmware','App','Filed','Last activity','Description','Steps','Anthbot reply'];
-  const rows=S.reports.map(r=>[r.key,r.title,TYPES[r.type].label,SEV[r.severity].label,ST[r.status].label,r.area,
-    r.votes.length,r.fixedIn,r.reporter.name,r.reporter.email,r.reporter.serial,r.reporter.region,r.reporter.lawn,
-    r.reporter.firmware,r.reporter.app,new Date(r.createdAt).toISOString(),new Date(r.updatedAt).toISOString(),
-    r.body,r.steps,r.reply].map(cell).join(','));
-  dl('m9-reports-'+today()+'.csv',head.join(',')+'\n'+rows.join('\n'),'text/csv');toast('Reports exported');
-}
+  const head=['ID','Title','Kind','Severity','Status','Part','How often','Ground','Votes','Priority','Owner','Fixed in',
+    'Tester','Email','Serial','Country','Lawn m2','Firmware','App','Filed','Last activity','Description','Steps','Anthbot answer'];
+  const rows=S.reports.map(r=>[r.key,r.title,TYPES[r.type].label,SEV[r.severity].label,ST[r.status].label,r.area,r.often,
+    (r.ground||[]).join(' / '),r.votes.length,r.priority,r.owner,r.fixedIn,r.reporter.name,r.reporter.email,r.reporter.serial,
+    r.reporter.region,r.reporter.lawn,r.reporter.firmware,r.reporter.app,new Date(r.createdAt).toISOString(),
+    new Date(r.updatedAt).toISOString(),r.body,r.steps,r.reply].map(cell).join(','));
+  dl('m9-reports-'+today()+'.csv',head.join(',')+'\n'+rows.join('\n'),'text/csv');toast('Reports exported')}
 function exportTesters(){
-  const head=['Name','Email','Serial','Region','Lawn m2','Firmware','App','Reports filed','Last seen'];
+  const head=['Name','Email','Serial','Country','Lawn m2','Firmware','App','Reports filed','Joined','Last seen'];
   const rows=Object.values(S.testers).map(t=>[t.name,t.email,t.serial,t.region,t.lawn,t.firmware,t.app,
-    S.reports.filter(r=>r.reporter.id===t.id).length,t.lastSeen?new Date(t.lastSeen).toISOString():''].map(cell).join(','));
-  dl('m9-testers-'+today()+'.csv',head.join(',')+'\n'+rows.join('\n'),'text/csv');toast('Testers exported');
+    S.reports.filter(r=>r.reporter.id===t.id).length,
+    t.joined?new Date(t.joined).toISOString():'',t.lastSeen?new Date(t.lastSeen).toISOString():''].map(cell).join(','));
+  dl('m9-testers-'+today()+'.csv',head.join(',')+'\n'+rows.join('\n'),'text/csv');toast('Testers exported')}
+
+/* ---------------- welcome ---------------- */
+function welcome(){
+  $('#wbox').innerHTML=`<div class="eyebrow">Welcome to the test group</div>
+    <h2 style="font-size:26px;font-weight:700;margin:10px 0 10px">Two things before you start</h2>
+    <p class="lede" style="font-size:14px;margin-bottom:22px">Anthbot needs to know which mower a report came from. Your name shows on your reports; your email and serial are only visible to Anthbot staff.</p>
+    <label class="f"><span>Your name</span><input type="text" id="w1" placeholder="Lasse K."></label>
+    <label class="f"><span>Email</span><input type="email" id="w2" placeholder="you@example.com"></label>
+    <label class="f"><span>Unit serial number <span class="hint">— on the sticker under the cover</span></span>
+      <input type="text" id="w3" placeholder="M9P-0042"></label>
+    <div class="row" style="margin-top:6px">
+      <button class="btn primary big" id="wGo" style="flex:1">Start testing</button>
+      <button class="btn ghost" id="wSkip">Later</button></div>`;
+  $('#welcome').classList.add('open');
+  $('#wGo').onclick=async()=>{
+    S.profile.name=$('#w1').value.trim();S.profile.email=$('#w2').value.trim();S.profile.serial=$('#w3').value.trim();
+    if(!S.profile.name)return toast('At least give us a name',true);
+    syncTester();await persist();$('#welcome').classList.remove('open');refresh();toast('Welcome, '+S.profile.name)};
+  $('#wSkip').onclick=()=>$('#welcome').classList.remove('open');
 }
 
 /* ---------------- plumbing ---------------- */
-function open_(){$('#panel').classList.add('open');$('#scrim').classList.add('open');document.body.style.overflow='hidden';}
-function closeAll(){$('#panel').classList.remove('open');$('#scrim').classList.remove('open');
-  $('#lightbox').classList.remove('open');document.body.style.overflow='';ui.openId=null;}
-$('#scrim').onclick=closeAll;
+function openPanel(){$('#panel').classList.add('open');$('#scrim').classList.add('open');document.body.style.overflow='hidden'}
+function closePanel(){$('#panel').classList.remove('open');$('#scrim').classList.remove('open');
+  $('#lightbox').classList.remove('open');document.body.style.overflow='';ui.open=null;ui.wiz=null}
+$('#scrim').onclick=closePanel;
 $('#lightbox').onclick=()=>$('#lightbox').classList.remove('open');
-$('#fabNew').onclick=openForm;
-$$('#tabs .tab').forEach(t=>t.onclick=()=>go(t.dataset.view));
-document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
+$('#newTop').onclick=()=>wizard();
+$('#whoami').onclick=()=>go('you');
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')return closePanel();
+  if(/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName))return;
+  if(e.key==='n'||e.key==='N'){e.preventDefault();wizard()}
+});
 
 /* ---------------- boot ---------------- */
 (async function(){
   S=await Store.load();
-  if(!S||!S.reports){S=seed();await Store.save(S);}
-  S.testers=S.testers||{};S.updates=S.updates||[];
-  S.profile.lastSeen=Date.now();
-  if(S.profile.name||S.profile.email)syncTester();
-  ui.view=(location.hash||'').replace('#','')||'reports';
-  if(!$('#view-'+ui.view)||(ui.view==='admin'&&!isAdmin()))ui.view='reports';
-  refresh();
-  if(!S.profile.name)setTimeout(()=>toast('Add your name and serial under “You” first'),700);
+  const fresh=!S||!S.reports;
+  if(fresh){S=seed();await Store.save(S)}
+  S.checks=S.checks||{};S.testers=S.testers||{};S.activity=S.activity||[];S.updates=S.updates||[];
+  S.reports.forEach(r=>{r.history=r.history||[];r.ground=r.ground||[];r.files=r.files||[];r.comments=r.comments||[]});
+  if(S.profile.name)syncTester();
+  ui.view=(location.hash||'').replace('#','')||'home';
+  if(!$('#v-'+ui.view)||(ui.view==='admin'&&!isAdmin()))ui.view='home';
+  go(ui.view);
+  if(!S.profile.name)setTimeout(welcome,500);
 })();
 
 /* ==================================================================
-   FIREBASE — what to change when you wire it up
+   FIREBASE — what changes when you wire it up
 
-   Only Store.load and Store.save touch persistence. To go live:
+   Only Store.load and Store.save touch persistence.
 
-   1. Auth: Firebase email-link or Google sign-in. Replace
-      S.profile.id with the Firebase uid, and take name and email
-      from the auth user instead of the form.
+   1. Auth: email-link or Google sign-in. S.profile.id becomes the
+      Firebase uid; name and email come from the auth user, not the
+      form. Drop the welcome box's email field at that point.
 
    2. Data: one Firestore document per report in a `reports`
-      collection, not one big blob — otherwise two testers saving at
-      the same second overwrite each other. Votes go in a
-      subcollection `reports/{id}/votes/{uid}` for the same reason.
-      Tester details live in `testers/{uid}`.
+      collection — not one big blob — or two testers saving in the
+      same second overwrite each other. Votes go in a subcollection
+      `reports/{id}/votes/{uid}` for the same reason. Tester cards
+      live in `testers/{uid}`.
 
    3. Admin: S.profile.role must NOT come from the client. Use a
-      custom claim, or an `admins/{uid}` document. The prompt-for-a-
-      code switch above is fine for a demo and useless as security.
+      custom claim or an `admins/{uid}` document. The staff code
+      prompt is fine for a demo and worthless as security — and this
+      app holds other people's emails and serials, so that matters.
 
    4. Rules sketch:
         match /reports/{id} {
@@ -869,15 +1493,16 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape')closeAll();});
           allow update: if request.auth.uid == resource.data.reporter.id
                         || exists(/databases/$(database)/documents/admins/$(request.auth.uid));
         }
+        match /reports/{id}/votes/{uid} { allow write: if request.auth.uid == uid; }
         match /testers/{uid} {
-          allow read: if exists(/databases/$(database)/documents/admins/$(request.auth.uid));
           allow write: if request.auth.uid == uid;
+          allow read:  if exists(/databases/$(database)/documents/admins/$(request.auth.uid));
         }
-      Note testers/{uid} is admin-read only — testers should not be
+      Note testers/{uid} is admin-read only — testers must not be
       able to list each other's emails and serials.
 
-   5. Photos go to Firebase Storage, not Firestore. Base64 in a
-      document hits the 1 MB limit fast.
+   5. Photos go to Firebase Storage. Base64 in a Firestore document
+      hits the 1 MB limit almost immediately.
    ================================================================== */
 </script>
 </body>
