@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Anthbot M9 Pro — Beta Field Report</title>
+<meta name="description" content="Closed beta reporting environment for the Anthbot M9 Pro robotic mower.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   DESIGN TOKENS — "night turf"
+   Palette pulled from the machine's own world: cut grass under
+   dusk floodlight, charge-state teal, hazard coral.
+   ============================================================ */
+:root{
+  --bg:#06120E;
+  --bg-2:#091A14;
+  --panel:rgba(255,255,255,.045);
+  --panel-2:rgba(255,255,255,.075);
+  --stroke:rgba(255,255,255,.09);
+  --stroke-lit:rgba(180,240,74,.22);
+  --txt:#E9F4EE;
+  --txt-2:#B6CDC1;
+  --muted:#7A9789;
+  --lime:#B4F04A;
+  --teal:#37D6A8;
+  --amber:#FFC24B;
+  --coral:#FF6A5A;
+  --violet:#A78BFA;
+  --sky:#5AC8FA;
+  --radius:16px;
+  --radius-s:10px;
+  --shadow:0 24px 60px -20px rgba(0,0,0,.75);
+  --display:'Space Grotesk',system-ui,sans-serif;
+  --body:'Inter',system-ui,sans-serif;
+  --mono:'JetBrains Mono',ui-monospace,monospace;
+  --header-h:64px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--bg);
+  color:var(--txt);
+  font-family:var(--body);
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+  padding-bottom:env(safe-area-inset-bottom);
+}
+/* aurora field */
+body::before{
+  content:"";position:fixed;inset:-20% -10% auto -10%;height:80vh;z-index:-2;
+  background:
+    radial-gradient(50% 55% at 18% 12%,rgba(55,214,168,.20),transparent 70%),
+    radial-gradient(45% 50% at 82% 8%,rgba(180,240,74,.15),transparent 70%),
+    radial-gradient(60% 60% at 55% 40%,rgba(90,200,250,.08),transparent 70%);
+  filter:blur(20px);pointer-events:none;
+}
+/* SIGNATURE: mowing stripes. Real mowers leave alternating light/dark
+   lanes — the whole page sits on that pattern. */
+body::after{
+  content:"";position:fixed;inset:0;z-index:-3;pointer-events:none;
+  background:repeating-linear-gradient(101deg,
+    rgba(255,255,255,.016) 0 64px,
+    rgba(0,0,0,0) 64px 128px);
+}
+::selection{background:var(--lime);color:#08150F}
+a{color:var(--teal);text-decoration:none}
+button,input,select,textarea{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--lime);outline-offset:2px;border-radius:6px}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+
+/* ============================ shell ============================ */
+.app{max-width:1280px;margin:0 auto;padding:0 20px 100px}
+header.top{
+  position:sticky;top:0;z-index:60;height:var(--header-h);
+  display:flex;align-items:center;gap:16px;
+  background:rgba(6,18,14,.72);backdrop-filter:blur(18px) saturate(1.3);
+  -webkit-backdrop-filter:blur(18px) saturate(1.3);
+  border-bottom:1px solid var(--stroke);
+  padding:0 max(20px,env(safe-area-inset-left));
+}
+.brand{display:flex;align-items:center;gap:11px;min-width:0}
+.mark{
+  width:34px;height:34px;border-radius:11px;flex:none;position:relative;
+  background:linear-gradient(150deg,var(--lime),var(--teal));
+  box-shadow:0 0 0 1px rgba(180,240,74,.35),0 8px 22px -8px rgba(55,214,168,.8);
+}
+.mark::after{
+  content:"";position:absolute;inset:7px;border-radius:4px;
+  background:repeating-linear-gradient(90deg,rgba(6,18,14,.85) 0 2px,transparent 2px 5px);
+}
+.brand h1{font-family:var(--display);font-size:15px;font-weight:600;margin:0;letter-spacing:-.01em;white-space:nowrap}
+.brand .sub{font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.14em;text-transform:uppercase}
+nav.tabs{display:flex;gap:2px;margin-left:auto;overflow-x:auto;scrollbar-width:none}
+nav.tabs::-webkit-scrollbar{display:none}
+.tab{
+  background:none;border:0;padding:8px 13px;border-radius:9px;cursor:pointer;
+  color:var(--muted);font-size:13.5px;font-weight:500;white-space:nowrap;transition:.15s;
+}
+.tab:hover{color:var(--txt);background:var(--panel)}
+.tab[aria-current="true"]{color:#08150F;background:var(--lime);font-weight:600}
+.tab .cnt{font-family:var(--mono);font-size:10.5px;opacity:.75;margin-left:5px}
+.top-right{display:flex;align-items:center;gap:8px;margin-left:8px}
+
+/* ============================ atoms ============================ */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  background:var(--panel);border:1px solid var(--stroke);color:var(--txt);
+  padding:9px 14px;border-radius:var(--radius-s);cursor:pointer;font-size:13.5px;
+  font-weight:500;transition:.15s;white-space:nowrap;
+}
+.btn:hover{background:var(--panel-2);border-color:var(--stroke-lit);transform:translateY(-1px)}
+.btn:active{transform:none}
+.btn.primary{background:linear-gradient(140deg,var(--lime),#8FDB3C);color:#08150F;border-color:transparent;font-weight:600}
+.btn.primary:hover{box-shadow:0 10px 26px -10px rgba(180,240,74,.75)}
+.btn.ghost{background:none}
+.btn.danger{color:var(--coral);border-color:rgba(255,106,90,.3)}
+.btn.sm{padding:6px 10px;font-size:12.5px;border-radius:8px}
+.btn.icon{padding:8px;width:36px;height:36px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none}
+.card{
+  background:var(--panel);border:1px solid var(--stroke);border-radius:var(--radius);
+  backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+}
+.pad{padding:18px}
+.chip{
+  display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:100px;
+  font-size:11.5px;font-weight:600;letter-spacing:.01em;border:1px solid transparent;white-space:nowrap;
+}
+.chip .dot{width:6px;height:6px;border-radius:50%;background:currentColor;flex:none}
+.key{font-family:var(--mono);font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+.eyebrow{font-family:var(--mono);font-size:10.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted)}
+h2.sec{font-family:var(--display);font-size:20px;font-weight:600;letter-spacing:-.02em;margin:0}
+label.f{display:block;margin-bottom:14px}
+label.f > span{display:block;font-size:12.5px;font-weight:600;color:var(--txt-2);margin-bottom:6px}
+label.f .hint{font-weight:400;color:var(--muted);font-size:11.5px}
+input[type=text],input[type=number],input[type=date],textarea,select{
+  width:100%;background:rgba(0,0,0,.28);border:1px solid var(--stroke);
+  border-radius:var(--radius-s);padding:10px 12px;font-size:14px;transition:.15s;
+}
+textarea{resize:vertical;min-height:82px;line-height:1.55}
+input:focus,textarea:focus,select:focus{border-color:var(--lime);outline:none;background:rgba(0,0,0,.45)}
+select{appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 16px) 50%,calc(100% - 11px) 50%;background-size:5px 5px,5px 5px;background-repeat:no-repeat;padding-right:32px}
+option{background:#0C1F18}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 14px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:0 14px}
+.row{display:flex;align-items:center;gap:10px}
+.spread{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.wrap{display:flex;flex-wrap:wrap;gap:8px}
+.muted{color:var(--muted)}
+.tiny{font-size:12px}
+hr.sep{border:0;border-top:1px solid var(--stroke);margin:16px 0}
+
+/* severity / status / type colour coding */
+.sev-critical{color:var(--coral);background:rgba(255,106,90,.13);border-color:rgba(255,106,90,.32)}
+.sev-high{color:var(--amber);background:rgba(255,194,75,.12);border-color:rgba(255,194,75,.28)}
+.sev-medium{color:var(--sky);background:rgba(90,200,250,.11);border-color:rgba(90,200,250,.25)}
+.sev-low{color:var(--muted);background:rgba(255,255,255,.05);border-color:var(--stroke)}
+.t-bug{color:var(--coral);background:rgba(255,106,90,.12)}
+.t-feature{color:var(--violet);background:rgba(167,139,250,.14)}
+.t-improvement{color:var(--teal);background:rgba(55,214,168,.13)}
+.t-question{color:var(--sky);background:rgba(90,200,250,.12)}
+.t-hardware{color:var(--amber);background:rgba(255,194,75,.12)}
+.t-safety{color:#fff;background:rgba(255,60,60,.35);border-color:rgba(255,106,90,.6)}
+.t-docs{color:var(--muted);background:rgba(255,255,255,.05)}
+.st-new{color:var(--lime);background:rgba(180,240,74,.13)}
+.st-triaged{color:var(--sky);background:rgba(90,200,250,.12)}
+.st-need-info{color:var(--amber);background:rgba(255,194,75,.12)}
+.st-confirmed{color:var(--coral);background:rgba(255,106,90,.12)}
+.st-in-progress{color:var(--violet);background:rgba(167,139,250,.14)}
+.st-fixed{color:var(--teal);background:rgba(55,214,168,.14)}
+.st-verified{color:#08150F;background:var(--teal)}
+.st-wont-fix,.st-duplicate{color:var(--muted);background:rgba(255,255,255,.05)}
+
+/* ============================ hero / dashboard ============================ */
+.hero{
+  position:relative;overflow:hidden;border-radius:22px;margin:22px 0 20px;
+  border:1px solid var(--stroke);background:linear-gradient(160deg,rgba(55,214,168,.10),rgba(6,18,14,.2) 60%);
+  padding:26px 26px 22px;
+}
+.hero::before{
+  content:"";position:absolute;inset:0;z-index:-1;
+  background:repeating-linear-gradient(101deg,rgba(180,240,74,.055) 0 46px,transparent 46px 92px);
+}
+.hero .fleet{font-family:var(--display);font-size:clamp(26px,4.4vw,40px);font-weight:700;letter-spacing:-.03em;line-height:1.05;margin:8px 0 6px}
+.hero .fleet em{font-style:normal;color:var(--lime)}
+.stat-strip{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:20px}
+.stat{background:rgba(0,0,0,.3);border:1px solid var(--stroke);border-radius:13px;padding:13px 14px}
+.stat .n{font-family:var(--display);font-size:26px;font-weight:700;letter-spacing:-.02em;line-height:1}
+.stat .l{font-size:11.5px;color:var(--muted);margin-top:5px}
+.stat.alert{border-color:rgba(255,106,90,.4);background:rgba(255,106,90,.08)}
+.stat.alert .n{color:var(--coral)}
+.dash-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:16px;align-items:start}
+.bars{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.bar-row{display:grid;grid-template-columns:104px 1fr 34px;align-items:center;gap:10px;font-size:12.5px}
+.bar-track{height:8px;border-radius:100px;background:rgba(255,255,255,.06);overflow:hidden}
+.bar-fill{height:100%;border-radius:100px;transition:width .5s cubic-bezier(.2,.9,.3,1)}
+.spark{width:100%;height:70px;display:block;margin-top:10px}
+.feed{list-style:none;margin:12px 0 0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:340px;overflow:auto}
+.feed li{display:flex;gap:10px;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.05);font-size:13px}
+.feed li:last-child{border:0}
+.feed .when{margin-left:auto;font-family:var(--mono);font-size:10.5px;color:var(--muted);white-space:nowrap}
+.avatar{width:24px;height:24px;border-radius:8px;flex:none;display:grid;place-items:center;font-size:10.5px;font-weight:700;font-family:var(--display);color:#08150F}
+
+/* ============================ report list ============================ */
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:16px 0}
+.search{position:relative;flex:1;min-width:200px}
+.search input{padding-left:34px}
+.search svg{position:absolute;left:11px;top:50%;transform:translateY(-50%);opacity:.45}
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.filters select{width:auto;min-width:118px;padding:7px 30px 7px 11px;font-size:12.5px;border-radius:8px}
+.list{display:flex;flex-direction:column;gap:10px}
+.item{
+  display:grid;grid-template-columns:58px 1fr auto;gap:14px;padding:14px 16px;cursor:pointer;
+  border-radius:var(--radius);border:1px solid var(--stroke);background:var(--panel);transition:.16s;
+}
+.item:hover{background:var(--panel-2);border-color:var(--stroke-lit);transform:translateX(2px)}
+.item.pinned{border-color:rgba(180,240,74,.35);background:linear-gradient(100deg,rgba(180,240,74,.07),transparent 45%)}
+.item.crit{box-shadow:inset 3px 0 0 var(--coral)}
+.vote{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;
+  border-radius:12px;border:1px solid var(--stroke);background:rgba(0,0,0,.3);padding:7px 0;transition:.15s;
+}
+.vote:hover{border-color:var(--lime)}
+.vote.on{background:rgba(180,240,74,.15);border-color:var(--lime);color:var(--lime)}
+.vote .v{font-family:var(--display);font-size:16px;font-weight:700;line-height:1}
+.vote .lbl{font-size:9px;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+.item h3{font-family:var(--display);font-size:15.5px;font-weight:600;margin:0 0 6px;letter-spacing:-.01em}
+.item .meta{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+.item .right{display:flex;flex-direction:column;align-items:flex-end;gap:6px;justify-content:center}
+.empty{text-align:center;padding:56px 20px;color:var(--muted)}
+.empty .big{font-family:var(--display);font-size:18px;color:var(--txt);margin-bottom:6px}
+
+/* ============================ drawer / modal ============================ */
+.scrim{position:fixed;inset:0;background:rgba(2,8,6,.72);backdrop-filter:blur(4px);z-index:90;opacity:0;pointer-events:none;transition:.2s}
+.scrim.open{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(720px,100%);z-index:100;
+  background:linear-gradient(180deg,#0B1F18,#071510);border-left:1px solid var(--stroke);
+  box-shadow:var(--shadow);transform:translateX(102%);transition:transform .28s cubic-bezier(.3,.9,.3,1);
+  display:flex;flex-direction:column;
+}
+.drawer.open{transform:none}
+.drawer-head{padding:16px 20px;border-bottom:1px solid var(--stroke);display:flex;gap:12px;align-items:flex-start}
+.drawer-body{overflow:auto;padding:20px;flex:1;overscroll-behavior:contain}
+.drawer-foot{padding:12px 20px;border-top:1px solid var(--stroke);display:flex;gap:8px;background:rgba(0,0,0,.25)}
+.modal{
+  position:fixed;z-index:100;top:50%;left:50%;transform:translate(-50%,-46%) scale(.97);
+  width:min(760px,calc(100% - 28px));max-height:88vh;overflow:auto;opacity:0;pointer-events:none;
+  background:linear-gradient(180deg,#0B1F18,#07130F);border:1px solid var(--stroke-lit);
+  border-radius:20px;box-shadow:var(--shadow);transition:.22s;
+}
+.modal.open{opacity:1;pointer-events:auto;transform:translate(-50%,-50%)}
+.modal-head{position:sticky;top:0;background:rgba(11,31,24,.95);backdrop-filter:blur(10px);padding:18px 22px;border-bottom:1px solid var(--stroke);z-index:2}
+.modal-body{padding:20px 22px}
+.modal-foot{position:sticky;bottom:0;background:rgba(7,19,15,.95);backdrop-filter:blur(10px);padding:14px 22px;border-top:1px solid var(--stroke);display:flex;gap:8px;justify-content:flex-end}
+.close-x{margin-left:auto;background:none;border:0;color:var(--muted);cursor:pointer;font-size:20px;line-height:1;padding:4px 8px;border-radius:8px}
+.close-x:hover{color:var(--txt);background:var(--panel)}
+
+/* detail internals */
+.kv{display:grid;grid-template-columns:126px 1fr;gap:7px 12px;font-size:13px}
+.kv dt{color:var(--muted);font-size:12px}
+.kv dd{margin:0}
+.block{background:rgba(0,0,0,.25);border:1px solid var(--stroke);border-radius:12px;padding:13px 15px;margin:12px 0}
+.block h4{font-family:var(--display);font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 8px;font-weight:600}
+.pre{white-space:pre-wrap;font-size:13.5px;line-height:1.6;margin:0}
+.timeline{list-style:none;margin:0;padding:0 0 0 18px;border-left:1px solid var(--stroke)}
+.timeline li{position:relative;padding:0 0 14px 14px;font-size:12.5px}
+.timeline li::before{content:"";position:absolute;left:-23px;top:5px;width:9px;height:9px;border-radius:50%;background:var(--teal);box-shadow:0 0 0 3px rgba(55,214,168,.15)}
+.comment{display:flex;gap:11px;padding:12px 0;border-bottom:1px solid rgba(255,255,255,.05)}
+.comment .body{flex:1;min-width:0}
+.comment .who{font-weight:600;font-size:13px}
+.badge-staff{background:var(--teal);color:#08150F;font-size:9.5px;padding:1px 6px;border-radius:5px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;margin-left:6px}
+.internal{background:rgba(255,194,75,.07);border:1px dashed rgba(255,194,75,.3);border-radius:10px;padding:10px 12px}
+.staffbox{border:1px solid rgba(55,214,168,.3);background:linear-gradient(160deg,rgba(55,214,168,.08),transparent);border-radius:14px;padding:15px;margin:14px 0}
+.thumbs{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.thumbs img{width:78px;height:78px;object-fit:cover;border-radius:10px;border:1px solid var(--stroke);cursor:zoom-in}
+
+/* ============================ boards ============================ */
+.board{display:grid;grid-template-columns:repeat(5,minmax(200px,1fr));gap:12px;overflow-x:auto;padding-bottom:10px}
+.col{background:rgba(0,0,0,.22);border:1px solid var(--stroke);border-radius:14px;padding:11px;min-height:180px}
+.col.over{border-color:var(--lime);background:rgba(180,240,74,.06)}
+.col h3{font-family:var(--display);font-size:12.5px;letter-spacing:.06em;text-transform:uppercase;margin:0 0 10px;color:var(--txt-2);display:flex;gap:8px;align-items:center}
+.col h3 .n{font-family:var(--mono);font-size:10.5px;color:var(--muted);margin-left:auto}
+.mini{background:var(--panel);border:1px solid var(--stroke);border-radius:11px;padding:10px 11px;margin-bottom:8px;cursor:pointer;transition:.15s}
+.mini:hover{background:var(--panel-2);border-color:var(--stroke-lit)}
+.mini[draggable=true]{cursor:grab}
+.mini .t{font-size:13px;font-weight:500;line-height:1.35;margin-bottom:7px}
+.rank{font-family:var(--display);font-size:13px;font-weight:700;color:var(--lime);min-width:22px}
+
+/* releases */
+.rel{border-left:2px solid var(--stroke);padding:0 0 20px 20px;position:relative;margin-left:8px}
+.rel::before{content:"";position:absolute;left:-7px;top:4px;width:12px;height:12px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 4px rgba(180,240,74,.12)}
+.rel.beta::before{background:var(--amber);box-shadow:0 0 0 4px rgba(255,194,75,.12)}
+.ver{font-family:var(--mono);font-size:16px;font-weight:600;color:var(--lime)}
+.fixlist{list-style:none;padding:0;margin:10px 0 0;display:flex;flex-direction:column;gap:6px}
+.fixlist li{display:flex;gap:9px;align-items:center;font-size:13px;padding:7px 10px;background:rgba(0,0,0,.25);border-radius:9px;border:1px solid var(--stroke)}
+
+/* checklist */
+.check{display:flex;gap:12px;padding:13px 15px;border:1px solid var(--stroke);border-radius:13px;background:var(--panel);margin-bottom:9px;align-items:flex-start}
+.check.pass{border-color:rgba(55,214,168,.35);background:rgba(55,214,168,.06)}
+.check.fail{border-color:rgba(255,106,90,.4);background:rgba(255,106,90,.07)}
+.check.blocked{border-color:rgba(255,194,75,.4);background:rgba(255,194,75,.06)}
+.check .n{font-family:var(--mono);font-size:11px;color:var(--muted);padding-top:2px}
+.seg{display:inline-flex;border:1px solid var(--stroke);border-radius:9px;overflow:hidden}
+.seg button{background:none;border:0;padding:6px 11px;font-size:12px;cursor:pointer;color:var(--muted);transition:.15s}
+.seg button:hover{background:var(--panel-2);color:var(--txt)}
+.seg button.on{background:var(--lime);color:#08150F;font-weight:600}
+.seg button.on.fail{background:var(--coral);color:#1a0605}
+.seg button.on.blocked{background:var(--amber);color:#1a1305}
+.progress{height:6px;border-radius:100px;background:rgba(255,255,255,.07);overflow:hidden;margin-top:10px}
+.progress div{height:100%;background:linear-gradient(90deg,var(--teal),var(--lime))}
+
+/* toast */
+#toasts{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);z-index:200;display:flex;flex-direction:column;gap:8px;align-items:center;pointer-events:none}
+.toast{
+  background:rgba(11,31,24,.97);border:1px solid var(--stroke-lit);border-radius:12px;
+  padding:11px 16px;font-size:13.5px;box-shadow:var(--shadow);animation:pop .25s cubic-bezier(.2,1.2,.4,1);
+  display:flex;gap:9px;align-items:center;max-width:90vw;
+}
+@keyframes pop{from{opacity:0;transform:translateY(12px) scale(.96)}}
+.toast.bad{border-color:rgba(255,106,90,.5)}
+
+/* misc */
+.fab{position:fixed;right:20px;bottom:20px;z-index:70;border-radius:100px;padding:14px 20px;font-size:14px;box-shadow:0 16px 40px -12px rgba(180,240,74,.7)}
+.tagpill{background:rgba(255,255,255,.06);border:1px solid var(--stroke);padding:2px 8px;border-radius:7px;font-size:11px;font-family:var(--mono);color:var(--txt-2)}
+.dupwarn{background:rgba(255,194,75,.09);border:1px solid rgba(255,194,75,.35);border-radius:12px;padding:11px 13px;margin-bottom:14px}
+.dupwarn .d{padding:6px 0;cursor:pointer;font-size:13px;border-bottom:1px solid rgba(255,255,255,.06)}
+.dupwarn .d:last-child{border:0}
+.switch{display:inline-flex;align-items:center;gap:8px;cursor:pointer;font-size:13px}
+.switch input{appearance:none;width:36px;height:20px;border-radius:100px;background:rgba(255,255,255,.12);position:relative;cursor:pointer;transition:.2s;flex:none}
+.switch input::after{content:"";position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:var(--txt);transition:.2s}
+.switch input:checked{background:var(--lime)}
+.switch input:checked::after{left:18px;background:#08150F}
+.lightbox{position:fixed;inset:0;z-index:150;background:rgba(2,8,6,.94);display:none;place-items:center;padding:20px;cursor:zoom-out}
+.lightbox.open{display:grid}
+.lightbox img{max-width:100%;max-height:100%;border-radius:12px}
+.tablewrap{overflow-x:auto}
+table.data{width:100%;border-collapse:collapse;font-size:13px}
+table.data th{text-align:left;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);padding:8px 10px;border-bottom:1px solid var(--stroke);font-weight:600;white-space:nowrap}
+table.data td{padding:9px 10px;border-bottom:1px solid rgba(255,255,255,.05)}
+table.data tr:hover td{background:rgba(255,255,255,.03)}
+
+@media(max-width:900px){
+  .dash-grid{grid-template-columns:1fr}
+  .grid3{grid-template-columns:1fr}
+  .board{grid-template-columns:repeat(5,84vw)}
+}
+@media(max-width:620px){
+  .app{padding:0 14px 110px}
+  .grid2{grid-template-columns:1fr}
+  .brand h1{display:none}
+  .item{grid-template-columns:48px 1fr;gap:11px}
+  .item .right{grid-column:2;flex-direction:row;align-items:center}
+  .kv{grid-template-columns:1fr;gap:2px 0}
+  .kv dd{margin-bottom:8px}
+  .modal{max-height:92vh}
+  .hero{padding:20px 18px}
+}
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <div class="mark" aria-hidden="true"></div>
+    <div>
+      <h1>Anthbot M9 Pro</h1>
+      <div class="sub">Closed beta · field report</div>
+    </div>
+  </div>
+  <nav class="tabs" id="tabs" role="tablist">
+    <button class="tab" data-view="dashboard" role="tab">Overview</button>
+    <button class="tab" data-view="reports" role="tab">Reports <span class="cnt" id="cntReports"></span></button>
+    <button class="tab" data-view="roadmap" role="tab">Requests <span class="cnt" id="cntReq"></span></button>
+    <button class="tab" data-view="releases" role="tab">Updates</button>
+    <button class="tab" data-view="checklist" role="tab">Test plan</button>
+    <button class="tab" data-view="fleet" role="tab">Fleet</button>
+    <button class="tab" data-view="settings" role="tab">You</button>
+  </nav>
+  <div class="top-right">
+    <button class="btn icon ghost" id="btnBell" title="Activity" aria-label="Activity">
+      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0"/></svg>
+    </button>
+    <button class="btn sm" id="btnWho"></button>
+  </div>
+</header>
+
+<main class="app">
+  <section id="view-dashboard" hidden></section>
+  <section id="view-reports" hidden></section>
+  <section id="view-roadmap" hidden></section>
+  <section id="view-releases" hidden></section>
+  <section id="view-checklist" hidden></section>
+  <section id="view-fleet" hidden></section>
+  <section id="view-settings" hidden></section>
+</main>
+
+<button class="btn primary fab" id="fabNew">
+  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><path d="M12 5v14M5 12h14"/></svg>
+  New report
+</button>
+
+<div class="scrim" id="scrim"></div>
+
+<!-- report detail -->
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-label="Report detail">
+  <div class="drawer-head" id="drawerHead"></div>
+  <div class="drawer-body" id="drawerBody"></div>
+  <div class="drawer-foot" id="drawerFoot"></div>
+</aside>
+
+<!-- new / edit report -->
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-label="Dialog">
+  <div class="modal-head" id="modalHead"></div>
+  <div class="modal-body" id="modalBody"></div>
+  <div class="modal-foot" id="modalFoot"></div>
+</div>
+
+<div class="lightbox" id="lightbox"><img id="lightboxImg" alt=""></div>
+<div id="toasts" aria-live="polite"></div>
+
+<script>
+"use strict";
+/* ==================================================================
+   ANTHBOT M9 PRO — CLOSED BETA REPORTING ENVIRONMENT
+   Single file. No build step. Vanilla JS.
+
+   STORAGE
+   Everything goes through the Store adapter below. It writes to
+   localStorage today and falls back to memory when storage is
+   blocked (sandboxed previews). To move to Firebase, replace the
+   four methods in Store — nothing else in the file touches storage.
+   See the FIREBASE SWAP POINT block at the bottom.
+   ================================================================== */
+
+/* ---------------------------- taxonomy ---------------------------- */
+const TYPES = {
+  bug:        {label:'Bug',              cls:'t-bug'},
+  safety:     {label:'Safety',           cls:'t-safety'},
+  hardware:   {label:'Hardware fault',   cls:'t-hardware'},
+  feature:    {label:'Feature request',  cls:'t-feature'},
+  improvement:{label:'Improvement',      cls:'t-improvement'},
+  question:   {label:'Question',         cls:'t-question'},
+  docs:       {label:'Manual / docs',    cls:'t-docs'}
+};
+const SEVERITIES = {
+  critical:{label:'Critical', cls:'sev-critical', w:4, help:'Mower unusable, damages lawn or property, or anyone could get hurt'},
+  high:    {label:'High',     cls:'sev-high',     w:3, help:'A main function fails, no workaround'},
+  medium:  {label:'Medium',   cls:'sev-medium',   w:2, help:'Annoying but there is a way around it'},
+  low:     {label:'Low',      cls:'sev-low',      w:1, help:'Cosmetic or minor'}
+};
+const STATUSES = {
+  'new':        {label:'New',            cls:'st-new',        open:true},
+  'triaged':    {label:'Triaged',        cls:'st-triaged',    open:true},
+  'need-info':  {label:'Needs info',     cls:'st-need-info',  open:true},
+  'confirmed':  {label:'Reproduced',     cls:'st-confirmed',  open:true},
+  'in-progress':{label:'Being fixed',    cls:'st-in-progress',open:true},
+  'fixed':      {label:'Fixed in build', cls:'st-fixed',      open:false},
+  'verified':   {label:'Verified fixed', cls:'st-verified',   open:false},
+  'wont-fix':   {label:'Not planned',    cls:'st-wont-fix',   open:false},
+  'duplicate':  {label:'Duplicate',      cls:'st-duplicate',  open:false}
+};
+const COMPONENTS = ['Navigation / mapping','Cutting deck & blades','Docking & charging','Battery & runtime','Wheels & traction','Obstacle avoidance','Rain & weather sensor','RTK / GPS signal','Wi-Fi / Bluetooth / LTE','Mobile app','Firmware / updates','Boundary & no-go zones','Noise & vibration','Anti-theft & alarm','Multi-zone scheduling','Packaging & setup','Manual & labelling','Other'];
+const FREQ = ['Every single time','Most runs','Now and then','Happened once'];
+const SURFACES = ['Flat lawn','Slopes under 25%','Slopes over 25%','Wet / soggy ground','Narrow passage','Tall or overgrown grass','Moss / uneven turf','Gravel or paving edge','Around trees / beds'];
+const P_LEVELS = {P0:'P0 — stop ship',P1:'P1 — must fix',P2:'P2 — should fix',P3:'P3 — someday'};
+const REQ_STAGES = {
+  requested:'Requested', reviewing:'Under review', planned:'Planned', building:'In build', shipped:'Shipped'
+};
+
+/* ---------------------------- helpers ---------------------------- */
+const $  = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const uid = ()=>Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+const esc = s => String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nl  = s => esc(s).replace(/\n/g,'<br>');
+function ago(ts){
+  const d=(Date.now()-ts)/1000;
+  if(d<60) return 'just now';
+  if(d<3600) return Math.floor(d/60)+'m ago';
+  if(d<86400) return Math.floor(d/3600)+'h ago';
+  if(d<604800) return Math.floor(d/86400)+'d ago';
+  return new Date(ts).toLocaleDateString('en-GB',{day:'numeric',month:'short'});
+}
+function fdate(ts){return new Date(ts).toLocaleString('en-GB',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'});}
+function hue(str){let h=0;for(const c of String(str))h=(h*31+c.charCodeAt(0))%360;return h;}
+function avatar(name){
+  const initials=String(name||'?').split(/\s+/).map(w=>w[0]).join('').slice(0,2).toUpperCase();
+  return `<span class="avatar" style="background:hsl(${hue(name)} 70% 62%)">${esc(initials)}</span>`;
+}
+function toast(msg,bad){
+  const t=document.createElement('div');
+  t.className='toast'+(bad?' bad':'');
+  t.innerHTML=(bad?'⚠️ ':'✓ ')+esc(msg);
+  $('#toasts').appendChild(t);
+  setTimeout(()=>{t.style.opacity='0';t.style.transition='.3s';setTimeout(()=>t.remove(),300);},2600);
+}
+function chip(cls,label,dot){return `<span class="chip ${cls}">${dot?'<span class="dot"></span>':''}${esc(label)}</span>`;}
+
+/* ==================================================================
+   STORE — the only place that touches persistence
+   ================================================================== */
+const Store = {
+  KEY:'anthbot_m9_beta_v1',
+  _mem:null,
+  _ok(){ try{localStorage.setItem('__t','1');localStorage.removeItem('__t');return true;}catch(e){return false;} },
+  async load(){
+    if(this._ok()){
+      try{ const raw=localStorage.getItem(this.KEY); return raw?JSON.parse(raw):null; }catch(e){ return null; }
+    }
+    return this._mem;
+  },
+  async save(state){
+    if(this._ok()){
+      try{ localStorage.setItem(this.KEY,JSON.stringify(state)); return true; }
+      catch(e){ toast('Storage full — export your data',true); return false; }
+    }
+    this._mem=state; return true;
+  },
+  async clear(){ if(this._ok()) localStorage.removeItem(this.KEY); this._mem=null; },
+  mode(){ return this._ok()?'This browser':'This session only'; }
+};
+
+/* ==================================================================
+   STATE
+   ================================================================== */
+let S = null;          // whole database
+let me = null;         // current profile
+const ui = {
+  view:'dashboard',
+  q:'', f:{type:'',severity:'',status:'',component:'',build:'',tag:'',mine:'',stale:''},
+  sort:'impact', openId:null, draftFiles:[]
+};
+
+function blankState(){
+  return {
+    v:1,
+    profile:{ id:uid(), name:'', unit:'', region:'', firmware:'2.4.1', app:'3.8.0', hw:'M9P-B', lawn:'', role:'tester' },
+    reports:[], releases:[], activity:[], checks:{}, counter:0, staffUnlocked:false, announcements:[]
+  };
+}
+
+function nextKey(){ S.counter+=1; return 'M9-'+String(S.counter).padStart(3,'0'); }
+function isStaff(){ return S.profile.role==='anthbot'; }
+function logAct(text,ref){
+  S.activity.unshift({id:uid(),text,ref:ref||null,by:S.profile.name||'Anonymous tester',at:Date.now()});
+  S.activity=S.activity.slice(0,300);
+}
+async function persist(){ await Store.save(S); }
+
+/* impact score: votes weighted by severity, with a small recency nudge */
+function impact(r){
+  const sev=SEVERITIES[r.severity]?.w||1;
+  const age=(Date.now()-r.createdAt)/86400000;
+  return (r.votes.length+1)*sev*10 + Math.max(0,20-age);
+}
+function isOpen(r){ return STATUSES[r.status]?.open; }
+function myVote(r){ return r.votes.includes(S.profile.id); }
+function byId(id){ return S.reports.find(r=>r.id===id); }
+
+/* ==================================================================
+   SEED — a beta group is never empty on day one
+   ================================================================== */
+function seed(){
+  const s=blankState();
+  s.profile.name='';
+  const now=Date.now(), D=86400000;
+  const mk=(o)=>{
+    s.counter+=1;
+    return Object.assign({
+      id:uid(), key:'M9-'+String(s.counter).padStart(3,'0'),
+      title:'', body:'', type:'bug', severity:'medium', status:'new',
+      component:'Other', freq:'Now and then', surface:[], steps:'', expected:'', actual:'',
+      env:{firmware:'2.4.1',app:'3.8.0',hw:'M9P-B',region:'DK',lawn:'800',weather:''},
+      tags:[], files:[], votes:[], watchers:[], comments:[], history:[],
+      author:{id:uid(),name:'Tester',role:'tester'},
+      createdAt:now, updatedAt:now, pinned:false, priority:'', assignee:'', fixedIn:'',
+      dupeOf:'', official:'', internal:'', stage:''
+    },o);
+  };
+  s.reports=[
+    mk({title:'Mower drives over the flower bed edge on zone 2',body:'When it finishes the north strip it turns one wheel-width too late and clips the bed. Lost three tulips this week.',type:'bug',severity:'critical',status:'confirmed',component:'Boundary & no-go zones',freq:'Most runs',surface:['Around trees / beds'],steps:'1. Schedule zone 2 at 09:00\n2. Let it run the north-south pattern\n3. Watch the last turn before the bed',expected:'Turn stays inside the virtual boundary',actual:'Front left wheel crosses roughly 12 cm past the line',tags:['boundary','zone2'],author:{id:'u2',name:'Mette H.',role:'tester'},createdAt:now-9*D,updatedAt:now-2*D,votes:['u2','u3','u4','u5','u7','u9'],priority:'P0',assignee:'Firmware team',official:'Reproduced on three units with RTK in low-satellite conditions. Fix is in the 2.5.0 candidate.'}),
+    mk({title:'Blade motor stalls in wet grass after ~20 minutes',body:'On damp mornings the deck stops and the app shows E-217. Restart clears it until the next wet run.',type:'hardware',severity:'critical',status:'in-progress',component:'Cutting deck & blades',freq:'Most runs',surface:['Wet / soggy ground'],expected:'Deck keeps cutting or slows down gracefully',actual:'Hard stop, error E-217, mower parks in place',tags:['E-217','wet'],author:{id:'u3',name:'Jonas P.',role:'tester'},createdAt:now-14*D,updatedAt:now-1*D,votes:['u3','u1','u4','u6','u8','u2','u11'],priority:'P1',assignee:'Hardware',official:'Current draw spikes when clippings pack the deck. Testing a new impeller profile — please report deck cleanliness with your next run.'}),
+    mk({title:'Child-lock keypad can be bypassed by holding STOP + dock',body:'Holding the physical stop button while pressing dock skips the PIN screen entirely. My 7-year-old found it, not me.',type:'safety',severity:'critical',status:'fixed',component:'Anti-theft & alarm',freq:'Every single time',expected:'PIN is always required before the blades can spin',actual:'Blades arm without a PIN',tags:['child-lock','pin'],author:{id:'u4',name:'Anna S.',role:'tester'},createdAt:now-21*D,updatedAt:now-4*D,votes:['u4','u1','u2','u3','u5','u6','u7','u8','u10'],priority:'P0',assignee:'Firmware team',fixedIn:'2.4.1',official:'Thank you for catching this. Patched in 2.4.1 — please confirm on your unit and mark it verified.'}),
+    mk({title:'App loses the mower after the router restarts',body:'Every time the router reboots overnight I have to re-pair. The mower is online, the app just will not find it.',type:'bug',severity:'high',status:'triaged',component:'Wi-Fi / Bluetooth / LTE',freq:'Every single time',tags:['pairing','wifi'],author:{id:'u5',name:'Bjarni T.',role:'tester'},createdAt:now-6*D,updatedAt:now-3*D,votes:['u5','u2','u9','u12'],priority:'P1'}),
+    mk({title:'Add a “skip today” button on the widget',body:'If it rained all night I want one tap to skip the day without opening the schedule.',type:'feature',severity:'low',status:'triaged',component:'Mobile app',stage:'planned',tags:['widget','schedule'],author:{id:'u6',name:'Sara L.',role:'tester'},createdAt:now-11*D,updatedAt:now-5*D,votes:['u6','u1','u2','u3','u4','u5','u7','u8','u9','u10','u11']}),
+    mk({title:'Let me set quiet hours per zone',body:'The zone by the bedroom window should never run before 10. The rest can start at 07.',type:'feature',severity:'low',status:'new',component:'Multi-zone scheduling',stage:'reviewing',tags:['noise','zones'],author:{id:'u7',name:'Rune K.',role:'tester'},createdAt:now-4*D,updatedAt:now-4*D,votes:['u7','u3','u8','u12','u2']}),
+    mk({title:'Docking misses on the third attempt when sun is low',body:'Late afternoon, sun straight down the driveway, it noses in at an angle and gives up after three tries.',type:'bug',severity:'high',status:'need-info',component:'Docking & charging',freq:'Now and then',surface:['Gravel or paving edge'],tags:['dock','sun'],author:{id:'u8',name:'Ingrid V.',role:'tester'},createdAt:now-3*D,updatedAt:now-2*D,votes:['u8','u4'],official:'Could you note the exact time of day and dock orientation? A photo of the approach would help a lot.'}),
+    mk({title:'Runtime is 38 min, spec sheet says 60',body:'Full charge, 800 m² flat lawn, medium grass. Never gets past 40 minutes before it returns.',type:'bug',severity:'medium',status:'confirmed',component:'Battery & runtime',freq:'Every single time',tags:['battery','runtime'],author:{id:'u9',name:'Tomas R.',role:'tester'},createdAt:now-16*D,updatedAt:now-6*D,votes:['u9','u1','u5','u7','u10','u11']}),
+    mk({title:'Quick-start card shows the old blade screw direction',body:'Card says clockwise to loosen. It is counter-clockwise on this deck. Nearly stripped it.',type:'docs',severity:'medium',status:'fixed',component:'Manual & labelling',tags:['manual'],author:{id:'u10',name:'Petra M.',role:'tester'},createdAt:now-19*D,updatedAt:now-7*D,votes:['u10','u6'],fixedIn:'app 3.8.0',official:'Corrected in the digital manual. Reprinted cards ship with the next batch.'}),
+    mk({title:'Rain sensor triggers on morning dew',body:'Not really rain, just heavy dew, and it sits in the dock until noon.',type:'improvement',severity:'medium',status:'new',component:'Rain & weather sensor',freq:'Most runs',tags:['rain','dew'],author:{id:'u11',name:'Kasper N.',role:'tester'},createdAt:now-2*D,updatedAt:now-2*D,votes:['u11','u2','u5']}),
+    mk({title:'Wheel motor whine at 62 dB on slopes',body:'Measured with a phone app at 1 m. Neighbour noticed before I did.',type:'bug',severity:'low',status:'new',component:'Noise & vibration',freq:'Most runs',surface:['Slopes over 25%'],tags:['noise'],author:{id:'u12',name:'Elin D.',role:'tester'},createdAt:now-1*D,updatedAt:now-1*D,votes:['u12']}),
+    mk({title:'Show cut-height in mm instead of steps 1–9',body:'Nobody knows what step 4 means. Give me millimetres.',type:'improvement',severity:'low',status:'new',component:'Mobile app',stage:'requested',tags:['ux'],author:{id:'u2',name:'Mette H.',role:'tester'},createdAt:now-5*D,updatedAt:now-5*D,votes:['u2','u9','u4','u6']})
+  ];
+  s.reports[2].comments=[
+    {id:uid(),by:'Anthbot Support',role:'anthbot',text:'Escalated to the safety team within the hour. Please stop letting children near the unit until you are on 2.4.1.',at:now-20*D,internal:false},
+    {id:uid(),by:'Anna S.',role:'tester',text:'Updated this morning, the bypass is gone on my unit.',at:now-3*D,internal:false}
+  ];
+  s.reports[0].history=[
+    {at:now-9*D,text:'Reported',by:'Mette H.'},
+    {at:now-8*D,text:'Status → Triaged',by:'Anthbot Support'},
+    {at:now-6*D,text:'Status → Reproduced',by:'Anthbot Support'},
+    {at:now-6*D,text:'Priority set to P0',by:'Anthbot Support'}
+  ];
+  s.releases=[
+    {id:uid(),version:'2.5.0',channel:'firmware',status:'beta',date:now+3*D,notes:'Boundary turn accuracy, deck stall recovery, dock approach in low sun.',fixes:[s.reports[0].id,s.reports[1].id,s.reports[6].id]},
+    {id:uid(),version:'2.4.1',channel:'firmware',status:'released',date:now-4*D,notes:'Emergency patch: child-lock bypass. Everyone must install this before the next run.',fixes:[s.reports[2].id]},
+    {id:uid(),version:'3.8.0',channel:'app',status:'released',date:now-7*D,notes:'Corrected blade service instructions, faster pairing screen.',fixes:[s.reports[8].id]}
+  ];
+  s.announcements=[
+    {id:uid(),at:now-4*D,title:'Install 2.4.1 before your next mow',body:'It closes the child-lock bypass reported in M9-003. Do not run the mower unattended until you are on it.',pinned:true}
+  ];
+  s.activity=[
+    {id:uid(),text:'marked M9-003 fixed in 2.4.1',by:'Anthbot Support',at:now-4*D},
+    {id:uid(),text:'reproduced M9-001 on unit 0042',by:'Anthbot Support',at:now-6*D},
+    {id:uid(),text:'reported M9-011 Wheel motor whine',by:'Elin D.',at:now-1*D}
+  ];
+  return s;
+}
+
+/* ==================================================================
+   TEST PLAN — the closed-beta script every tester runs
+   ================================================================== */
+const CHECKLIST = [
+  {g:'Unboxing & setup',items:[
+    'Box arrives undamaged, all parts on the packing list present',
+    'Dock installs with the supplied pegs on your ground type',
+    'First pairing completes in under 5 minutes',
+    'Boundary is recorded without a manual re-walk'
+  ]},
+  {g:'Core mowing',items:[
+    'Completes a full zone without human help',
+    'Cut height matches what the app says (measure it)',
+    'Stripe overlap leaves no uncut ribbons',
+    'Handles your steepest slope both up and across',
+    'Cuts a narrow passage under 80 cm without wedging'
+  ]},
+  {g:'Obstacle & safety',items:[
+    'Stops for a garden hose lying across the lane',
+    'Stops for a stationary shoe / toy (use an object, never a person or pet)',
+    'Lift sensor stops the blades within 1 second',
+    'Tilt sensor stops the blades when tipped',
+    'Child lock requires the PIN every time',
+    'Emergency stop button halts everything instantly'
+  ]},
+  {g:'Docking & power',items:[
+    'Finds the dock from the far corner of the lawn',
+    'Docks correctly in low sun and after dark',
+    'Charges to full and reports the right percentage',
+    'Resumes the interrupted zone after charging',
+    'Survives a full night in rain without a fault'
+  ]},
+  {g:'App & connectivity',items:[
+    'Reconnects on its own after a router restart',
+    'Schedule changes reach the mower within a minute',
+    'Live map matches where the mower actually is',
+    'Notifications arrive for errors and completion',
+    'Firmware update installs without a factory reset'
+  ]},
+  {g:'Edge cases worth breaking',items:[
+    'Run it in tall wet grass it was never meant for',
+    'Block the dock and see what it does',
+    'Pull the Wi-Fi mid-run',
+    'Start a zone while another is running',
+    'Let the battery run flat on the far side of the lawn'
+  ]}
+];
+
+/* ==================================================================
+   ROUTER
+   ================================================================== */
+function go(view){
+  ui.view=view;
+  $$('#tabs .tab').forEach(t=>t.setAttribute('aria-current',String(t.dataset.view===view)));
+  $$('main > section').forEach(s=>s.hidden=true);
+  const el=$('#view-'+view); el.hidden=false;
+  ({dashboard:renderDashboard,reports:renderReports,roadmap:renderRoadmap,releases:renderReleases,
+    checklist:renderChecklist,fleet:renderFleet,settings:renderSettings}[view])(el);
+  window.scrollTo({top:0,behavior:'instant'});
+  location.hash=view;
+}
+function renderAll(){
+  $('#cntReports').textContent=S.reports.filter(r=>r.type!=='feature'&&isOpen(r)).length||'';
+  $('#cntReq').textContent=S.reports.filter(r=>r.type==='feature'||r.type==='improvement').length||'';
+  $('#btnWho').innerHTML=(S.profile.name?avatar(S.profile.name):'')+' '+esc(S.profile.name||'Sign in')+(isStaff()?' <span class="badge-staff">Anthbot</span>':'');
+  go(ui.view);
+}
+
+/* ==================================================================
+   DASHBOARD
+   ================================================================== */
+function renderDashboard(el){
+  const R=S.reports;
+  const open=R.filter(isOpen);
+  const crit=open.filter(r=>r.severity==='critical');
+  const mine=R.filter(r=>r.author.id===S.profile.id);
+  const fixedWaiting=R.filter(r=>r.status==='fixed');
+  const votesTotal=R.reduce((a,r)=>a+r.votes.length,0);
+  const doneChecks=Object.values(S.checks).filter(v=>v&&v!=='').length;
+  const totalChecks=CHECKLIST.reduce((a,g)=>a+g.items.length,0);
+
+  const statusCounts=Object.keys(STATUSES).map(k=>({k,n:R.filter(r=>r.status===k).length}))
+    .filter(x=>x.n).sort((a,b)=>b.n-a.n);
+  const maxS=Math.max(1,...statusCounts.map(s=>s.n));
+  const compCounts=COMPONENTS.map(c=>({c,n:R.filter(r=>r.component===c).length})).filter(x=>x.n).sort((a,b)=>b.n-a.n).slice(0,6);
+  const maxC=Math.max(1,...compCounts.map(s=>s.n));
+
+  // 14 day report trend
+  const days=[...Array(14)].map((_,i)=>{
+    const t0=new Date(); t0.setHours(0,0,0,0); t0.setDate(t0.getDate()-(13-i));
+    const t1=t0.getTime()+86400000;
+    return {d:t0.getTime(),n:R.filter(r=>r.createdAt>=t0.getTime()&&r.createdAt<t1).length};
+  });
+
+  const ann=S.announcements[0];
+
+  el.innerHTML=`
+  <div class="hero">
+    <div class="eyebrow">Build ${esc(S.profile.firmware)} · ${S.reports.length} reports · ${new Set(R.map(r=>r.author.name)).size} testers</div>
+    <div class="fleet">${crit.length?`<em>${crit.length}</em> critical ${crit.length===1?'issue is':'issues are'} still open.`:`No critical issues open. <em>Keep breaking it.</em>`}</div>
+    <p class="muted" style="margin:0;max-width:60ch">Everything you hit out there belongs in here — the dangerous, the annoying, the merely odd, and the thing you wish it did instead.</p>
+    <div class="stat-strip">
+      <div class="stat ${crit.length?'alert':''}"><div class="n">${crit.length}</div><div class="l">Critical open</div></div>
+      <div class="stat"><div class="n">${open.length}</div><div class="l">Open reports</div></div>
+      <div class="stat"><div class="n">${fixedWaiting.length}</div><div class="l">Waiting for you to verify</div></div>
+      <div class="stat"><div class="n">${votesTotal}</div><div class="l">“Same here” votes</div></div>
+      <div class="stat"><div class="n">${mine.length}</div><div class="l">Filed by you</div></div>
+      <div class="stat"><div class="n">${doneChecks}/${totalChecks}</div><div class="l">Test plan done</div></div>
+    </div>
+  </div>
+
+  ${ann?`<div class="card pad" style="border-color:rgba(180,240,74,.35);background:linear-gradient(100deg,rgba(180,240,74,.08),transparent);margin-bottom:16px">
+    <div class="eyebrow">From Anthbot</div>
+    <h2 class="sec" style="margin:6px 0 6px">${esc(ann.title)}</h2>
+    <p class="muted" style="margin:0">${nl(ann.body)}</p>
+  </div>`:''}
+
+  <div class="dash-grid">
+    <div style="display:flex;flex-direction:column;gap:16px">
+      ${crit.length?`<div class="card pad">
+        <div class="spread"><h2 class="sec">Needs attention now</h2><button class="btn sm ghost" data-goto="reports">See all</button></div>
+        <div class="list" style="margin-top:12px">${crit.slice(0,4).map(itemHTML).join('')}</div>
+      </div>`:''}
+
+      ${fixedWaiting.length?`<div class="card pad">
+        <h2 class="sec">Fixed — does it hold up on your unit?</h2>
+        <p class="muted tiny" style="margin:6px 0 0">Anthbot marked these fixed. Run the scenario again and tell them.</p>
+        <div class="list" style="margin-top:12px">${fixedWaiting.slice(0,3).map(itemHTML).join('')}</div>
+      </div>`:''}
+
+      <div class="card pad">
+        <h2 class="sec">Most felt across the group</h2>
+        <p class="muted tiny" style="margin:6px 0 0">Ranked by votes weighted with severity.</p>
+        <div class="list" style="margin-top:12px">${[...R].filter(isOpen).sort((a,b)=>impact(b)-impact(a)).slice(0,5).map(itemHTML).join('')}</div>
+      </div>
+    </div>
+
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card pad">
+        <h2 class="sec">Where it stands</h2>
+        <div class="bars">${statusCounts.map(s=>`
+          <div class="bar-row"><span class="muted">${STATUSES[s.k].label}</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${s.n/maxS*100}%;background:${statusColor(s.k)}"></span></span>
+            <span class="key" style="text-align:right">${s.n}</span></div>`).join('')}</div>
+      </div>
+
+      <div class="card pad">
+        <h2 class="sec">What breaks most</h2>
+        <div class="bars">${compCounts.map(s=>`
+          <div class="bar-row"><span class="muted" style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${esc(s.c)}">${esc(s.c)}</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${s.n/maxC*100}%;background:linear-gradient(90deg,var(--teal),var(--lime))"></span></span>
+            <span class="key" style="text-align:right">${s.n}</span></div>`).join('')}</div>
+      </div>
+
+      <div class="card pad">
+        <h2 class="sec">Last 14 days</h2>
+        ${sparkline(days)}
+      </div>
+
+      <div class="card pad">
+        <div class="spread"><h2 class="sec">Activity</h2></div>
+        <ul class="feed">${S.activity.slice(0,14).map(a=>`
+          <li>${avatar(a.by)}<span><strong>${esc(a.by)}</strong> ${esc(a.text)}</span><span class="when">${ago(a.at)}</span></li>`).join('')||'<li class="muted">Nothing yet.</li>'}</ul>
+      </div>
+    </div>
+  </div>`;
+  wireItems(el);
+}
+function statusColor(k){
+  return {'new':'var(--lime)','triaged':'var(--sky)','need-info':'var(--amber)','confirmed':'var(--coral)',
+  'in-progress':'var(--violet)','fixed':'var(--teal)','verified':'var(--teal)','wont-fix':'var(--muted)','duplicate':'var(--muted)'}[k]||'var(--muted)';
+}
+function sparkline(days){
+  const max=Math.max(1,...days.map(d=>d.n)), W=300,H=70;
+  const pts=days.map((d,i)=>[i*(W/(days.length-1)),H-8-(d.n/max)*(H-20)]);
+  const path=pts.map((p,i)=>(i?'L':'M')+p[0].toFixed(1)+' '+p[1].toFixed(1)).join(' ');
+  const area=path+` L${W} ${H} L0 ${H} Z`;
+  return `<svg class="spark" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" role="img" aria-label="New reports per day">
+    <defs><linearGradient id="sg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="rgba(180,240,74,.35)"/><stop offset="100%" stop-color="rgba(180,240,74,0)"/></linearGradient></defs>
+    <path d="${area}" fill="url(#sg)"/>
+    <path d="${path}" fill="none" stroke="var(--lime)" stroke-width="2" stroke-linejoin="round"/>
+    ${pts.map((p,i)=>days[i].n?`<circle cx="${p[0].toFixed(1)}" cy="${p[1].toFixed(1)}" r="2.5" fill="var(--lime)"/>`:'').join('')}
+  </svg>
+  <div class="row tiny muted" style="justify-content:space-between"><span>${new Date(days[0].d).toLocaleDateString('en-GB',{day:'numeric',month:'short'})}</span><span>${days.reduce((a,d)=>a+d.n,0)} new</span><span>today</span></div>`;
+}
+
+/* ==================================================================
+   REPORT LIST
+   ================================================================== */
+function itemHTML(r){
+  const dupe=r.dupeOf?byId(r.dupeOf):null;
+  return `<article class="item ${r.pinned?'pinned':''} ${r.severity==='critical'&&isOpen(r)?'crit':''}" data-id="${r.id}" tabindex="0">
+    <button class="vote ${myVote(r)?'on':''}" data-vote="${r.id}" title="I have this too" aria-pressed="${myVote(r)}">
+      <span class="v">${r.votes.length}</span><span class="lbl">same</span>
+    </button>
+    <div style="min-width:0">
+      <h3>${r.pinned?'📌 ':''}${esc(r.title)}</h3>
+      <div class="meta">
+        <span class="key">${esc(r.key)}</span>
+        ${chip(TYPES[r.type].cls,TYPES[r.type].label)}
+        ${r.type!=='feature'?chip(SEVERITIES[r.severity].cls,SEVERITIES[r.severity].label,true):''}
+        ${chip(STATUSES[r.status].cls,STATUSES[r.status].label)}
+        ${r.fixedIn?`<span class="tagpill">in ${esc(r.fixedIn)}</span>`:''}
+        ${dupe?`<span class="tagpill">dupe of ${esc(dupe.key)}</span>`:''}
+        <span class="muted tiny">${esc(r.component)}</span>
+      </div>
+    </div>
+    <div class="right">
+      <span class="muted tiny">${esc(r.author.name)} · ${ago(r.createdAt)}</span>
+      <span class="muted tiny">${r.comments.length?`💬 ${r.comments.length}`:''} ${r.files.length?`📎 ${r.files.length}`:''}</span>
+    </div>
+  </article>`;
+}
+function wireItems(root){
+  $$('.item',root).forEach(n=>{
+    n.addEventListener('click',e=>{ if(e.target.closest('[data-vote]'))return; openReport(n.dataset.id); });
+    n.addEventListener('keydown',e=>{ if(e.key==='Enter')openReport(n.dataset.id); });
+  });
+  $$('[data-vote]',root).forEach(b=>b.addEventListener('click',e=>{e.stopPropagation();toggleVote(b.dataset.vote);}));
+  $$('[data-goto]',root).forEach(b=>b.addEventListener('click',()=>go(b.dataset.goto)));
+}
+async function toggleVote(id){
+  const r=byId(id); if(!r)return;
+  const i=r.votes.indexOf(S.profile.id);
+  if(i>=0){ r.votes.splice(i,1); } else { r.votes.push(S.profile.id); toast('Counted — '+r.key+' now has '+r.votes.length); }
+  r.updatedAt=Date.now();
+  await persist(); renderAll(); if(ui.openId===id) openReport(id);
+}
+
+function filtered(){
+  let list=S.reports.slice();
+  const q=ui.q.toLowerCase().trim();
+  if(q) list=list.filter(r=>(r.title+' '+r.body+' '+r.key+' '+r.tags.join(' ')+' '+r.component+' '+r.author.name).toLowerCase().includes(q));
+  const f=ui.f;
+  if(f.type)list=list.filter(r=>r.type===f.type);
+  if(f.severity)list=list.filter(r=>r.severity===f.severity);
+  if(f.status==='__open')list=list.filter(isOpen);
+  else if(f.status==='__closed')list=list.filter(r=>!isOpen(r));
+  else if(f.status)list=list.filter(r=>r.status===f.status);
+  if(f.component)list=list.filter(r=>r.component===f.component);
+  if(f.build)list=list.filter(r=>r.env.firmware===f.build);
+  if(f.tag)list=list.filter(r=>r.tags.includes(f.tag));
+  if(f.mine==='mine')list=list.filter(r=>r.author.id===S.profile.id);
+  if(f.mine==='voted')list=list.filter(r=>myVote(r));
+  if(f.mine==='watch')list=list.filter(r=>r.watchers.includes(S.profile.id));
+  if(f.stale)list=list.filter(r=>isOpen(r)&&Date.now()-r.updatedAt>7*86400000);
+  const sorters={
+    impact:(a,b)=>impact(b)-impact(a),
+    votes:(a,b)=>b.votes.length-a.votes.length,
+    new:(a,b)=>b.createdAt-a.createdAt,
+    old:(a,b)=>a.createdAt-b.createdAt,
+    activity:(a,b)=>b.updatedAt-a.updatedAt,
+    severity:(a,b)=>SEVERITIES[b.severity].w-SEVERITIES[a.severity].w
+  };
+  list.sort(sorters[ui.sort]||sorters.impact);
+  list.sort((a,b)=>(b.pinned?1:0)-(a.pinned?1:0));
+  return list;
+}
+function renderReports(el){
+  const allTags=[...new Set(S.reports.flatMap(r=>r.tags))].sort();
+  const builds=[...new Set(S.reports.map(r=>r.env.firmware).filter(Boolean))].sort();
+  const list=filtered();
+  el.innerHTML=`
+  <div class="spread" style="margin:22px 0 4px">
+    <div><div class="eyebrow">Everything reported</div><h2 class="sec" style="margin-top:6px">${list.length} of ${S.reports.length} reports</h2></div>
+    <div class="row">
+      <button class="btn sm" id="expCsv">Export CSV</button>
+      <button class="btn primary sm" id="newFromList">New report</button>
+    </div>
+  </div>
+  <div class="toolbar">
+    <div class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+      <input type="text" id="q" placeholder="Search title, text, tag, tester or M9-042" value="${esc(ui.q)}">
+    </div>
+    <select id="sort" style="width:auto;min-width:150px">
+      ${[['impact','Sort: impact'],['votes','Sort: most votes'],['new','Sort: newest'],['activity','Sort: last activity'],['severity','Sort: severity'],['old','Sort: oldest']]
+        .map(([v,l])=>`<option value="${v}" ${ui.sort===v?'selected':''}>${l}</option>`).join('')}
+    </select>
+  </div>
+  <div class="filters">
+    ${sel('f-status','status',[['','Any status'],['__open','Open only'],['__closed','Closed only'],...Object.entries(STATUSES).map(([k,v])=>[k,v.label])])}
+    ${sel('f-type','type',[['','Any kind'],...Object.entries(TYPES).map(([k,v])=>[k,v.label])])}
+    ${sel('f-severity','severity',[['','Any severity'],...Object.entries(SEVERITIES).map(([k,v])=>[k,v.label])])}
+    ${sel('f-component','component',[['','Any area'],...COMPONENTS.map(c=>[c,c])])}
+    ${sel('f-build','build',[['','Any build'],...builds.map(b=>[b,'FW '+b])])}
+    ${sel('f-tag','tag',[['','Any tag'],...allTags.map(t=>[t,'#'+t])])}
+    ${sel('f-mine','mine',[['','Everyone'],['mine','Filed by me'],['voted','I voted'],['watch','I follow']])}
+    ${sel('f-stale','stale',[['','Any age'],['1','Untouched 7+ days']])}
+    <button class="btn sm ghost" id="clearF">Clear</button>
+  </div>
+  <div class="list">${list.map(itemHTML).join('')||`<div class="empty"><div class="big">Nothing matches that</div>Widen the filters, or file the thing you were about to search for.</div>`}</div>`;
+
+  $('#q').addEventListener('input',e=>{ui.q=e.target.value;const l=filtered();$('.list',el).innerHTML=l.map(itemHTML).join('')||`<div class="empty"><div class="big">Nothing matches that</div>Try fewer filters.</div>`;wireItems(el);});
+  $('#sort').addEventListener('change',e=>{ui.sort=e.target.value;renderReports(el);});
+  $$('[data-filter]',el).forEach(s=>s.addEventListener('change',e=>{ui.f[s.dataset.filter]=e.target.value;renderReports(el);}));
+  $('#clearF').addEventListener('click',()=>{ui.f={type:'',severity:'',status:'',component:'',build:'',tag:'',mine:'',stale:''};ui.q='';renderReports(el);});
+  $('#newFromList').addEventListener('click',()=>openForm());
+  $('#expCsv').addEventListener('click',exportCsv);
+  wireItems(el);
+}
+function sel(id,key,opts){
+  return `<select id="${id}" data-filter="${key}">${opts.map(([v,l])=>`<option value="${esc(v)}" ${ui.f[key]===v?'selected':''}>${esc(l)}</option>`).join('')}</select>`;
+}
+
+/* ==================================================================
+   REPORT DETAIL
+   ================================================================== */
+function openReport(id){
+  const r=byId(id); if(!r)return;
+  ui.openId=id;
+  const staff=isStaff();
+  const dupe=r.dupeOf?byId(r.dupeOf):null;
+  const rel=S.releases.find(x=>x.fixes.includes(r.id));
+
+  $('#drawerHead').innerHTML=`
+    <div style="min-width:0">
+      <div class="row" style="gap:7px;margin-bottom:7px">
+        <span class="key">${esc(r.key)}</span>
+        ${chip(TYPES[r.type].cls,TYPES[r.type].label)}
+        ${r.type!=='feature'?chip(SEVERITIES[r.severity].cls,SEVERITIES[r.severity].label,true):''}
+        ${chip(STATUSES[r.status].cls,STATUSES[r.status].label)}
+        ${r.priority?`<span class="tagpill">${esc(r.priority)}</span>`:''}
+      </div>
+      <h2 class="sec" style="font-size:19px;line-height:1.25">${esc(r.title)}</h2>
+      <div class="muted tiny" style="margin-top:6px">${esc(r.author.name)} · ${fdate(r.createdAt)} · last activity ${ago(r.updatedAt)}</div>
+    </div>
+    <button class="close-x" id="drawerClose" aria-label="Close">×</button>`;
+
+  $('#drawerBody').innerHTML=`
+    ${dupe?`<div class="block" style="border-color:rgba(255,194,75,.35)"><h4>Duplicate</h4>Tracked in <a href="#" data-open="${dupe.id}">${esc(dupe.key)} — ${esc(dupe.title)}</a></div>`:''}
+    ${r.official?`<div class="block" style="border-color:rgba(55,214,168,.4);background:rgba(55,214,168,.07)">
+        <h4>Anthbot says</h4><p class="pre">${nl(r.official)}</p>
+        ${r.fixedIn?`<div style="margin-top:9px">${chip('st-fixed','Fixed in '+r.fixedIn)}</div>`:''}</div>`:''}
+
+    ${r.body?`<div class="block"><h4>What happened</h4><p class="pre">${nl(r.body)}</p></div>`:''}
+    ${r.steps?`<div class="block"><h4>Steps to reproduce</h4><p class="pre">${nl(r.steps)}</p></div>`:''}
+    ${(r.expected||r.actual)?`<div class="grid2">
+      ${r.expected?`<div class="block"><h4>Expected</h4><p class="pre">${nl(r.expected)}</p></div>`:''}
+      ${r.actual?`<div class="block"><h4>Actually happened</h4><p class="pre">${nl(r.actual)}</p></div>`:''}</div>`:''}
+
+    ${r.files.length?`<div class="block"><h4>Attachments</h4><div class="thumbs">${r.files.map((f,i)=>`<img src="${f.data}" alt="${esc(f.name)}" data-zoom="${i}">`).join('')}</div></div>`:''}
+
+    <div class="block"><h4>Conditions</h4>
+      <dl class="kv">
+        <dt>Area</dt><dd>${esc(r.component)}</dd>
+        <dt>How often</dt><dd>${esc(r.freq||'—')}</dd>
+        <dt>Ground</dt><dd>${r.surface.length?esc(r.surface.join(', ')):'—'}</dd>
+        <dt>Firmware</dt><dd class="key">${esc(r.env.firmware||'—')}</dd>
+        <dt>App</dt><dd class="key">${esc(r.env.app||'—')}</dd>
+        <dt>Hardware</dt><dd class="key">${esc(r.env.hw||'—')}</dd>
+        <dt>Lawn</dt><dd>${esc(r.env.lawn||'—')} m² · ${esc(r.env.region||'—')}</dd>
+        <dt>Weather</dt><dd>${esc(r.env.weather||'—')}</dd>
+      </dl>
+      ${r.tags.length?`<div class="wrap" style="margin-top:11px">${r.tags.map(t=>`<span class="tagpill">#${esc(t)}</span>`).join('')}</div>`:''}
+    </div>
+
+    ${staff?`<div class="staffbox">
+      <div class="eyebrow" style="color:var(--teal)">Anthbot controls</div>
+      <div class="grid2" style="margin-top:12px">
+        <label class="f"><span>Status</span><select id="sStatus">${Object.entries(STATUSES).map(([k,v])=>`<option value="${k}" ${r.status===k?'selected':''}>${v.label}</option>`).join('')}</select></label>
+        <label class="f"><span>Priority</span><select id="sPrio"><option value="">Not set</option>${Object.entries(P_LEVELS).map(([k,v])=>`<option value="${k}" ${r.priority===k?'selected':''}>${v}</option>`).join('')}</select></label>
+        <label class="f"><span>Owner</span><input type="text" id="sAssignee" value="${esc(r.assignee)}" placeholder="Firmware team"></label>
+        <label class="f"><span>Fixed in build</span><input type="text" id="sFixed" value="${esc(r.fixedIn)}" placeholder="2.5.0"></label>
+        <label class="f"><span>Duplicate of</span><select id="sDupe"><option value="">Not a duplicate</option>${S.reports.filter(x=>x.id!==r.id).map(x=>`<option value="${x.id}" ${r.dupeOf===x.id?'selected':''}>${esc(x.key)} — ${esc(x.title.slice(0,40))}</option>`).join('')}</select></label>
+        <label class="f"><span>Request stage</span><select id="sStage"><option value="">Not a request</option>${Object.entries(REQ_STAGES).map(([k,v])=>`<option value="${k}" ${r.stage===k?'selected':''}>${v}</option>`).join('')}</select></label>
+      </div>
+      <label class="f"><span>Official reply <span class="hint">— shown at the top for every tester</span></span><textarea id="sOfficial" placeholder="What you found, what you changed, what you need from testers.">${esc(r.official)}</textarea></label>
+      <label class="f"><span>Internal note <span class="hint">— Anthbot only</span></span><textarea id="sInternal" class="internal" placeholder="Triage notes, not visible to testers.">${esc(r.internal)}</textarea></label>
+      <div class="row">
+        <button class="btn primary sm" id="saveStaff">Save changes</button>
+        <label class="switch"><input type="checkbox" id="sPin" ${r.pinned?'checked':''}> Pin to top</label>
+      </div>
+    </div>`:''}
+
+    ${(staff&&r.internal)?`<div class="block internal"><h4>Internal note</h4><p class="pre">${nl(r.internal)}</p></div>`:''}
+
+    <div class="block"><h4>History</h4>
+      <ul class="timeline">
+        ${(r.history.length?r.history:[{at:r.createdAt,text:'Reported',by:r.author.name}]).slice().reverse().map(h=>
+          `<li><strong>${esc(h.text)}</strong><div class="muted">${esc(h.by)} · ${fdate(h.at)}</div></li>`).join('')}
+      </ul>
+    </div>
+
+    <div class="block">
+      <h4>Discussion (${r.comments.filter(c=>staff||!c.internal).length})</h4>
+      ${r.comments.filter(c=>staff||!c.internal).map(c=>`
+        <div class="comment ${c.internal?'internal':''}">${avatar(c.by)}
+          <div class="body">
+            <div class="who">${esc(c.by)}${c.role==='anthbot'?'<span class="badge-staff">Anthbot</span>':''}${c.internal?' <span class="tagpill">internal</span>':''}
+              <span class="muted tiny" style="font-weight:400"> · ${ago(c.at)}</span></div>
+            <p class="pre" style="margin-top:4px">${nl(c.text)}</p>
+          </div>
+        </div>`).join('')||'<p class="muted tiny">No replies yet. Add what you know — even “happens to me on flat ground too” helps.</p>'}
+      <textarea id="cText" placeholder="Add detail, a workaround, or your conditions when it happened" style="margin-top:12px"></textarea>
+      <div class="row" style="margin-top:8px">
+        <button class="btn primary sm" id="cAdd">Post reply</button>
+        ${staff?'<label class="switch"><input type="checkbox" id="cInternal"> Internal only</label>':''}
+      </div>
+    </div>`;
+
+  const watching=r.watchers.includes(S.profile.id);
+  $('#drawerFoot').innerHTML=`
+    <button class="btn ${myVote(r)?'primary':''}" data-vote="${r.id}">${myVote(r)?'✓ You have this too':'I have this too'} · ${r.votes.length}</button>
+    <button class="btn" id="watch">${watching?'★ Following':'☆ Follow'}</button>
+    ${r.status==='fixed'?`<button class="btn" id="verify">Confirm it's fixed</button><button class="btn danger" id="reopen">Still broken</button>`:''}
+    ${(r.author.id===S.profile.id||isStaff())?`<button class="btn ghost sm" id="editR">Edit</button><button class="btn ghost sm danger" id="delR">Delete</button>`:''}`;
+
+  openDrawer();
+
+  $('#drawerClose').onclick=closeAll;
+  $$('[data-vote]',$('#drawerFoot')).forEach(b=>b.onclick=()=>toggleVote(r.id));
+  $$('[data-open]',$('#drawerBody')).forEach(a=>a.onclick=e=>{e.preventDefault();openReport(a.dataset.open);});
+  $$('[data-zoom]',$('#drawerBody')).forEach(img=>img.onclick=()=>{$('#lightboxImg').src=img.src;$('#lightbox').classList.add('open');});
+  $('#watch').onclick=async()=>{
+    const i=r.watchers.indexOf(S.profile.id);
+    i>=0?r.watchers.splice(i,1):r.watchers.push(S.profile.id);
+    await persist(); openReport(r.id);
+  };
+  if($('#verify')) $('#verify').onclick=()=>setStatus(r,'verified','Verified fixed by tester');
+  if($('#reopen')) $('#reopen').onclick=()=>setStatus(r,'confirmed','Reopened — still happening after the fix');
+  if($('#editR')) $('#editR').onclick=()=>openForm(r);
+  if($('#delR')) $('#delR').onclick=async()=>{
+    if(!confirm('Delete '+r.key+'? This cannot be undone.'))return;
+    S.reports=S.reports.filter(x=>x.id!==r.id); logAct('deleted '+r.key);
+    await persist(); closeAll(); renderAll(); toast(r.key+' deleted');
+  };
+  $('#cAdd').onclick=async()=>{
+    const t=$('#cText').value.trim(); if(!t)return;
+    r.comments.push({id:uid(),by:S.profile.name||'Anonymous tester',role:S.profile.role,text:t,at:Date.now(),internal:!!($('#cInternal')&&$('#cInternal').checked)});
+    r.updatedAt=Date.now(); logAct('replied on '+r.key,r.id);
+    await persist(); openReport(r.id); renderAll(); toast('Reply posted');
+  };
+  if(isStaff()){
+    $('#saveStaff').onclick=async()=>{
+      const before=r.status;
+      const ns=$('#sStatus').value;
+      r.priority=$('#sPrio').value; r.assignee=$('#sAssignee').value.trim();
+      r.fixedIn=$('#sFixed').value.trim(); r.dupeOf=$('#sDupe').value;
+      r.stage=$('#sStage').value; r.official=$('#sOfficial').value.trim();
+      r.internal=$('#sInternal').value.trim(); r.pinned=$('#sPin').checked;
+      if(ns!==before){ r.status=ns; r.history.push({at:Date.now(),text:'Status → '+STATUSES[ns].label,by:S.profile.name||'Anthbot'}); }
+      else r.history.push({at:Date.now(),text:'Updated by Anthbot',by:S.profile.name||'Anthbot'});
+      r.updatedAt=Date.now(); logAct('updated '+r.key,r.id);
+      await persist(); openReport(r.id); renderAll(); toast(r.key+' updated');
+    };
+  }
+}
+async function setStatus(r,status,note){
+  r.status=status; r.updatedAt=Date.now();
+  r.history.push({at:Date.now(),text:note,by:S.profile.name||'Tester'});
+  logAct(note.toLowerCase()+' on '+r.key,r.id);
+  await persist(); openReport(r.id); renderAll(); toast(note);
+}
+
+/* ==================================================================
+   NEW / EDIT FORM
+   ================================================================== */
+function openForm(edit){
+  const r=edit||null;
+  ui.draftFiles=r?r.files.slice():[];
+  const P=S.profile;
+  $('#modalHead').innerHTML=`<div class="spread"><div>
+      <div class="eyebrow">${r?'Editing '+r.key:'New report'}</div>
+      <h2 class="sec" style="margin-top:6px">${r?'Update this report':'Tell Anthbot what you found'}</h2>
+    </div><button class="close-x" id="mClose" aria-label="Close">×</button></div>`;
+
+  $('#modalBody').innerHTML=`
+    <div id="dupZone"></div>
+    <label class="f"><span>One-line summary <span class="hint">— what a stranger would understand</span></span>
+      <input type="text" id="fTitle" maxlength="120" value="${esc(r?.title||'')}" placeholder="Blade motor stalls in wet grass after 20 minutes"></label>
+    <div class="grid3">
+      <label class="f"><span>Kind</span><select id="fType">${Object.entries(TYPES).map(([k,v])=>`<option value="${k}" ${r?.type===k?'selected':''}>${v.label}</option>`).join('')}</select></label>
+      <label class="f"><span>Severity</span><select id="fSev">${Object.entries(SEVERITIES).map(([k,v])=>`<option value="${k}" ${(r?.severity||'medium')===k?'selected':''}>${v.label}</option>`).join('')}</select></label>
+      <label class="f"><span>Area</span><select id="fComp">${COMPONENTS.map(c=>`<option ${r?.component===c?'selected':''}>${c}</option>`).join('')}</select></label>
+    </div>
+    <p class="muted tiny" id="sevHelp" style="margin:-6px 0 14px"></p>
+    <label class="f"><span>What happened</span>
+      <textarea id="fBody" placeholder="Plain words. Where you were standing, what you saw and heard.">${esc(r?.body||'')}</textarea></label>
+    <label class="f"><span>Steps to reproduce <span class="hint">— so Anthbot can trigger it on their unit</span></span>
+      <textarea id="fSteps" placeholder="1. Start zone 2\n2. Wait for the north turn\n3. Watch the left wheel">${esc(r?.steps||'')}</textarea></label>
+    <div class="grid2">
+      <label class="f"><span>What you expected</span><textarea id="fExp" style="min-height:64px">${esc(r?.expected||'')}</textarea></label>
+      <label class="f"><span>What it actually did</span><textarea id="fAct" style="min-height:64px">${esc(r?.actual||'')}</textarea></label>
+    </div>
+    <div class="grid2">
+      <label class="f"><span>How often</span><select id="fFreq">${FREQ.map(f=>`<option ${r?.freq===f?'selected':''}>${f}</option>`).join('')}</select></label>
+      <label class="f"><span>Weather at the time</span><input type="text" id="fWeather" value="${esc(r?.env.weather||'')}" placeholder="Dry, 18°C, low sun"></label>
+    </div>
+    <label class="f"><span>Ground it happened on <span class="hint">— pick any</span></span>
+      <div class="wrap" id="fSurface">${SURFACES.map(s=>`<button type="button" class="chip ${r?.surface.includes(s)?'sev-medium':'t-docs'}" data-surf="${esc(s)}" aria-pressed="${!!r?.surface.includes(s)}">${esc(s)}</button>`).join('')}</div></label>
+    <div class="grid3">
+      <label class="f"><span>Firmware</span><input type="text" id="fFw" value="${esc(r?.env.firmware||P.firmware)}"></label>
+      <label class="f"><span>App version</span><input type="text" id="fApp" value="${esc(r?.env.app||P.app)}"></label>
+      <label class="f"><span>Hardware rev</span><input type="text" id="fHw" value="${esc(r?.env.hw||P.hw)}"></label>
+    </div>
+    <label class="f"><span>Tags <span class="hint">— comma separated, keeps things findable</span></span>
+      <input type="text" id="fTags" value="${esc((r?.tags||[]).join(', '))}" placeholder="dock, low-sun, E-217"></label>
+    <label class="f"><span>Photos or a short clip frame <span class="hint">— stored in this browser, keep them small</span></span>
+      <input type="file" id="fFiles" accept="image/*" multiple></label>
+    <div class="thumbs" id="fThumbs"></div>`;
+
+  $('#modalFoot').innerHTML=`<button class="btn ghost" id="mCancel">Cancel</button>
+    <button class="btn primary" id="mSave">${r?'Save changes':'File report'}</button>`;
+
+  openModal();
+  const sevHelp=()=>$('#sevHelp').textContent=SEVERITIES[$('#fSev').value].help;
+  sevHelp(); $('#fSev').onchange=sevHelp;
+  $('#fType').onchange=()=>{ if($('#fType').value==='safety') $('#fSev').value='critical', sevHelp(); };
+  $$('#fSurface [data-surf]').forEach(b=>b.onclick=()=>{
+    const on=b.getAttribute('aria-pressed')==='true';
+    b.setAttribute('aria-pressed',String(!on));
+    b.className='chip '+(!on?'sev-medium':'t-docs');
+  });
+  $('#mClose').onclick=$('#mCancel').onclick=closeAll;
+  const drawThumbs=()=>$('#fThumbs').innerHTML=ui.draftFiles.map((f,i)=>`<img src="${f.data}" alt="${esc(f.name)}" title="Click to remove" data-rm="${i}">`).join('');
+  drawThumbs();
+  $('#fThumbs').onclick=e=>{const i=e.target.dataset.rm;if(i!=null){ui.draftFiles.splice(+i,1);drawThumbs();}};
+  $('#fFiles').onchange=async e=>{
+    for(const file of [...e.target.files].slice(0,4)){
+      if(file.size>1.6e6){ toast(file.name+' is too big — under 1.5 MB please',true); continue; }
+      const data=await new Promise(res=>{const fr=new FileReader();fr.onload=()=>res(fr.result);fr.readAsDataURL(file);});
+      ui.draftFiles.push({name:file.name,data});
+    }
+    drawThumbs(); e.target.value='';
+  };
+  // live duplicate detection
+  $('#fTitle').addEventListener('input',()=>{
+    const q=$('#fTitle').value.toLowerCase().split(/\s+/).filter(w=>w.length>3);
+    if(q.length<2){$('#dupZone').innerHTML='';return;}
+    const hits=S.reports.filter(x=>x.id!==r?.id).map(x=>({x,score:q.filter(w=>(x.title+' '+x.body+' '+x.tags.join(' ')).toLowerCase().includes(w)).length}))
+      .filter(h=>h.score>=2).sort((a,b)=>b.score-a.score).slice(0,3);
+    $('#dupZone').innerHTML=hits.length?`<div class="dupwarn"><strong>Someone may have this already</strong>
+      <div class="muted tiny" style="margin:2px 0 6px">Voting on an existing report is worth more than a second copy.</div>
+      ${hits.map(h=>`<div class="d" data-dup="${h.x.id}">${esc(h.x.key)} — ${esc(h.x.title)} <span class="muted">· ${h.x.votes.length} votes</span></div>`).join('')}</div>`:'';
+    $$('[data-dup]').forEach(d=>d.onclick=()=>{closeAll();openReport(d.dataset.dup);});
+  });
+  $('#mSave').onclick=async()=>{
+    const title=$('#fTitle').value.trim();
+    if(!title){ toast('Give it a one-line summary first',true); $('#fTitle').focus(); return; }
+    if(!S.profile.name){ toast('Add your tester name under “You” first',true); }
+    const surf=$$('#fSurface [aria-pressed="true"]').map(b=>b.dataset.surf);
+    const data={
+      title, body:$('#fBody').value.trim(), type:$('#fType').value, severity:$('#fSev').value,
+      component:$('#fComp').value, freq:$('#fFreq').value, surface:surf,
+      steps:$('#fSteps').value.trim(), expected:$('#fExp').value.trim(), actual:$('#fAct').value.trim(),
+      tags:$('#fTags').value.split(',').map(t=>t.trim().toLowerCase()).filter(Boolean),
+      files:ui.draftFiles.slice(),
+      env:{firmware:$('#fFw').value.trim(),app:$('#fApp').value.trim(),hw:$('#fHw').value.trim(),
+           region:S.profile.region,lawn:S.profile.lawn,weather:$('#fWeather').value.trim()},
+      updatedAt:Date.now()
+    };
+    if(r){
+      Object.assign(r,data);
+      r.history.push({at:Date.now(),text:'Edited by reporter',by:S.profile.name||'Tester'});
+      logAct('edited '+r.key,r.id); toast(r.key+' updated');
+      await persist(); closeAll(); renderAll(); openReport(r.id);
+    }else{
+      const nr=Object.assign({
+        id:uid(), key:nextKey(), status:'new', votes:[S.profile.id], watchers:[S.profile.id],
+        comments:[], history:[{at:Date.now(),text:'Reported',by:S.profile.name||'Tester'}],
+        author:{id:S.profile.id,name:S.profile.name||'Anonymous tester',role:S.profile.role},
+        createdAt:Date.now(), pinned:false, priority:'', assignee:'', fixedIn:'', dupeOf:'',
+        official:'', internal:'', stage:(data.type==='feature'||data.type==='improvement')?'requested':''
+      },data);
+      S.reports.unshift(nr); logAct('reported '+nr.key+' '+nr.title.slice(0,44),nr.id);
+      await persist(); closeAll(); renderAll(); openReport(nr.id);
+      toast(nr.key+' filed — thank you');
+    }
+  };
+  setTimeout(()=>$('#fTitle').focus(),120);
+}
+
+/* ==================================================================
+   REQUESTS BOARD (feature requests + improvements)
+   ================================================================== */
+function renderRoadmap(el){
+  const reqs=S.reports.filter(r=>r.type==='feature'||r.type==='improvement');
+  const cols=Object.entries(REQ_STAGES);
+  const ranked=[...reqs].sort((a,b)=>b.votes.length-a.votes.length);
+  el.innerHTML=`
+  <div class="spread" style="margin:22px 0 14px">
+    <div><div class="eyebrow">What testers want next</div>
+      <h2 class="sec" style="margin-top:6px">${reqs.length} requests · ${reqs.reduce((a,r)=>a+r.votes.length,0)} votes cast</h2></div>
+    <button class="btn primary sm" id="newReq">Request something</button>
+  </div>
+  <div class="card pad" style="margin-bottom:16px">
+    <h2 class="sec">Top of the pile</h2>
+    <p class="muted tiny" style="margin:6px 0 12px">Straight vote count. Anthbot pulls from the top.</p>
+    <div class="list">${ranked.slice(0,5).map((r,i)=>`
+      <article class="item" data-id="${r.id}" tabindex="0">
+        <button class="vote ${myVote(r)?'on':''}" data-vote="${r.id}"><span class="v">${r.votes.length}</span><span class="lbl">want</span></button>
+        <div style="min-width:0"><h3><span class="rank">#${i+1}</span> ${esc(r.title)}</h3>
+          <div class="meta"><span class="key">${esc(r.key)}</span>${chip(TYPES[r.type].cls,TYPES[r.type].label)}
+          ${r.stage?chip('st-triaged',REQ_STAGES[r.stage]):''}<span class="muted tiny">${esc(r.component)}</span></div></div>
+        <div class="right"><span class="muted tiny">${esc(r.author.name)}</span></div>
+      </article>`).join('')||'<div class="empty">No requests yet — ask for the thing you keep wishing it did.</div>'}</div>
+  </div>
+  <h2 class="sec" style="margin-bottom:10px">Where each one stands</h2>
+  ${isStaff()?'<p class="muted tiny" style="margin:0 0 10px">Drag a card between columns to move it.</p>':''}
+  <div class="board">${cols.map(([k,label])=>{
+    const list=reqs.filter(r=>(r.stage||'requested')===k).sort((a,b)=>b.votes.length-a.votes.length);
+    return `<div class="col" data-stage="${k}"><h3>${esc(label)}<span class="n">${list.length}</span></h3>
+      ${list.map(r=>`<div class="mini" data-id="${r.id}" ${isStaff()?'draggable="true"':''}>
+        <div class="t">${esc(r.title)}</div>
+        <div class="row" style="gap:6px"><span class="key">${esc(r.key)}</span>
+          <span class="chip t-improvement" style="margin-left:auto">▲ ${r.votes.length}</span></div></div>`).join('')}
+      </div>`;}).join('')}</div>`;
+
+  wireItems(el);
+  $('#newReq').onclick=()=>openForm();
+  $$('.mini',el).forEach(m=>{
+    m.onclick=()=>openReport(m.dataset.id);
+    m.addEventListener('dragstart',e=>e.dataTransfer.setData('text/plain',m.dataset.id));
+  });
+  $$('.col',el).forEach(c=>{
+    c.addEventListener('dragover',e=>{if(!isStaff())return;e.preventDefault();c.classList.add('over');});
+    c.addEventListener('dragleave',()=>c.classList.remove('over'));
+    c.addEventListener('drop',async e=>{
+      e.preventDefault(); c.classList.remove('over');
+      if(!isStaff())return;
+      const r=byId(e.dataTransfer.getData('text/plain')); if(!r)return;
+      r.stage=c.dataset.stage; r.updatedAt=Date.now();
+      r.history.push({at:Date.now(),text:'Moved to '+REQ_STAGES[r.stage],by:S.profile.name||'Anthbot'});
+      logAct('moved '+r.key+' to '+REQ_STAGES[r.stage],r.id);
+      await persist(); renderRoadmap(el); toast(r.key+' → '+REQ_STAGES[r.stage]);
+    });
+  });
+}
+
+/* ==================================================================
+   RELEASES / UPDATES
+   ================================================================== */
+function renderReleases(el){
+  const rels=[...S.releases].sort((a,b)=>b.date-a.date);
+  el.innerHTML=`
+  <div class="spread" style="margin:22px 0 16px">
+    <div><div class="eyebrow">Build log</div><h2 class="sec" style="margin-top:6px">What Anthbot shipped</h2></div>
+    ${isStaff()?'<button class="btn primary sm" id="newRel">Publish a build</button>':''}
+  </div>
+  ${rels.map(rel=>{
+    const fixes=rel.fixes.map(byId).filter(Boolean);
+    return `<div class="rel ${rel.status==='beta'?'beta':''}">
+      <div class="row" style="gap:9px;flex-wrap:wrap">
+        <span class="ver">${esc(rel.channel==='app'?'App ':'Firmware ')}${esc(rel.version)}</span>
+        ${chip(rel.status==='released'?'st-fixed':'st-need-info',rel.status==='released'?'Released':rel.status==='beta'?'Beta channel':'Rolling out')}
+        <span class="muted tiny">${new Date(rel.date).toLocaleDateString('en-GB',{day:'numeric',month:'long',year:'numeric'})}</span>
+        ${isStaff()?`<button class="btn sm ghost" data-delrel="${rel.id}">Remove</button>`:''}
+      </div>
+      <p class="pre muted" style="margin:8px 0 0">${nl(rel.notes)}</p>
+      ${fixes.length?`<ul class="fixlist">${fixes.map(f=>`<li><span class="key">${esc(f.key)}</span><span style="flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(f.title)}</span>
+        ${chip(STATUSES[f.status].cls,STATUSES[f.status].label)}
+        <button class="btn sm ghost" data-open="${f.id}">Open</button></li>`).join('')}</ul>`:'<p class="muted tiny">No linked reports.</p>'}
+    </div>`;}).join('')||'<div class="empty"><div class="big">No builds published yet</div>Anthbot posts firmware and app releases here.</div>'}`;
+
+  $$('[data-open]',el).forEach(b=>b.onclick=()=>openReport(b.dataset.open));
+  $$('[data-delrel]',el).forEach(b=>b.onclick=async()=>{
+    if(!confirm('Remove this build entry?'))return;
+    S.releases=S.releases.filter(x=>x.id!==b.dataset.delrel); await persist(); renderReleases(el);
+  });
+  if($('#newRel')) $('#newRel').onclick=()=>releaseForm();
+}
+function releaseForm(){
+  const open=S.reports.filter(r=>isOpen(r)||r.status==='fixed');
+  $('#modalHead').innerHTML=`<div class="spread"><div><div class="eyebrow">Anthbot</div>
+    <h2 class="sec" style="margin-top:6px">Publish a build</h2></div><button class="close-x" id="mClose">×</button></div>`;
+  $('#modalBody').innerHTML=`
+    <div class="grid3">
+      <label class="f"><span>Version</span><input type="text" id="rVer" placeholder="2.5.0"></label>
+      <label class="f"><span>Channel</span><select id="rCh"><option value="firmware">Firmware</option><option value="app">Mobile app</option></select></label>
+      <label class="f"><span>State</span><select id="rSt"><option value="beta">Beta channel</option><option value="rolling">Rolling out</option><option value="released">Released</option></select></label>
+    </div>
+    <label class="f"><span>Release date</span><input type="date" id="rDate" value="${new Date().toISOString().slice(0,10)}"></label>
+    <label class="f"><span>Release notes</span><textarea id="rNotes" placeholder="What changed, and what testers should re-test."></textarea></label>
+    <label class="f"><span>Reports fixed in this build <span class="hint">— they flip to “Fixed in build” and testers get asked to verify</span></span>
+      <div style="max-height:230px;overflow:auto;border:1px solid var(--stroke);border-radius:12px;padding:10px">
+      ${open.map(r=>`<label class="switch" style="display:flex;padding:5px 0"><input type="checkbox" value="${r.id}" class="relfix">
+        <span class="key">${esc(r.key)}</span> <span style="flex:1">${esc(r.title)}</span></label>`).join('')||'<span class="muted tiny">Nothing open.</span>'}
+      </div></label>`;
+  $('#modalFoot').innerHTML=`<button class="btn ghost" id="mCancel">Cancel</button><button class="btn primary" id="rSave">Publish build</button>`;
+  openModal();
+  $('#mClose').onclick=$('#mCancel').onclick=closeAll;
+  $('#rSave').onclick=async()=>{
+    const version=$('#rVer').value.trim();
+    if(!version){toast('Version number is required',true);return;}
+    const fixes=$$('.relfix:checked').map(c=>c.value);
+    S.releases.push({id:uid(),version,channel:$('#rCh').value,status:$('#rSt').value,
+      date:new Date($('#rDate').value).getTime()||Date.now(),notes:$('#rNotes').value.trim(),fixes});
+    fixes.forEach(id=>{const r=byId(id);if(!r)return;
+      r.status='fixed'; r.fixedIn=version; r.updatedAt=Date.now();
+      r.history.push({at:Date.now(),text:'Fixed in '+version,by:S.profile.name||'Anthbot'});});
+    logAct('published build '+version+' with '+fixes.length+' fixes');
+    await persist(); closeAll(); renderAll(); toast('Build '+version+' published');
+  };
+}
+
+/* ==================================================================
+   TEST PLAN
+   ================================================================== */
+function renderChecklist(el){
+  const total=CHECKLIST.reduce((a,g)=>a+g.items.length,0);
+  const done=Object.values(S.checks).filter(v=>v).length;
+  const fails=Object.values(S.checks).filter(v=>v==='fail').length;
+  el.innerHTML=`
+  <div class="spread" style="margin:22px 0 6px">
+    <div><div class="eyebrow">Closed beta script</div>
+      <h2 class="sec" style="margin-top:6px">Run every case, mark what you saw</h2></div>
+    <button class="btn sm ghost" id="resetChecks">Reset my results</button>
+  </div>
+  <p class="muted" style="margin:0 0 12px;max-width:66ch">A fail here is worth a report. Hit “File a report” on the row and the case, area and conditions are carried over for you.</p>
+  <div class="card pad" style="margin-bottom:18px">
+    <div class="spread"><strong>${done} of ${total} cases run</strong><span class="muted tiny">${fails} failing</span></div>
+    <div class="progress"><div style="width:${done/total*100}%"></div></div>
+  </div>
+  ${CHECKLIST.map((g,gi)=>`
+    <h2 class="sec" style="margin:22px 0 10px">${esc(g.g)}</h2>
+    ${g.items.map((it,ii)=>{
+      const k='c'+gi+'_'+ii, st=S.checks[k]||'';
+      return `<div class="check ${st}">
+        <span class="n">${gi+1}.${ii+1}</span>
+        <div style="flex:1;min-width:0">
+          <div style="font-size:14px;margin-bottom:9px">${esc(it)}</div>
+          <div class="row" style="flex-wrap:wrap;gap:8px">
+            <span class="seg">
+              <button data-c="${k}" data-v="pass" class="${st==='pass'?'on':''}">Pass</button>
+              <button data-c="${k}" data-v="fail" class="${st==='fail'?'on fail':''}">Fail</button>
+              <button data-c="${k}" data-v="blocked" class="${st==='blocked'?'on blocked':''}">Blocked</button>
+            </span>
+            <button class="btn sm ghost" data-file="${esc(it)}" data-grp="${esc(g.g)}">File a report</button>
+          </div>
+        </div></div>`;}).join('')}`).join('')}`;
+
+  $$('[data-c]',el).forEach(b=>b.onclick=async()=>{
+    const k=b.dataset.c;
+    S.checks[k]=S.checks[k]===b.dataset.v?'':b.dataset.v;
+    await persist(); renderChecklist(el);
+  });
+  $$('[data-file]',el).forEach(b=>b.onclick=()=>{
+    openForm();
+    setTimeout(()=>{
+      $('#fTitle').value=b.dataset.file;
+      $('#fTitle').dispatchEvent(new Event('input'));
+      $('#fBody').value='Test plan case: '+b.dataset.grp+' — '+b.dataset.file+'\n\nWhat I saw:\n';
+      $('#fBody').focus();
+    },150);
+  });
+  $('#resetChecks').onclick=async()=>{ if(!confirm('Clear all your test plan results?'))return; S.checks={}; await persist(); renderChecklist(el); };
+}
+
+/* ==================================================================
+   FLEET — testers, units, coverage
+   ================================================================== */
+function renderFleet(el){
+  const testers={};
+  S.reports.forEach(r=>{
+    const t=testers[r.author.name]||(testers[r.author.name]={name:r.author.name,n:0,votes:0,crit:0,fw:r.env.firmware});
+    t.n++; t.votes+=r.votes.length; if(r.severity==='critical')t.crit++;
+  });
+  const rows=Object.values(testers).sort((a,b)=>b.n-a.n);
+  const builds={};
+  S.reports.forEach(r=>{const b=r.env.firmware||'unknown';builds[b]=(builds[b]||0)+1;});
+  const uncovered=COMPONENTS.filter(c=>!S.reports.some(r=>r.component===c));
+  el.innerHTML=`
+  <div style="margin:22px 0 16px"><div class="eyebrow">Group health</div>
+    <h2 class="sec" style="margin-top:6px">Who is testing what</h2></div>
+  <div class="grid2" style="gap:16px">
+    <div class="card pad">
+      <h2 class="sec">Testers</h2>
+      <div class="tablewrap"><table class="data"><thead><tr><th>Tester</th><th>Reports</th><th>Critical</th><th>Votes received</th><th>Build</th></tr></thead>
+      <tbody>${rows.map(t=>`<tr><td><div class="row">${avatar(t.name)} ${esc(t.name)}</div></td>
+        <td>${t.n}</td><td>${t.crit||'—'}</td><td>${t.votes}</td><td class="key">${esc(t.fw||'—')}</td></tr>`).join('')}</tbody></table></div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card pad"><h2 class="sec">Reports per build</h2>
+        <div class="bars">${Object.entries(builds).sort((a,b)=>b[1]-a[1]).map(([b,n])=>`
+          <div class="bar-row"><span class="key">${esc(b)}</span>
+          <span class="bar-track"><span class="bar-fill" style="width:${n/Math.max(...Object.values(builds))*100}%;background:var(--teal)"></span></span>
+          <span class="key" style="text-align:right">${n}</span></div>`).join('')}</div>
+      </div>
+      <div class="card pad"><h2 class="sec">Nobody has touched these yet</h2>
+        <p class="muted tiny" style="margin:6px 0 10px">Zero reports filed against these areas. Either they are solid, or nobody has tried them.</p>
+        <div class="wrap">${uncovered.map(c=>`<span class="tagpill">${esc(c)}</span>`).join('')||'<span class="muted tiny">Every area has at least one report. Good coverage.</span>'}</div>
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ==================================================================
+   YOU — profile, role, data
+   ================================================================== */
+function renderSettings(el){
+  const P=S.profile;
+  el.innerHTML=`
+  <div style="margin:22px 0 16px"><div class="eyebrow">Your tester card</div>
+    <h2 class="sec" style="margin-top:6px">Set this once — every report you file picks it up</h2></div>
+  <div class="grid2" style="gap:16px;align-items:start">
+    <div class="card pad">
+      <div class="grid2">
+        <label class="f"><span>Name shown on reports</span><input type="text" id="pName" value="${esc(P.name)}" placeholder="Lasse K."></label>
+        <label class="f"><span>Unit serial</span><input type="text" id="pUnit" value="${esc(P.unit)}" placeholder="M9P-0042"></label>
+        <label class="f"><span>Region</span><input type="text" id="pRegion" value="${esc(P.region)}" placeholder="DK"></label>
+        <label class="f"><span>Lawn size (m²)</span><input type="text" id="pLawn" value="${esc(P.lawn)}" placeholder="800"></label>
+        <label class="f"><span>Firmware</span><input type="text" id="pFw" value="${esc(P.firmware)}"></label>
+        <label class="f"><span>App version</span><input type="text" id="pApp" value="${esc(P.app)}"></label>
+        <label class="f"><span>Hardware rev</span><input type="text" id="pHw" value="${esc(P.hw)}"></label>
+      </div>
+      <button class="btn primary" id="pSave">Save tester card</button>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:16px">
+      <div class="card pad">
+        <h2 class="sec">Role</h2>
+        <p class="muted tiny" style="margin:6px 0 12px">Anthbot staff can set status, priority, publish builds and reply officially. Until real logins are wired up, this is on the honour system.</p>
+        <div class="row" style="flex-wrap:wrap">
+          <span class="chip ${isStaff()?'st-verified':'st-new'}">${isStaff()?'Anthbot staff':'Tester'}</span>
+          <button class="btn sm" id="roleBtn">${isStaff()?'Switch to tester':'Switch to Anthbot staff'}</button>
+        </div>
+      </div>
+      <div class="card pad">
+        <h2 class="sec">Your data</h2>
+        <p class="muted tiny" style="margin:6px 0 12px">Saved to: <strong>${esc(Store.mode())}</strong>. Nothing leaves this device yet — export before clearing your browser.</p>
+        <div class="wrap">
+          <button class="btn sm" id="expJson">Export everything (JSON)</button>
+          <button class="btn sm" id="expCsv2">Export reports (CSV)</button>
+          <button class="btn sm" id="impBtn">Import JSON</button>
+          <input type="file" id="impFile" accept="application/json" hidden>
+        </div>
+        <hr class="sep">
+        <div class="wrap">
+          <button class="btn sm ghost" id="reseed">Reload the demo data</button>
+          <button class="btn sm danger" id="wipe">Erase everything</button>
+        </div>
+      </div>
+      <div class="card pad">
+        <h2 class="sec">Keyboard</h2>
+        <div class="kv tiny" style="margin-top:8px">
+          <dt><span class="tagpill">N</span></dt><dd>New report</dd>
+          <dt><span class="tagpill">/</span></dt><dd>Jump to search</dd>
+          <dt><span class="tagpill">1–7</span></dt><dd>Switch tab</dd>
+          <dt><span class="tagpill">Esc</span></dt><dd>Close panel</dd>
+        </div>
+      </div>
+    </div>
+  </div>`;
+
+  $('#pSave').onclick=async()=>{
+    Object.assign(S.profile,{name:$('#pName').value.trim(),unit:$('#pUnit').value.trim(),region:$('#pRegion').value.trim(),
+      lawn:$('#pLawn').value.trim(),firmware:$('#pFw').value.trim(),app:$('#pApp').value.trim(),hw:$('#pHw').value.trim()});
+    await persist(); renderAll(); toast('Tester card saved');
+  };
+  $('#roleBtn').onclick=async()=>{
+    if(!isStaff()){
+      const code=prompt('Anthbot staff code:');
+      if(code===null)return;
+      if(code.trim().toLowerCase()!=='anthbot'){ toast('That code is not right',true); return; }
+      S.profile.role='anthbot';
+    } else S.profile.role='tester';
+    await persist(); renderAll(); toast('Now signed in as '+(isStaff()?'Anthbot staff':'tester'));
+  };
+  $('#expJson').onclick=()=>download('m9-beta-'+new Date().toISOString().slice(0,10)+'.json',JSON.stringify(S,null,2),'application/json');
+  $('#expCsv2').onclick=exportCsv;
+  $('#impBtn').onclick=()=>$('#impFile').click();
+  $('#impFile').onchange=async e=>{
+    const f=e.target.files[0]; if(!f)return;
+    try{
+      const data=JSON.parse(await f.text());
+      if(!data.reports) throw new Error('no reports');
+      if(!confirm('Replace everything on this device with the imported file?'))return;
+      S=data; await persist(); renderAll(); toast('Imported '+data.reports.length+' reports');
+    }catch(err){ toast('That file is not a valid export',true); }
+  };
+  $('#reseed').onclick=async()=>{
+    if(!confirm('Reload demo data? Your current reports are replaced.'))return;
+    const keep=S.profile; S=seed(); S.profile=keep; await persist(); renderAll(); toast('Demo data reloaded');
+  };
+  $('#wipe').onclick=async()=>{
+    if(!confirm('Erase every report, release and result on this device?'))return;
+    const keep=S.profile; await Store.clear(); S=blankState(); S.profile=keep; await persist(); renderAll(); toast('Everything erased');
+  };
+}
+function download(name,text,type){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([text],{type}));
+  a.download=name; a.click(); URL.revokeObjectURL(a.href);
+}
+function exportCsv(){
+  const cols=['key','title','type','severity','status','component','priority','votes','author','firmware','app','fixedIn','created','updated','tags','body','steps','expected','actual'];
+  const cell=v=>'"'+String(v??'').replace(/"/g,'""')+'"';
+  const rows=S.reports.map(r=>[r.key,r.title,TYPES[r.type].label,SEVERITIES[r.severity].label,STATUSES[r.status].label,
+    r.component,r.priority,r.votes.length,r.author.name,r.env.firmware,r.env.app,r.fixedIn,
+    new Date(r.createdAt).toISOString(),new Date(r.updatedAt).toISOString(),r.tags.join(' '),r.body,r.steps,r.expected,r.actual].map(cell).join(','));
+  download('m9-reports-'+new Date().toISOString().slice(0,10)+'.csv',cols.join(',')+'\n'+rows.join('\n'),'text/csv');
+  toast('CSV exported');
+}
+
+/* ==================================================================
+   PANEL PLUMBING
+   ================================================================== */
+function openDrawer(){ $('#drawer').classList.add('open'); $('#scrim').classList.add('open'); document.body.style.overflow='hidden'; }
+function openModal(){ $('#modal').classList.add('open'); $('#scrim').classList.add('open'); document.body.style.overflow='hidden'; }
+function closeAll(){
+  $('#drawer').classList.remove('open'); $('#modal').classList.remove('open');
+  $('#scrim').classList.remove('open'); $('#lightbox').classList.remove('open');
+  document.body.style.overflow=''; ui.openId=null;
+}
+$('#scrim').onclick=closeAll;
+$('#lightbox').onclick=()=>$('#lightbox').classList.remove('open');
+$('#fabNew').onclick=()=>openForm();
+$('#btnWho').onclick=()=>go('settings');
+$('#btnBell').onclick=()=>{ go('dashboard'); setTimeout(()=>{const f=$('.feed');f&&f.scrollIntoView({behavior:'smooth',block:'center'});},60); };
+$$('#tabs .tab').forEach(t=>t.onclick=()=>go(t.dataset.view));
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape') return closeAll();
+  const typing=/INPUT|TEXTAREA|SELECT/.test(document.activeElement.tagName);
+  if(typing) return;
+  if(e.key==='n'||e.key==='N'){ e.preventDefault(); openForm(); }
+  if(e.key==='/'){ e.preventDefault(); go('reports'); setTimeout(()=>$('#q')?.focus(),60); }
+  const views=['dashboard','reports','roadmap','releases','checklist','fleet','settings'];
+  if(/^[1-7]$/.test(e.key)) go(views[+e.key-1]);
+});
+
+/* ==================================================================
+   BOOT
+   ================================================================== */
+(async function init(){
+  S = await Store.load();
+  if(!S || !S.reports){ S = seed(); await persist(); }
+  // forward-compatible defaults for older saves
+  S.checks=S.checks||{}; S.activity=S.activity||[]; S.announcements=S.announcements||[];
+  S.reports.forEach(r=>{ r.watchers=r.watchers||[]; r.files=r.files||[]; r.history=r.history||[]; r.surface=r.surface||[]; });
+  ui.view=(location.hash||'').replace('#','')||'dashboard';
+  if(!$('#view-'+ui.view)) ui.view='dashboard';
+  renderAll();
+  if(!S.profile.name) setTimeout(()=>toast('Add your name under “You” so reports are attributable'),700);
+})();
+
+/* ==================================================================
+   FIREBASE SWAP POINT
+   ------------------------------------------------------------------
+   Nothing above touches storage except Store. To go multi-user:
+
+   1. Add the SDK before this script:
+      <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+        import { getAuth, signInWithPopup, GoogleAuthProvider }
+          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc, collection, onSnapshot }
+          from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+        window.fb = { app: initializeApp(CONFIG), ... };
+      <\/script>
+
+   2. Replace Store.load / Store.save with Firestore reads and writes.
+      Move reports out of one document into a `reports` collection —
+      one doc per report — so two testers writing at once do not
+      overwrite each other. Votes belong in a subcollection keyed by
+      uid (votes/{uid}) rather than an array, for the same reason.
+
+   3. S.profile.id becomes the Firebase uid, and S.profile.role comes
+      from a custom claim or a `staff/{uid}` document — never from the
+      client, or the honour-system role switch above becomes a real
+      privilege escalation.
+
+   4. Security rules sketch:
+      match /reports/{id} {
+        allow read: if request.auth != null;
+        allow create: if request.auth != null
+                      && request.resource.data.author.id == request.auth.uid;
+        allow update: if request.auth.uid == resource.data.author.id
+                      || exists(/databases/$(database)/documents/staff/$(request.auth.uid));
+      }
+      match /reports/{id}/votes/{uid} {
+        allow write: if request.auth.uid == uid;
+      }
+      Attachments move to Storage; keep base64 out of Firestore, the
+      1 MB document limit will bite.
+   ================================================================== */
+</script>
+</body>
+</html>
