@@ -1,75 +1,82 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="day">
+<html lang="en" data-theme="light">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Anthbot M9 Pro — Beta Tester Hub</title>
+<title>ANTHBOT M9 Pro — Pioneer Beta Hub</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
 <style>
 /* ==========================================================
-   ANTHBOT M9 PRO — HARDWARE PALETTE & DESIGN SYSTEM
+   ANTHBOT OFFICIAL BRAND PALETTE (eu.anthbot.com)
+   Fresh Lawn Green, Deep Forest Charcoal, Crisp Alabaster
    ========================================================== */
 :root {
-  --bg: #F2F4F7;
+  --bg: #F5F8F6;
+  --bg-subtle: #EBF2EE;
   --card: #FFFFFF;
-  --surface: #E8ECEF;
-  --surface-2: #DCE2E8;
-  --ink: #1C2127;
-  --body: #363F49;
-  --muted: #64707D;
-  --line: #DCE2E8;
-  --line-strong: #C2CBD4;
+  --card-hover: #FCFDFC;
+  --ink: #0B1911;
+  --body: #2C3E34;
+  --muted: #607569;
+  --line: #E0EAE4;
+  --line-strong: #C6D8CD;
 
-  /* M9 Pro Hardware Accents */
-  --stop: #D9342A;
-  --stop-hover: #B8251C;
-  --stop-tint: #FDECEB;
-  --violet: #6B53A6;
-  --violet-hover: #553F8A;
-  --violet-tint: #EFEBF9;
-  --bronze: #9E7832;
-  --bronze-tint: #FBF4E6;
-  --ok: #1E7E48;
-  --ok-tint: #E6F6EC;
+  /* Official Anthbot Greens & Accents */
+  --brand: #12B855;
+  --brand-dark: #0C9443;
+  --brand-deep: #092214;
+  --brand-tint: #E6F9EE;
+  --brand-glow: rgba(18, 184, 85, 0.22);
 
-  --radius-xl: 20px;
+  --lime: #A3E635;
+  --amber: #F59E0B;
+  --amber-tint: #FEF5E6;
+  --danger: #EF4444;
+  --danger-tint: #FEECEC;
+  --info: #0EA5E9;
+  --info-tint: #E6F6FE;
+
+  --radius-2xl: 24px;
+  --radius-xl: 18px;
   --radius-l: 14px;
   --radius-m: 10px;
-  --radius-s: 8px;
-  --shadow: 0 12px 32px -12px rgba(28, 33, 39, 0.14);
-  --shadow-sm: 0 2px 8px -2px rgba(28, 33, 39, 0.08);
+  --shadow-sm: 0 2px 10px rgba(11, 25, 17, 0.04);
+  --shadow-md: 0 12px 30px -8px rgba(11, 25, 17, 0.08);
+  --shadow-lg: 0 22px 48px -12px rgba(11, 25, 17, 0.14);
 
-  --font-display: 'Bricolage Grotesque', system-ui, sans-serif;
-  --font-sans: 'Inter', system-ui, sans-serif;
+  --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
 }
 
-:root[data-theme="night"] {
-  --bg: #111519;
-  --card: #1A2026;
-  --surface: #232B33;
-  --surface-2: #2D3741;
-  --ink: #F0F4F8;
-  --body: #CBD5E0;
-  --muted: #8B99A8;
-  --line: #2B343D;
-  --line-strong: #3D4956;
+:root[data-theme="dark"] {
+  --bg: #08120C;
+  --bg-subtle: #112118;
+  --card: #0F1D15;
+  --card-hover: #15271D;
+  --ink: #F2F9F5;
+  --body: #C5D6CC;
+  --muted: #7F998A;
+  --line: #1C3125;
+  --line-strong: #2A4736;
 
-  --stop: #FF5C52;
-  --stop-hover: #FF7870;
-  --stop-tint: rgba(255, 92, 82, 0.15);
-  --violet: #9D86E9;
-  --violet-hover: #B4A1F0;
-  --violet-tint: rgba(157, 134, 233, 0.16);
-  --bronze: #DEB468;
-  --bronze-tint: rgba(222, 180, 104, 0.15);
-  --ok: #48C77E;
-  --ok-tint: rgba(72, 199, 126, 0.15);
+  --brand: #1ED760;
+  --brand-dark: #15B858;
+  --brand-deep: #06150C;
+  --brand-tint: rgba(30, 215, 96, 0.14);
+  --brand-glow: rgba(30, 215, 96, 0.25);
 
-  --shadow: 0 14px 36px -12px rgba(0, 0, 0, 0.65);
-  --shadow-sm: 0 2px 8px -2px rgba(0, 0, 0, 0.45);
+  --amber: #FBBF24;
+  --amber-tint: rgba(251, 191, 36, 0.14);
+  --danger: #F87171;
+  --danger-tint: rgba(248, 113, 113, 0.14);
+  --info: #38BDF8;
+  --info-tint: rgba(56, 189, 248, 0.14);
+
+  --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 12px 30px -8px rgba(0, 0, 0, 0.55);
+  --shadow-lg: 0 24px 52px -12px rgba(0, 0, 0, 0.75);
 }
 
 * { box-sizing: border-box; }
@@ -79,69 +86,119 @@ body {
   color: var(--body);
   font-family: var(--font-sans);
   font-size: 15px;
-  line-height: 1.5;
+  line-height: 1.55;
   -webkit-font-smoothing: antialiased;
-  padding-bottom: 90px;
+  padding-bottom: 96px;
 }
 button, input, select, textarea { font: inherit; color: inherit; }
-h1, h2, h3, h4 { font-family: var(--font-display); color: var(--ink); margin: 0; letter-spacing: -0.02em; }
+h1, h2, h3, h4 { color: var(--ink); margin: 0; letter-spacing: -0.025em; }
 
-/* ---------------- Top Header ---------------- */
+/* ---------------- Top Promo/Beta Bar ---------------- */
+.announcement {
+  background: var(--brand-deep);
+  color: #E2F5EA;
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 9px 16px;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.announcement .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--brand);
+  box-shadow: 0 0 0 4px rgba(18, 184, 85, 0.25);
+}
+.announcement b { color: #FFFFFF; font-weight: 700; }
+
+/* ---------------- Header ---------------- */
 .topbar {
   position: sticky;
   top: 0;
   z-index: 50;
-  background: var(--card);
+  background: rgba(255, 255, 255, 0.86);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
   border-bottom: 1px solid var(--line);
-  padding: 12px 20px;
+  padding: 12px 24px;
+}
+:root[data-theme="dark"] .topbar {
+  background: rgba(15, 29, 21, 0.86);
 }
 .topbar-inner {
-  max-width: 980px;
+  max-width: 1080px;
   margin: 0 auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 14px;
+  gap: 16px;
 }
 .brand {
   display: flex;
   align-items: center;
-  gap: 11px;
+  gap: 12px;
   cursor: pointer;
+  user-select: none;
 }
-.mower-badge {
-  width: 38px;
-  height: 38px;
-  border-radius: 11px;
-  background: linear-gradient(145deg, #FFFFFF, #CBD2D9 60%, #E8ECEF);
-  border: 1px solid var(--line-strong);
-  position: relative;
-  box-shadow: var(--shadow-sm);
-  flex-shrink: 0;
+.brand-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  display: grid;
+  place-items: center;
+  color: #FFFFFF;
+  font-weight: 800;
+  font-size: 19px;
+  letter-spacing: -0.04em;
+  box-shadow: 0 6px 16px var(--brand-glow);
 }
-.mower-badge::after {
-  content: "";
-  position: absolute;
-  bottom: 6px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 14px;
-  height: 6px;
-  border-radius: 3px;
-  background: var(--stop);
+.brand-name {
+  font-weight: 800;
+  font-size: 18px;
+  letter-spacing: 0.04em;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 7px;
 }
-.brand-title { font-family: var(--font-display); font-weight: 700; font-size: 16px; color: var(--ink); line-height: 1.1; }
-.brand-sub { font-family: var(--font-mono); font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; color: var(--bronze); display: block; margin-top: 2px; }
+.brand-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  background: var(--brand-tint);
+  color: var(--brand-dark);
+  padding: 2px 8px;
+  border-radius: 99px;
+}
+:root[data-theme="dark"] .brand-pill { color: var(--brand); }
+.brand-sub {
+  font-size: 11.5px;
+  color: var(--muted);
+  display: block;
+  margin-top: 1px;
+}
 
-/* Desktop Nav */
+/* Navigation Pills */
 .nav-tabs {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 4px;
+  background: var(--bg-subtle);
+  padding: 4px;
+  border-radius: 99px;
+  border: 1px solid var(--line);
 }
 .tab-btn {
   background: transparent;
-  border: 1px solid transparent;
-  padding: 8px 14px;
+  border: 0;
+  padding: 8px 16px;
   border-radius: 99px;
   font-size: 13.5px;
   font-weight: 600;
@@ -150,23 +207,28 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--ink); margin: 0;
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  transition: 0.15s;
+  transition: all 0.18s ease;
 }
-.tab-btn:hover { color: var(--ink); background: var(--surface); }
-.tab-btn.active { background: var(--ink); color: var(--card); }
+.tab-btn:hover { color: var(--ink); }
+.tab-btn.active {
+  background: var(--card);
+  color: var(--ink);
+  box-shadow: var(--shadow-sm);
+}
 .tab-btn .badge {
   font-family: var(--font-mono);
   font-size: 11px;
   padding: 1px 7px;
   border-radius: 99px;
-  background: var(--surface-2);
-  color: var(--ink);
+  background: var(--brand-tint);
+  color: var(--brand-dark);
+  font-weight: 700;
 }
-.tab-btn.active .badge { background: rgba(255,255,255,0.2); color: var(--card); }
+:root[data-theme="dark"] .tab-btn .badge { color: var(--brand); }
 
-.top-actions { display: flex; align-items: center; gap: 8px; }
+.top-actions { display: flex; align-items: center; gap: 10px; }
 
-/* ---------------- Buttons & Chips ---------------- */
+/* ---------------- Buttons & Badges ---------------- */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -174,246 +236,386 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--ink); margin: 0;
   gap: 8px;
   padding: 10px 18px;
   border-radius: 99px;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 14px;
   border: 1px solid var(--line-strong);
   background: var(--card);
   color: var(--ink);
   cursor: pointer;
-  transition: 0.15s;
+  transition: all 0.16s ease;
   white-space: nowrap;
 }
-.btn:hover { background: var(--surface); }
-.btn-stop {
-  background: var(--stop);
-  border-color: var(--stop);
-  color: #FFFFFF;
-  box-shadow: 0 6px 16px -6px rgba(217, 52, 42, 0.65);
+.btn:hover {
+  border-color: var(--brand);
+  transform: translateY(-1px);
 }
-.btn-stop:hover { background: var(--stop-hover); border-color: var(--stop-hover); }
-:root[data-theme="night"] .btn-stop { color: #180605; }
-.btn-primary {
-  background: var(--violet);
-  border-color: var(--violet);
+.btn-brand {
+  background: linear-gradient(135deg, var(--brand), var(--brand-dark));
+  border-color: transparent;
   color: #FFFFFF;
+  box-shadow: 0 8px 20px -4px var(--brand-glow);
 }
-.btn-primary:hover { background: var(--violet-hover); }
-:root[data-theme="night"] .btn-primary { color: #130D24; }
-.btn-sm { padding: 6px 12px; font-size: 12.5px; }
-.btn-xl { padding: 15px 26px; font-size: 16px; border-radius: 14px; }
+.btn-brand:hover {
+  filter: brightness(1.05);
+  box-shadow: 0 12px 24px -4px var(--brand-glow);
+}
+:root[data-theme="dark"] .btn-brand { color: #05140B; }
+
+.btn-ghost {
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+.btn-ghost:hover { background: var(--bg-subtle); color: var(--ink); border-color: transparent; }
+.btn-sm { padding: 7px 13px; font-size: 12.5px; }
+.btn-xl { padding: 15px 28px; font-size: 15.5px; }
 
 .chip {
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  padding: 3px 10px;
+  padding: 4px 10px;
   border-radius: 99px;
   font-size: 11.5px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
 }
-.chip-stop { background: var(--stop-tint); color: var(--stop); }
-.chip-violet { background: var(--violet-tint); color: var(--violet); }
-.chip-bronze { background: var(--bronze-tint); color: var(--bronze); }
-.chip-ok { background: var(--ok-tint); color: var(--ok); }
-.chip-muted { background: var(--surface); color: var(--muted); }
+.chip-brand  { background: var(--brand-tint); color: var(--brand-dark); }
+:root[data-theme="dark"] .chip-brand { color: var(--brand); }
+.chip-amber  { background: var(--amber-tint); color: #B45309; }
+:root[data-theme="dark"] .chip-amber { color: var(--amber); }
+.chip-danger { background: var(--danger-tint); color: #DC2626; }
+:root[data-theme="dark"] .chip-danger { color: var(--danger); }
+.chip-info   { background: var(--info-tint); color: #0284C7; }
+:root[data-theme="dark"] .chip-info { color: var(--info); }
+.chip-muted  { background: var(--bg-subtle); color: var(--muted); font-weight: 600; }
+
 .mono { font-family: var(--font-mono); font-size: 12px; color: var(--muted); }
 
 /* ---------------- Layout ---------------- */
 .container {
-  max-width: 980px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 24px 20px;
+  padding: 28px 24px;
 }
 .card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-  padding: 20px;
+  border-radius: var(--radius-xl);
+  padding: 22px;
   box-shadow: var(--shadow-sm);
 }
 
-/* ---------------- Home Hero ---------------- */
+/* ---------------- Anthbot Hero Showcase ---------------- */
 .hero {
-  background: var(--card);
-  border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  box-shadow: var(--shadow);
-  margin-bottom: 22px;
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius-2xl);
+  background: radial-gradient(120% 130% at 95% 10%, #165934 0%, #0B2918 55%, #07190F 100%);
+  color: #FFFFFF;
+  padding: 36px;
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 24px;
+  border: 1px solid rgba(255,255,255,0.08);
+}
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  right: -120px;
+  top: -140px;
+  background: radial-gradient(circle, rgba(18, 184, 85, 0.32), transparent 68%);
+  pointer-events: none;
 }
 .hero-top {
+  position: relative;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
   flex-wrap: wrap;
 }
-.hero h1 { font-size: clamp(24px, 3.5vw, 32px); line-height: 1.15; margin-top: 4px; }
-.hero p { margin: 6px 0 0; color: var(--muted); max-width: 56ch; }
-.quick-triggers {
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.15);
+  font-size: 12px;
+  font-weight: 600;
+  color: #A7F3D0;
+  margin-bottom: 14px;
+}
+.hero h1 {
+  color: #FFFFFF;
+  font-size: clamp(26px, 3.8vw, 38px);
+  font-weight: 800;
+  line-height: 1.12;
+  max-width: 18ch;
+}
+.hero h1 span { color: #34D399; }
+.hero p {
+  color: rgba(240, 253, 244, 0.8);
+  margin: 10px 0 0;
+  max-width: 56ch;
+  font-size: 15px;
+}
+.hero-specs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+.spec-pill {
+  font-size: 11.5px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  color: #D1FAE5;
+}
+
+/* 6 Quick Report Cards inside Hero */
+.quick-label {
+  position: relative;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #A7F3D0;
+  margin: 26px 0 10px;
+}
+.quick-grid {
+  position: relative;
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
   gap: 10px;
 }
 .q-card {
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--radius-l);
+  padding: 14px;
+  text-align: left;
+  color: #FFFFFF;
+  cursor: pointer;
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 14px 16px;
-  border-radius: var(--radius-m);
-  border: 1px solid var(--line);
-  background: var(--bg);
-  cursor: pointer;
-  text-align: left;
-  transition: 0.15s;
+  gap: 11px;
+  transition: all 0.16s ease;
 }
 .q-card:hover {
-  border-color: var(--violet);
-  background: var(--violet-tint);
+  background: rgba(18, 184, 85, 0.24);
+  border-color: #34D399;
   transform: translateY(-2px);
 }
-.q-card .q-emo { font-size: 22px; line-height: 1; }
-.q-card b { display: block; font-size: 14px; color: var(--ink); }
-.q-card small { font-size: 12px; color: var(--muted); }
+.q-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 19px;
+  flex-shrink: 0;
+}
+.q-card b { display: block; font-size: 13.5px; line-height: 1.2; }
+.q-card small { font-size: 11.5px; color: rgba(255,255,255,0.68); display: block; margin-top: 2px; }
 
-/* Notice Banner */
-.notice-bar {
-  background: var(--stop-tint);
-  border: 1px solid var(--stop);
-  border-radius: var(--radius-l);
-  padding: 14px 18px;
-  margin-bottom: 22px;
+/* ---------------- Stats Strip ---------------- */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 14px;
+  margin-bottom: 28px;
+}
+.stat-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 18px 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  box-shadow: var(--shadow-sm);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
 }
-.notice-bar b { color: var(--stop); }
-
-/* Stats strip */
-.stats-grid {
+.stat-card:hover {
+  border-color: var(--brand);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+.stat-num {
+  font-size: 30px;
+  font-weight: 800;
+  color: var(--ink);
+  line-height: 1;
+}
+.stat-label {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-top: 6px;
+}
+.stat-ico {
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--brand-tint);
+  color: var(--brand-dark);
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-  gap: 12px;
-  margin-bottom: 26px;
+  place-items: center;
+  font-size: 20px;
 }
-.stat-box {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-  padding: 16px;
-  cursor: pointer;
-  text-align: left;
-  transition: 0.15s;
-}
-.stat-box:hover { border-color: var(--line-strong); transform: translateY(-1px); }
-.stat-num { font-family: var(--font-display); font-size: 28px; font-weight: 700; color: var(--ink); line-height: 1; }
-.stat-label { font-size: 12.5px; color: var(--muted); margin-top: 6px; }
 
 /* ---------------- Issue List & Cards ---------------- */
-.filter-bar {
+.toolbar {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
   margin-bottom: 14px;
 }
-.search-input {
+.search-wrap {
   flex: 1;
-  min-width: 210px;
-  padding: 10px 16px;
+  min-width: 240px;
+  position: relative;
+}
+.search-input {
+  width: 100%;
+  padding: 12px 18px;
   border-radius: 99px;
   border: 1px solid var(--line-strong);
   background: var(--card);
+  font-size: 14.5px;
+  transition: 0.15s;
 }
-.pill-filters {
+.search-input:focus {
+  outline: none;
+  border-color: var(--brand);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+}
+.pill-bar {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-wrap: wrap;
   margin-bottom: 18px;
 }
-.pill {
-  padding: 7px 14px;
+.filter-pill {
+  padding: 8px 16px;
   border-radius: 99px;
   border: 1px solid var(--line-strong);
   background: var(--card);
+  color: var(--body);
   font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-}
-.pill.active { background: var(--ink); color: var(--card); border-color: var(--ink); font-weight: 600; }
-
-.issue-list { display: flex; flex-direction: column; gap: 10px; }
-.issue-row {
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: var(--radius-l);
-  padding: 16px;
-  display: grid;
-  grid-template-columns: auto 1fr auto;
-  gap: 16px;
-  align-items: center;
+  font-weight: 600;
   cursor: pointer;
   transition: 0.15s;
 }
-.issue-row:hover { border-color: var(--line-strong); box-shadow: var(--shadow-sm); }
-.issue-row.critical-row { border-left: 4px solid var(--stop); }
+.filter-pill:hover { border-color: var(--brand); }
+.filter-pill.active {
+  background: var(--brand);
+  border-color: var(--brand);
+  color: #FFFFFF;
+}
+:root[data-theme="dark"] .filter-pill.active { color: #05140B; }
 
-.me-too-btn {
+.issue-list { display: flex; flex-direction: column; gap: 12px; }
+.issue-card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-xl);
+  padding: 16px 20px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 18px;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.16s ease;
+  box-shadow: var(--shadow-sm);
+}
+.issue-card:hover {
+  border-color: var(--brand);
+  background: var(--card-hover);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-1px);
+}
+
+/* +1 Me Too Button */
+.vote-box {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  min-width: 64px;
-  height: 60px;
-  border-radius: var(--radius-m);
-  border: 1px solid var(--line-strong);
+  width: 66px;
+  height: 64px;
+  border-radius: var(--radius-l);
+  border: 1.5px solid var(--line-strong);
   background: var(--bg);
   cursor: pointer;
-  transition: 0.15s;
-  padding: 6px;
+  transition: all 0.15s ease;
 }
-.me-too-btn:hover { border-color: var(--violet); background: var(--violet-tint); }
-.me-too-btn.voted {
-  background: var(--violet);
-  border-color: var(--violet);
+.vote-box:hover {
+  border-color: var(--brand);
+  background: var(--brand-tint);
+}
+.vote-box.voted {
+  background: var(--brand);
+  border-color: var(--brand);
   color: #FFFFFF;
+  box-shadow: 0 6px 14px var(--brand-glow);
 }
-:root[data-theme="night"] .me-too-btn.voted { color: #130D24; }
-.me-too-count { font-family: var(--font-display); font-size: 18px; font-weight: 700; line-height: 1; }
-.me-too-lbl { font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 4px; opacity: 0.85; }
+:root[data-theme="dark"] .vote-box.voted { color: #05140B; }
+.vote-num { font-size: 18px; font-weight: 800; line-height: 1; }
+.vote-lbl { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; margin-top: 4px; }
 
-.issue-main h3 { font-size: 16px; font-weight: 600; margin-bottom: 6px; line-height: 1.3; }
-.issue-meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.issue-body h3 {
+  font-size: 16.5px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+.issue-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  align-items: center;
+}
 
 /* ---------------- Checklist ---------------- */
-.check-group { margin-bottom: 24px; }
-.check-item {
+.check-card {
   background: var(--card);
   border: 1px solid var(--line);
-  border-radius: var(--radius-m);
-  padding: 14px 16px;
-  margin-bottom: 8px;
+  border-radius: var(--radius-l);
+  padding: 16px 18px;
+  margin-bottom: 10px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 14px;
   flex-wrap: wrap;
+  transition: 0.15s;
 }
-.check-item.pass { border-color: var(--ok); background: var(--ok-tint); }
-.check-item.fail { border-color: var(--stop); background: var(--stop-tint); }
-.check-actions { display: flex; gap: 6px; align-items: center; }
+.check-card.pass {
+  border-color: var(--brand);
+  background: var(--brand-tint);
+}
+.check-card.fail {
+  border-color: var(--danger);
+  background: var(--danger-tint);
+}
 
-/* ---------------- Super-Easy Modal Form ---------------- */
+/* ---------------- Modal (1-Screen Report Form & Details) ---------------- */
 .backdrop {
   position: fixed;
   inset: 0;
-  background: rgba(15, 20, 26, 0.6);
-  backdrop-filter: blur(3px);
+  background: rgba(6, 16, 10, 0.65);
+  backdrop-filter: blur(5px);
   z-index: 100;
   display: none;
   place-items: center;
@@ -424,140 +626,147 @@ h1, h2, h3, h4 { font-family: var(--font-display); color: var(--ink); margin: 0;
 .modal {
   background: var(--card);
   border: 1px solid var(--line-strong);
-  border-radius: var(--radius-xl);
-  width: min(640px, 100%);
+  border-radius: var(--radius-2xl);
+  width: min(660px, 100%);
   max-height: 92vh;
   display: flex;
   flex-direction: column;
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-lg);
   overflow: hidden;
+  animation: modalIn 0.2s ease-out;
+}
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px) scale(0.98); }
 }
 .modal-head {
-  padding: 18px 24px;
+  padding: 20px 26px;
   border-bottom: 1px solid var(--line);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: var(--bg);
 }
 .modal-body {
-  padding: 22px 24px;
+  padding: 24px 26px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 20px;
 }
 .modal-foot {
-  padding: 16px 24px;
+  padding: 16px 26px;
   border-top: 1px solid var(--line);
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   background: var(--bg);
 }
-.close-btn {
-  background: var(--surface);
+.close-x {
+  background: var(--bg-subtle);
   border: 0;
-  width: 32px;
-  height: 32px;
+  width: 34px;
+  height: 34px;
   border-radius: 50%;
   font-size: 18px;
+  font-weight: 700;
   cursor: pointer;
   display: grid;
   place-items: center;
 }
+.close-x:hover { background: var(--line-strong); }
 
-/* Tap Selector Grids inside Modal */
+/* Form Elements */
 .field-label {
   display: block;
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 700;
   color: var(--ink);
   margin-bottom: 8px;
 }
-.field-label span { font-weight: 400; color: var(--muted); }
+.field-label span { font-weight: 500; color: var(--muted); }
 .tap-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(135px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
   gap: 8px;
 }
 .tap-tile {
-  padding: 11px 12px;
+  padding: 12px 13px;
   border-radius: var(--radius-m);
-  border: 1px solid var(--line-strong);
+  border: 1.5px solid var(--line-strong);
   background: var(--bg);
   text-align: left;
   cursor: pointer;
-  transition: 0.12s;
+  transition: 0.14s;
   display: flex;
   align-items: center;
   gap: 9px;
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--ink);
 }
-.tap-tile:hover { border-color: var(--violet); }
+.tap-tile:hover { border-color: var(--brand); }
 .tap-tile.selected {
-  background: var(--violet-tint);
-  border-color: var(--violet);
-  color: var(--violet);
-  box-shadow: inset 0 0 0 1px var(--violet);
+  background: var(--brand-tint);
+  border-color: var(--brand);
+  color: var(--brand-dark);
 }
-.tap-tile.selected.sev-stop {
-  background: var(--stop-tint);
-  border-color: var(--stop);
-  color: var(--stop);
-  box-shadow: inset 0 0 0 1px var(--stop);
-}
+:root[data-theme="dark"] .tap-tile.selected { color: var(--brand); }
 
 input[type="text"], input[type="email"], textarea, select {
   width: 100%;
-  padding: 12px 14px;
+  padding: 12px 15px;
   border-radius: var(--radius-m);
-  border: 1px solid var(--line-strong);
+  border: 1.5px solid var(--line-strong);
   background: var(--bg);
   color: var(--ink);
   font-size: 14.5px;
+  transition: 0.15s;
 }
 input:focus, textarea:focus, select:focus {
   outline: none;
-  border-color: var(--violet);
+  border-color: var(--brand);
   background: var(--card);
+  box-shadow: 0 0 0 3px var(--brand-glow);
 }
 textarea { min-height: 92px; resize: vertical; }
 
-/* Duplicate suggestion box */
 .dup-box {
-  background: var(--bronze-tint);
-  border: 1px solid var(--bronze);
+  background: var(--amber-tint);
+  border: 1px solid var(--amber);
   border-radius: var(--radius-m);
   padding: 12px 14px;
   margin-top: 8px;
 }
-.dup-item {
+.dup-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 10px;
   padding: 8px 0;
-  border-bottom: 1px solid rgba(158, 120, 50, 0.2);
+  border-bottom: 1px solid rgba(245, 158, 11, 0.2);
   font-size: 13.5px;
 }
-.dup-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.dup-row:last-child { border-bottom: 0; padding-bottom: 0; }
 
-/* Photo Upload */
 .photo-drop {
-  border: 1px dashed var(--line-strong);
-  border-radius: var(--radius-m);
-  padding: 14px;
+  display: block;
+  border: 1.5px dashed var(--line-strong);
+  border-radius: var(--radius-l);
+  padding: 16px;
   text-align: center;
   background: var(--bg);
   cursor: pointer;
+  font-weight: 600;
+  color: var(--muted);
+  transition: 0.15s;
 }
+.photo-drop:hover { border-color: var(--brand); color: var(--brand-dark); background: var(--brand-tint); }
 .thumb-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
 .thumb {
-  width: 76px;
-  height: 76px;
-  border-radius: 8px;
+  width: 78px;
+  height: 78px;
+  border-radius: 10px;
   overflow: hidden;
   position: relative;
   border: 1px solid var(--line-strong);
@@ -565,19 +774,18 @@ textarea { min-height: 92px; resize: vertical; }
 .thumb img { width: 100%; height: 100%; object-fit: cover; }
 .thumb button {
   position: absolute;
-  top: 3px;
-  right: 3px;
+  top: 4px;
+  right: 4px;
   background: rgba(0,0,0,0.75);
   color: #fff;
   border: 0;
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
   cursor: pointer;
-  font-size: 12px;
 }
 
-/* Mobile Bottom Bar */
+/* Mobile Bottom Nav */
 .mobile-nav {
   display: none;
   position: fixed;
@@ -585,7 +793,7 @@ textarea { min-height: 92px; resize: vertical; }
   left: 0;
   right: 0;
   background: var(--card);
-  border-top: 1px solid var(--line-strong);
+  border-top: 1px solid var(--line);
   padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
   z-index: 60;
   justify-content: space-around;
@@ -595,19 +803,18 @@ textarea { min-height: 92px; resize: vertical; }
   border: 0;
   color: var(--muted);
   font-size: 11px;
-  font-weight: 600;
+  font-weight: 700;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 3px;
   cursor: pointer;
 }
-.mobile-nav button.active { color: var(--stop); }
+.mobile-nav button.active { color: var(--brand); }
 
-/* Toast */
 #toastBox {
   position: fixed;
-  bottom: 24px;
+  bottom: 26px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 200;
@@ -617,116 +824,124 @@ textarea { min-height: 92px; resize: vertical; }
   pointer-events: none;
 }
 .toast {
-  background: var(--ink);
-  color: var(--card);
-  padding: 12px 20px;
+  background: var(--brand-deep);
+  color: #FFFFFF;
+  border: 1px solid var(--brand);
+  padding: 12px 22px;
   border-radius: 99px;
   font-size: 14px;
-  font-weight: 600;
-  box-shadow: var(--shadow);
+  font-weight: 700;
+  box-shadow: var(--shadow-lg);
 }
 
-@media (max-width: 760px) {
+@media (max-width: 820px) {
   .nav-tabs { display: none; }
   .mobile-nav { display: flex; }
-  .issue-row { grid-template-columns: auto 1fr; }
-  .issue-right { grid-column: 2; }
+  .hero { padding: 26px 22px; }
+  .issue-card { grid-template-columns: auto 1fr; }
+  .issue-meta-right { grid-column: 2; text-align: left !important; }
 }
 </style>
 </head>
 <body>
 
-<!-- TOP NAVIGATION BAR -->
+<!-- ANTHBOT OFFICIAL TOP BAR -->
+<div class="announcement">
+  <span class="dot"></span>
+  <span><b>ANTHBOT M9 Pro Pioneer Beta</b> · Easy Going, Pro Mowing · HoloSense™ Quad-Fusion Testing</span>
+</div>
+
+<!-- STICKY HEADER -->
 <header class="topbar">
   <div class="topbar-inner">
     <div class="brand" id="goHomeLogo">
-      <div class="mower-badge"></div>
+      <div class="brand-mark">A</div>
       <div>
-        <div class="brand-title">Anthbot M9 Pro</div>
-        <span class="brand-sub">Beta Tester Hub</span>
+        <div class="brand-name">ANTHBOT <span class="brand-pill">M9 PRO</span></div>
+        <span class="brand-sub">Pioneer Beta Tester Hub</span>
       </div>
     </div>
 
     <nav class="nav-tabs" id="desktopNav"></nav>
 
     <div class="top-actions">
-      <button class="btn btn-sm" id="themeBtn" title="Switch Day / Night">🌙</button>
-      <button class="btn btn-stop" id="topReportBtn">+ Report Issue</button>
+      <button class="btn btn-sm" id="themeBtn" title="Toggle Light / Dark">🌙</button>
+      <button class="btn btn-brand" id="topReportBtn">+ Report Issue</button>
     </div>
   </div>
 </header>
 
-<!-- MAIN CONTENT AREA -->
+<!-- MAIN CONTENT -->
 <main class="container" id="appMain"></main>
 
-<!-- MOBILE BOTTOM NAVIGATION -->
+<!-- MOBILE BOTTOM NAV -->
 <nav class="mobile-nav" id="mobileNav"></nav>
 
-<!-- MODAL (NEW REPORT OR ISSUE DETAIL) -->
+<!-- MODAL -->
 <div class="backdrop" id="modalBackdrop">
   <div class="modal" id="modalBox"></div>
 </div>
 
-<!-- TOAST NOTIFICATIONS -->
+<!-- TOASTS -->
 <div id="toastBox"></div>
 
 <script>
 "use strict";
 
 /* ==========================================================
-   SIMPLE CATEGORIES & CONSTANTS
+   M9 PRO SPECIFIC CATEGORIES (From eu.anthbot.com M9 Pro specs)
    ========================================================== */
 const KINDS = [
-  { id: 'bug',     emo: '🐛', label: 'Bug / Error',    chip: 'chip-stop' },
-  { id: 'safety',  emo: '🛑', label: 'Safety Issue',   chip: 'chip-stop' },
-  { id: 'stuck',   emo: '🛞', label: 'Got Stuck',      chip: 'chip-bronze' },
-  { id: 'signal',  emo: '📡', label: 'Lost Signal',    chip: 'chip-bronze' },
-  { id: 'cut',     emo: '🌱', label: 'Poor Cut',       chip: 'chip-violet' },
-  { id: 'wish',    emo: '💡', label: 'Feature Wish',   chip: 'chip-violet' }
+  { id: 'bug',    emo: '⚡', label: 'Bug / Fault',     sub: 'Error or wrong behavior', chip: 'chip-danger' },
+  { id: 'lidar',  emo: '🛰️', label: 'HoloSense / GPS', sub: 'LiDAR, RTK or NetRTK',    chip: 'chip-amber' },
+  { id: 'vision', emo: '👁️', label: 'AI Vision / Edge', sub: 'Obstacles or EdgeWiz™',  chip: 'chip-info' },
+  { id: 'stuck',  emo: '🛞', label: 'Slope / Stuck',   sub: 'Wheels, 24° slope, dock', chip: 'chip-amber' },
+  { id: 'app',    emo: '📱', label: 'App & Auto-Map',  sub: 'Mapping, zones, 4G/Wi-Fi', chip: 'chip-info' },
+  { id: 'wish',   emo: '🌱', label: 'Feature Idea',    sub: 'Suggest an improvement',  chip: 'chip-brand' }
 ];
 
-const PARTS = [
-  'Mapping & Boundary',
-  'GPS / RTK Signal',
-  'Mowing & Navigation',
-  'Docking & Charging',
-  'Blades & Cutting Deck',
-  'Obstacle Sensors',
-  'Wheels & Slopes',
-  'Mobile App & Wi-Fi',
-  'Battery & Runtime',
-  'Other / Not Sure'
+const M9_SYSTEMS = [
+  'HoloSense™ (360° LiDAR + RTK + NetRTK)',
+  'One-Tap Auto-Mapping & Boundaries',
+  'Dual HDR AI Vision (Obstacle Avoidance)',
+  'EdgeWiz™ Edge Mowing & Cut Quality',
+  '5-Blade Disc & Auto Height (3–7 cm)',
+  'Slope Climbing (Up to 45% / 24°)',
+  'Docking, 5Ah Battery & 90m Charging',
+  'Anthbot App, Multi-Zone (32) & 4G/Wi-Fi',
+  'Rain Sensor & IPX6 Weatherproofing',
+  'Other / General Hardware'
 ];
 
 const SEVERITIES = [
-  { id: 'critical', emo: '🛑', label: 'Dangerous / Unusable', cls: 'sev-stop', chip: 'chip-stop' },
-  { id: 'high',     emo: '⚠️', label: 'Major Problem',        cls: '',         chip: 'chip-bronze' },
-  { id: 'medium',   emo: '🔧', label: 'Annoying',             cls: '',         chip: 'chip-violet' },
-  { id: 'low',      emo: '💬', label: 'Minor / Cosmetic',     cls: '',         chip: 'chip-muted' }
+  { id: 'critical', emo: '🛑', label: 'Stops Mowing',    chip: 'chip-danger' },
+  { id: 'high',     emo: '⚠️', label: 'Major Issue',     chip: 'chip-amber' },
+  { id: 'medium',   emo: '🔧', label: 'Annoying',        chip: 'chip-info' },
+  { id: 'low',      emo: '💬', label: 'Minor / Polish',  chip: 'chip-muted' }
 ];
 
 const STATUSES = {
-  'open':      { label: 'Open',               chip: 'chip-bronze' },
-  'fixing':    { label: 'Anthbot Fixing',     chip: 'chip-violet' },
-  'fixed':     { label: 'Fixed — Test It!',   chip: 'chip-ok' },
-  'verified':  { label: 'Confirmed Fixed',    chip: 'chip-muted' }
+  'open':     { label: 'Open Report',        chip: 'chip-amber' },
+  'fixing':   { label: 'In OTA Pipeline',    chip: 'chip-info' },
+  'fixed':    { label: 'Fixed — Please Test', chip: 'chip-brand' },
+  'verified': { label: 'Verified Fixed ✓',   chip: 'chip-muted' }
 };
 
-const QUICK_CHECKS = [
-  { id: 'c1', group: 'First Setup',    text: 'Paired and mapped the boundary on the first try' },
-  { id: 'c2', group: 'First Setup',    text: 'RTK / GPS signal stays locked around trees and walls' },
-  { id: 'c3', group: 'Mowing & Cut',   text: 'Finishes a full zone with no uncut stripes left behind' },
-  { id: 'c4', group: 'Mowing & Cut',   text: 'Climbs your steepest slope without wheel slip' },
-  { id: 'c5', group: 'Safety',         text: 'Stops cleanly for an object left on the grass' },
-  { id: 'c6', group: 'Safety',         text: 'Red STOP button halts blades immediately' },
-  { id: 'c7', group: 'Dock & App',     text: 'Finds the charging dock and charges to 100%' },
-  { id: 'c8', group: 'Dock & App',     text: 'App reconnects quickly and shows live mower position' }
+const M9_CHECKLIST = [
+  { id: 'c1', group: 'Drop & Mow Setup',     text: 'One-Tap Auto-Mapping completes your lawn boundary in under 5 minutes' },
+  { id: 'c2', group: 'HoloSense™ Navigation', text: '360° LiDAR navigates smoothly under dense trees or narrow side alleys' },
+  { id: 'c3', group: 'HoloSense™ Navigation', text: 'NetRTK / RTK maintains 1 cm border accuracy along open edges' },
+  { id: 'c4', group: 'Dual HDR AI Vision',    text: 'Detects and steers cleanly around low-lying obstacles (hose, toys, pets)' },
+  { id: 'c5', group: 'Mowing & EdgeWiz™',     text: 'EdgeWiz™ trims cleanly along borders and 5-blade disc leaves an even cut' },
+  { id: 'c6', group: 'Slopes & Traction',     text: 'Handles your steepest slope (up to 45% / 24°) without wheel spin' },
+  { id: 'c7', group: 'Battery & Auto-Homing', text: 'Returns to dock automatically on low battery or rain and charges in ~90 min' },
+  { id: 'c8', group: 'App & Quiet Operation', text: 'Noise stays whisper-quiet (≤58 dB) and live map updates over Wi-Fi / 4G' }
 ];
 
 /* ==========================================================
-   STATE & STORAGE
+   STATE & DEMO DATA
    ========================================================== */
-const STORAGE_KEY = 'anthbot_m9_easy_v1';
+const STORAGE_KEY = 'anthbot_m9pro_brand_v2';
 
 function seedData() {
   const now = Date.now(), D = 86400000;
@@ -738,48 +953,47 @@ function seedData() {
       serial: '',
       firmware: '2.4.1',
       role: 'tester',
-      theme: 'day'
+      theme: 'light'
     },
-    notice: 'Firmware 2.4.1 is out now — fixes the child-lock PIN bypass (M9-003). Please update before your next run.',
+    notice: 'OTA Firmware 2.4.1 is live — improves HoloSense™ LiDAR handoff under dense trees and fixes M9-003.',
     checks: {},
     counter: 5,
     issues: [
       {
         id: 'i1', key: 'M9-001',
-        title: 'Front wheel drives 12 cm over the flower bed edge on turns',
-        kind: 'bug', part: 'Mapping & Boundary', severity: 'critical', status: 'fixing',
-        notes: 'Happens on the north turn in Zone 2 when RTK signal dips slightly.',
-        reply: 'Reproduced by Anthbot firmware team. Fix is coming in firmware 2.5.0.',
-        FixedIn: '2.5.0',
+        title: 'EdgeWiz™ leaves a 5 cm uncut strip on tight 90° inside corners',
+        kind: 'vision', part: 'EdgeWiz™ Edge Mowing & Cut Quality', severity: 'medium', status: 'fixing',
+        notes: 'Straight borders are super clean, but when turning 90 degrees around the patio stones it swings out slightly.',
+        reply: 'Anthbot Navigation Team: Confirmed! We tuned the corner pivot radius in upcoming OTA 2.5.0.',
         reporter: 'Mette H.', serial: 'M9P-0042', firmware: '2.4.1',
         votes: ['u2', 'u3', 'u4', 'u5'],
-        photos: [], comments: [], createdAt: now - 5 * D
-      },
-      {
-        id: 'i2', key: 'M9-002',
-        title: 'Blade motor stops in damp morning grass with error E-217',
-        kind: 'stuck', part: 'Blades & Cutting Deck', severity: 'high', status: 'fixing',
-        notes: 'After ~20 minutes on wet grass, the deck stops and mower parks in place.',
-        reply: 'Testing a higher-torque recovery routine for wet clippings.',
-        reporter: 'Jonas P.', serial: 'M9P-0051', firmware: '2.4.1',
-        votes: ['u2', 'u3', 'u6'],
         photos: [], comments: [], createdAt: now - 4 * D
       },
       {
+        id: 'i2', key: 'M9-002',
+        title: '5-Blade disc motor pauses with E-217 in heavy morning dew',
+        kind: 'bug', part: '5-Blade Disc & Auto Height (3–7 cm)', severity: 'high', status: 'fixing',
+        notes: 'When cutting at 3 cm height in thick wet grass, clippings build up and trigger an over-current pause.',
+        reply: 'Testing auto-rpm boost in wet grass mode for OTA 2.5.0.',
+        reporter: 'Jonas P.', serial: 'M9P-0051', firmware: '2.4.1',
+        votes: ['u2', 'u3', 'u6'],
+        photos: [], comments: [], createdAt: now - 3 * D
+      },
+      {
         id: 'i3', key: 'M9-003',
-        title: 'Child lock bypassed if holding STOP while pressing Home',
-        kind: 'safety', part: 'Obstacle Sensors', severity: 'critical', status: 'fixed',
-        notes: 'Blades can arm without asking for the PIN code.',
-        reply: 'Patched in Firmware 2.4.1. Please test on your mower and click "Confirm Fixed"!',
+        title: 'Brief hesitation when switching from NetRTK to 360° LiDAR under beech trees',
+        kind: 'lidar', part: 'HoloSense™ (360° LiDAR + RTK + NetRTK)', severity: 'low', status: 'fixed',
+        notes: 'Pauses for about 3 seconds at the tree line before continuing smoothly.',
+        reply: 'Smoothed out the Quad-Fusion filter in Firmware 2.4.1. Please test and click Confirm Fixed!',
         reporter: 'Anna S.', serial: 'M9P-0063', firmware: '2.4.0',
-        votes: ['u2', 'u3', 'u4', 'u5', 'u6'],
-        photos: [], comments: [], createdAt: now - 9 * D
+        votes: ['u2', 'u4', 'u5', 'u6'],
+        photos: [], comments: [], createdAt: now - 7 * D
       },
       {
         id: 'i4', key: 'M9-004',
-        title: 'App loses connection to mower after home Wi-Fi router restarts',
-        kind: 'signal', part: 'Mobile App & Wi-Fi', severity: 'medium', status: 'open',
-        notes: 'Mower is online, but the phone app needs a full restart to see it again.',
+        title: 'One-Tap Auto-Mapping mistakes low grey gravel path for lawn border',
+        kind: 'app', part: 'One-Tap Auto-Mapping & Boundaries', severity: 'medium', status: 'open',
+        notes: 'Dual AI Vision stops at the gravel transition unless I manually drive it across.',
         reply: '',
         reporter: 'Bjarni T.', serial: 'M9P-0070', firmware: '2.4.1',
         votes: ['u5', 'u2'],
@@ -787,13 +1001,13 @@ function seedData() {
       },
       {
         id: 'i5', key: 'M9-005',
-        title: 'One-tap "Skip Today" rain button on the app home screen',
-        kind: 'wish', part: 'Mobile App & Wi-Fi', severity: 'low', status: 'open',
-        notes: 'When the lawn is soaked, I want to pause today without editing the weekly schedule.',
-        reply: 'Planned for App 3.9!',
+        title: 'Add per-zone cutting height (e.g. 3.5 cm front lawn, 5.5 cm orchard)',
+        kind: 'wish', part: 'Anthbot App, Multi-Zone (32) & 4G/Wi-Fi', severity: 'low', status: 'open',
+        notes: 'Since the M9 Pro has motorized 3–7 cm blade height adjustment in the app, per-zone height would be amazing.',
+        reply: 'Great idea — scheduled for Anthbot App v3.9!',
         reporter: 'Sara L.', serial: 'M9P-0088', firmware: '2.4.1',
-        votes: ['u2', 'u3', 'u4', 'u6'],
-        photos: [], comments: [], createdAt: now - 3 * D
+        votes: ['u2', 'u3', 'u4', 'u5', 'u6'],
+        photos: [], comments: [], createdAt: now - 5 * D
       }
     ]
   };
@@ -801,7 +1015,7 @@ function seedData() {
 
 let S = loadState();
 let UI = {
-  tab: 'home',       // Default is always the home screen
+  tab: 'home',   // Always starts on Home screen
   filter: 'all',
   search: ''
 };
@@ -816,7 +1030,7 @@ function loadState() {
 }
 function saveState() {
   try { localStorage.setItem(STORAGE_KEY, JSON.stringify(S)); }
-  catch (e) { toast('Browser storage full — export backup in My Mower'); }
+  catch (e) { toast('Storage full — export backup in My M9 Pro'); }
 }
 
 /* ==========================================================
@@ -837,18 +1051,17 @@ function ago(ts) {
 function toast(msg) {
   const t = document.createElement('div');
   t.className = 'toast';
-  t.textContent = '✓ ' + msg;
+  t.textContent = '🌱 ' + msg;
   $('#toastBox').appendChild(t);
   setTimeout(() => t.remove(), 2600);
 }
 
 function applyTheme() {
-  const theme = S.profile.theme || 'day';
+  const theme = S.profile.theme || 'light';
   document.documentElement.setAttribute('data-theme', theme);
-  $('#themeBtn').textContent = theme === 'night' ? '☀️' : '🌙';
+  $('#themeBtn').textContent = theme === 'dark' ? '☀️' : '🌙';
 }
 
-/* Shrink image so localStorage never overflows */
 function compressPhoto(file) {
   return new Promise(resolve => {
     const reader = new FileReader();
@@ -861,7 +1074,7 @@ function compressPhoto(file) {
         canvas.width = Math.round(img.width * scale);
         canvas.height = Math.round(img.height * scale);
         canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-        resolve(canvas.toDataURL('image/jpeg', 0.8));
+        resolve(canvas.toDataURL('image/jpeg', 0.82));
       };
       img.src = reader.result;
     };
@@ -870,16 +1083,16 @@ function compressPhoto(file) {
 }
 
 /* ==========================================================
-   NAVIGATION & RENDERING
+   NAVIGATION
    ========================================================== */
 function renderNav() {
   const openCount = S.issues.filter(i => i.status !== 'verified').length;
   const doneChecks = Object.values(S.checks).filter(Boolean).length;
   const tabs = [
-    { id: 'home',      emo: '🏠', label: 'Home' },
-    { id: 'issues',    emo: '📋', label: 'Issues & Wishes', badge: openCount },
-    { id: 'checklist', emo: '✅', label: 'Checklist',       badge: `${doneChecks}/${QUICK_CHECKS.length}` },
-    { id: 'mower',     emo: '🤖', label: S.profile.role === 'admin' ? 'Staff / Mower' : 'My Mower' }
+    { id: 'home',      emo: '🏡', label: 'Home' },
+    { id: 'issues',    emo: '📋', label: 'Issues & Ideas', badge: openCount },
+    { id: 'checklist', emo: '✅', label: 'M9 Pro Test Plan', badge: `${doneChecks}/${M9_CHECKLIST.length}` },
+    { id: 'mower',     emo: '🤖', label: S.profile.role === 'admin' ? 'Staff / Mower' : 'My M9 Pro' }
   ];
 
   $('#desktopNav').innerHTML = tabs.map(t => `
@@ -914,96 +1127,118 @@ function renderApp() {
 }
 
 /* ==========================================================
-   VIEW 1: HOME SCREEN (DEFAULT)
+   VIEW 1: HOME (DEFAULT)
    ========================================================== */
 function renderHome(el) {
   const openBugs = S.issues.filter(i => i.kind !== 'wish' && i.status !== 'verified');
   const toVerify = S.issues.filter(i => i.status === 'fixed');
-  const topIssues = [...S.issues].sort((a, b) => b.votes.length - a.votes.length).slice(0, 4);
+  const wishes = S.issues.filter(i => i.kind === 'wish');
   const doneChecks = Object.values(S.checks).filter(Boolean).length;
+  const topIssues = [...S.issues].sort((a, b) => b.votes.length - a.votes.length).slice(0, 4);
 
   el.innerHTML = `
-    ${S.notice ? `
-      <div class="notice-bar">
-        <div><b>📢 Notice from Anthbot:</b> ${esc(S.notice)}</div>
-      </div>
-    ` : ''}
-
     <div class="hero">
       <div class="hero-top">
         <div>
-          <span class="mono">FIRMWARE ${esc(S.profile.firmware || '2.4.1')} · CLOSED BETA</span>
-          <h1>Spot a problem with your M9 Pro?</h1>
-          <p>Tap a button below to report it in 15 seconds — or tap <b>+1 Me Too</b> on an existing report so Anthbot knows how many mowers are affected.</p>
+          <div class="hero-tag">🛰️ ANTHBOT M9 PRO · 1000㎡ WIRE-FREE BETA</div>
+          <h1>Help us perfect <span>Pro Mowing.</span></h1>
+          <p>Spot an issue or have an idea for your M9 Pro? Tap any category below to report it in seconds, or tap <b>+1 Me Too</b> on another tester's report.</p>
+          <div class="hero-specs">
+            <span class="spec-pill">360° LiDAR + NetRTK</span>
+            <span class="spec-pill">Dual HDR AI Vision</span>
+            <span class="spec-pill">EdgeWiz™</span>
+            <span class="spec-pill">24° (45%) Slope</span>
+            <span class="spec-pill">FW ${esc(S.profile.firmware || '2.4.1')}</span>
+          </div>
         </div>
-        <button class="btn btn-stop btn-xl" id="heroReportBtn">🛑 Report an Issue</button>
+        <button class="btn btn-brand btn-xl" id="heroReportBtn">+ Quick Report</button>
       </div>
 
-      <div class="quick-triggers">
+      <div class="quick-label">1-Tap Report — Pick what happened:</div>
+      <div class="quick-grid">
         ${KINDS.map(k => `
           <button class="q-card" data-quick-kind="${k.id}">
-            <span class="q-emo">${k.emo}</span>
+            <div class="q-icon">${k.emo}</div>
             <div>
               <b>${esc(k.label)}</b>
-              <small>Tap to report</small>
+              <small>${esc(k.sub)}</small>
             </div>
           </button>
         `).join('')}
       </div>
     </div>
 
+    ${S.notice ? `
+      <div class="card" style="margin-bottom:24px;border-left:4px solid var(--brand);background:var(--brand-tint);padding:15px 20px">
+        <strong style="color:var(--brand-dark)">📢 ANTHBOT Team Update:</strong>
+        <span style="margin-left:6px">${esc(S.notice)}</span>
+      </div>
+    ` : ''}
+
     <div class="stats-grid">
-      <button class="stat-box" data-goto="issues" data-flt="all">
-        <div class="stat-num">${openBugs.length}</div>
-        <div class="stat-label">Open issues</div>
+      <button class="stat-card" data-goto="issues" data-flt="bugs">
+        <div>
+          <div class="stat-num">${openBugs.length}</div>
+          <div class="stat-label">Active Issues</div>
+        </div>
+        <div class="stat-ico">⚡</div>
       </button>
-      <button class="stat-box" data-goto="issues" data-flt="fixed">
-        <div class="stat-num" style="color:var(--ok)">${toVerify.length}</div>
-        <div class="stat-label">Fixed — please test</div>
+      <button class="stat-card" data-goto="issues" data-flt="fixed">
+        <div>
+          <div class="stat-num" style="color:var(--brand-dark)">${toVerify.length}</div>
+          <div class="stat-label">OTA Fixed — Test Now</div>
+        </div>
+        <div class="stat-ico">✨</div>
       </button>
-      <button class="stat-box" data-goto="issues" data-flt="wish">
-        <div class="stat-num" style="color:var(--violet)">${S.issues.filter(i => i.kind === 'wish').length}</div>
-        <div class="stat-label">Feature wishes</div>
+      <button class="stat-card" data-goto="issues" data-flt="wish">
+        <div>
+          <div class="stat-num">${wishes.length}</div>
+          <div class="stat-label">Feature Ideas</div>
+        </div>
+        <div class="stat-ico">🌱</div>
       </button>
-      <button class="stat-box" data-goto="checklist">
-        <div class="stat-num">${doneChecks}/${QUICK_CHECKS.length}</div>
-        <div class="stat-label">Checklist completed</div>
+      <button class="stat-card" data-goto="checklist">
+        <div>
+          <div class="stat-num">${doneChecks}/${M9_CHECKLIST.length}</div>
+          <div class="stat-label">Field Checklist</div>
+        </div>
+        <div class="stat-ico">✅</div>
       </button>
     </div>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-      <h2>Most Reported by Testers</h2>
-      <button class="btn btn-sm" id="seeAllBtn">See all (${S.issues.length}) →</button>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px">
+      <h2>Top Community Reports</h2>
+      <button class="btn btn-sm" id="seeAllBtn">View All (${S.issues.length}) →</button>
     </div>
 
     <div class="issue-list">
-      ${topIssues.map(issueRowHTML).join('')}
+      ${topIssues.map(issueCardHTML).join('')}
     </div>
   `;
 
   $('#heroReportBtn').onclick = () => openReportModal(); $$('[data-quick-kind]', el).forEach(b => b.onclick = () => openReportModal({ kind: b.dataset.quickKind }));$$('[data-goto]', el).forEach(b => b.onclick = () => { if (b.dataset.flt) UI.filter = b.dataset.flt; UI.tab = b.dataset.goto; renderApp(); });$('#seeAllBtn').onclick = () => { UI.tab = 'issues'; renderApp(); };
-  wireIssueRows(el);
+  wireIssueCards(el);
 }
 
 /* ==========================================================
-   VIEW 2: ALL ISSUES & WISHES
+   VIEW 2: ISSUES & IDEAS
    ========================================================== */
-function issueRowHTML(item) {
+function issueCardHTML(item) {
   const k = KINDS.find(x => x.id === item.kind) || KINDS[0];
   const sev = SEVERITIES.find(x => x.id === item.severity) || SEVERITIES[2];
   const st = STATUSES[item.status] || STATUSES.open;
   const voted = item.votes.includes(S.profile.id);
 
   return `
-    <article class="issue-row ${item.severity === 'critical' && item.status !== 'verified' ? 'critical-row' : ''}" data-open-id="${item.id}">
-      <button class="me-too-btn ${voted ? 'voted' : ''}" data-vote-id="${item.id}" title="Happens to me too!">
-        <span class="me-too-count">+${item.votes.length}</span>
-        <span class="me-too-lbl">${voted ? 'Voted' : 'Me Too'}</span>
+    <article class="issue-card" data-open-id="${item.id}">
+      <button class="vote-box ${voted ? 'voted' : ''}" data-vote-id="${item.id}" title="Happens on my M9 Pro too">
+        <span class="vote-num">+${item.votes.length}</span>
+        <span class="vote-lbl">${voted ? 'Joined' : 'Me Too'}</span>
       </button>
 
-      <div class="issue-main">
+      <div class="issue-body">
         <h3>${esc(item.title)}</h3>
-        <div class="issue-meta">
+        <div class="issue-tags">
           <span class="mono">${esc(item.key)}</span>
           <span class="chip ${k.chip}">${k.emo} ${esc(k.label)}</span>
           ${item.kind !== 'wish' ? `<span class="chip ${sev.chip}">${esc(sev.label)}</span>` : ''}
@@ -1012,18 +1247,18 @@ function issueRowHTML(item) {
         </div>
       </div>
 
-      <div class="issue-right mono" style="text-align:right">
-        <div>${esc(item.reporter)}</div>
+      <div class="issue-meta-right mono" style="text-align:right">
+        <div style="font-weight:600;color:var(--body)">${esc(item.reporter)}</div>
         <div>${ago(item.createdAt)}</div>
       </div>
     </article>
   `;
 }
 
-function wireIssueRows(root) {
+function wireIssueCards(root) {
   $$('[data-vote-id]', root).forEach(btn => { btn.onclick = e => { e.stopPropagation(); toggleVote(btn.dataset.voteId); }; });$$
-('[data-open-id]', root).forEach(row => {
-    row.onclick = () => openDetailModal(row.dataset.openId);
+('[data-open-id]', root).forEach(card => {
+    card.onclick = () => openDetailModal(card.dataset.openId);
   });
 }
 
@@ -1043,11 +1278,11 @@ function toggleVote(id) {
 
 function renderIssues(el) {
   const filters = [
-    { id: 'all',   label: 'All' },
-    { id: 'bugs',  label: '🐛 Problems Only' },
-    { id: 'wish',  label: '💡 Wishes Only' },
-    { id: 'fixed', label: '✅ Ready to Test' },
-    { id: 'mine',  label: '👤 My Votes' }
+    { id: 'all',   label: 'All Reports' },
+    { id: 'bugs',  label: '⚡ Issues Only' },
+    { id: 'wish',  label: '🌱 Feature Ideas' },
+    { id: 'fixed', label: '✨ Ready to Verify' },
+    { id: 'mine',  label: '👤 My +1s' }
   ];
 
   let list = [...S.issues];
@@ -1063,28 +1298,30 @@ function renderIssues(el) {
   list.sort((a, b) => b.votes.length - a.votes.length);
 
   el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:16px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:18px">
       <div>
-        <h1>Issues & Feature Wishes</h1>
-        <p style="margin:4px 0 0;color:var(--muted)">Tap <b>+Me Too</b> if you have the same issue, or click any row for full details.</p>
+        <h1>M9 Pro Issues & Feature Ideas</h1>
+        <p style="margin:4px 0 0;color:var(--muted)">Tap <b>+Me Too</b> if you experience the same thing, or click any card for full details & ANTHBOT replies.</p>
       </div>
-      <button class="btn btn-stop" id="listNewBtn">+ Report Issue</button>
+      <button class="btn btn-brand" id="listNewBtn">+ Report Issue</button>
     </div>
 
-    <div class="filter-bar">
-      <input type="text" class="search-input" id="searchBox" placeholder="Search by keyword, error code (e.g. E-217), or mower part..." value="${esc(UI.search)}">
+    <div class="toolbar">
+      <div class="search-wrap">
+        <input type="text" class="search-input" id="searchBox" placeholder="Search by keyword, error code (e.g. E-217), LiDAR, EdgeWiz..." value="${esc(UI.search)}">
+      </div>
     </div>
 
-    <div class="pill-filters">
-      ${filters.map(f => `<button class="pill ${UI.filter === f.id ? 'active' : ''}" data-f="${f.id}">${f.label}</button>`).join('')}
+    <div class="pill-bar">
+      ${filters.map(f => `<button class="filter-pill ${UI.filter === f.id ? 'active' : ''}" data-f="${f.id}">${f.label}</button>`).join('')}
     </div>
 
-    <div class="issue-list" id="issuesContainer">
-      ${list.map(issueRowHTML).join('') || `
-        <div class="card" style="text-align:center;padding:42px 20px">
-          <h3>Nothing matches your search</h3>
-          <p style="color:var(--muted)">Be the first to report it to Anthbot!</p>
-          <button class="btn btn-stop" id="emptyNewBtn">+ Report Issue</button>
+    <div class="issue-list">
+      ${list.map(issueCardHTML).join('') || `
+        <div class="card" style="text-align:center;padding:48px 20px">
+          <h3>No matching reports</h3>
+          <p style="color:var(--muted)">Be the first Pioneer tester to log this!</p>
+          <button class="btn btn-brand" id="emptyNewBtn">+ Report Issue</button>
         </div>
       `}
     </div>
@@ -1100,35 +1337,35 @@ function renderIssues(el) {
     UI.filter = b.dataset.f;
     renderIssues(el);
   });
-  wireIssueRows(el);
+  wireIssueCards(el);
 }
 
 /* ==========================================================
-   VIEW 3: QUICK 8-POINT CHECKLIST
+   VIEW 3: M9 PRO FIELD CHECKLIST
    ========================================================== */
 function renderChecklist(el) {
-  const groups = [...new Set(QUICK_CHECKS.map(c => c.group))];
+  const groups = [...new Set(M9_CHECKLIST.map(c => c.group))];
   const done = Object.values(S.checks).filter(Boolean).length;
 
   el.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:20px">
+    <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;margin-bottom:22px">
       <div>
-        <h1>Quick Beta Checklist (${done}/${QUICK_CHECKS.length})</h1>
-        <p style="margin:4px 0 0;color:var(--muted)">Try these 8 core tasks on your lawn. If one fails, tap <b>Failed</b> and it will pre-fill a bug report for you.</p>
+        <h1>M9 Pro Field Test Plan (${done}/${M9_CHECKLIST.length})</h1>
+        <p style="margin:4px 0 0;color:var(--muted)">Test these 8 key M9 Pro capabilities in your garden. Tapping <b>✕ Issue Found</b> opens a pre-filled report.</p>
       </div>
-      <button class="btn btn-sm" id="resetChecksBtn">Reset Checklist</button>
+      <button class="btn btn-sm" id="resetChecksBtn">Reset Progress</button>
     </div>
 
     ${groups.map(g => `
-      <div class="check-group">
-        <h3 style="margin-bottom:10px">${esc(g)}</h3>${QUICK_CHECKS.filter(c => c.group === g).map(c => {
+      <div style="margin-bottom:24px">
+        <h3 style="margin-bottom:10px;color:var(--brand-dark)">${esc(g)}</h3>${M9_CHECKLIST.filter(c => c.group === g).map(c => {
           const st = S.checks[c.id] || '';
           return `
-            <div class="check-item ${st}">
-              <span style="font-weight:500">${esc(c.text)}</span>
-              <div class="check-actions">
-                <button class="btn btn-sm ${st === 'pass' ? 'btn-primary' : ''}" data-cid="${c.id}" data-val="pass">✓ Worked</button>
-                <button class="btn btn-sm ${st === 'fail' ? 'btn-stop' : ''}" data-cid="${c.id}" data-val="fail" data-text="${esc(c.text)}">✕ Failed</button>
+            <div class="check-card ${st}">
+              <span style="font-weight:600">${esc(c.text)}</span>
+              <div style="display:flex;gap:8px">
+                <button class="btn btn-sm ${st === 'pass' ? 'btn-brand' : ''}" data-cid="${c.id}" data-val="pass">✓ Works Great</button>
+                <button class="btn btn-sm" style="${st === 'fail' ? 'background:var(--danger);color:#fff;border-color:var(--danger)' : ''}" data-cid="${c.id}" data-val="fail" data-text="${esc(c.text)}">✕ Issue Found</button>
               </div>
             </div>
           `;
@@ -1148,7 +1385,7 @@ function renderChecklist(el) {
       if (S.checks[id] === 'fail') {
         openReportModal({
           kind: 'bug',
-          title: `Checklist failed: ${btn.dataset.text}`
+          title: `Field test issue: ${btn.dataset.text}`
         });
       }
     };
@@ -1163,7 +1400,7 @@ function renderChecklist(el) {
 }
 
 /* ==========================================================
-   VIEW 4: MY MOWER & STAFF TOOLS
+   VIEW 4: MY M9 PRO & STAFF MODE
    ========================================================== */
 function renderMower(el) {
   const p = S.profile;
@@ -1171,20 +1408,20 @@ function renderMower(el) {
 
   el.innerHTML = `
     <div style="margin-bottom:20px">
-      <h1>My Mower & Tester Info</h1>
-      <p style="margin:4px 0 0;color:var(--muted)">Saved once and automatically attached to your reports so you never have to retype it.</p>
+      <h1>My M9 Pro & Tester Profile</h1>
+      <p style="margin:4px 0 0;color:var(--muted)">Save your mower details once — they attach automatically to every report you send.</p>
     </div>
 
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(310px,1fr));gap:20px">
       <div class="card">
-        <h3 style="margin-bottom:14px">Your Details</h3>
+        <h3 style="margin-bottom:14px">🤖 Unit & Tester Info</h3>
         <div style="display:flex;flex-direction:column;gap:12px">
           <div>
             <label class="field-label">Your Name</label>
             <input type="text" id="profName" placeholder="e.g. Lasse K." value="${esc(p.name)}">
           </div>
           <div>
-            <label class="field-label">Email <span>(Visible to Anthbot only)</span></label>
+            <label class="field-label">Email <span>(Private to ANTHBOT Staff)</span></label>
             <input type="email" id="profEmail" placeholder="you@example.com" value="${esc(p.email)}">
           </div>
           <div>
@@ -1192,39 +1429,39 @@ function renderMower(el) {
             <input type="text" id="profSerial" placeholder="M9P-0042" value="${esc(p.serial)}">
           </div>
           <div>
-            <label class="field-label">Current Firmware Version</label>
+            <label class="field-label">Firmware Version</label>
             <input type="text" id="profFw" placeholder="2.4.1" value="${esc(p.firmware)}">
           </div>
-          <button class="btn btn-primary" id="saveProfBtn" style="margin-top:6px">Save My Info</button>
+          <button class="btn btn-brand" id="saveProfBtn" style="margin-top:6px">Save My M9 Pro</button>
         </div>
       </div>
 
-      <div style="display:flex;flex-direction:column;gap:18px">
+      <div style="display:flex;flex-direction:column;gap:20px">
         <div class="card">
-          <h3 style="margin-bottom:8px">Backup & Export</h3>
-          <p style="color:var(--muted);font-size:13.5px;margin-top:0">Download all reports as a spreadsheet (CSV) or JSON backup.</p>
+          <h3 style="margin-bottom:8px">📦 Export & Backup</h3>
+          <p style="color:var(--muted);font-size:13.5px;margin-top:0">Export all beta reports to a spreadsheet (CSV) or JSON file.</p>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
-            <button class="btn btn-sm" id="csvBtn">📊 Export CSV</button>
+            <button class="btn btn-sm" id="csvBtn">📊 Download CSV</button>
             <button class="btn btn-sm" id="jsonBtn">💾 Backup JSON</button>
-            <button class="btn btn-sm" id="resetDemoBtn">🔄 Reset Demo Data</button>
+            <button class="btn btn-sm" id="resetDemoBtn">🔄 Reset Demo</button>
           </div>
         </div>
 
         <div class="card">
-          <h3 style="margin-bottom:8px">Anthbot Staff Mode</h3>
+          <h3 style="margin-bottom:8px">🛡️ ANTHBOT Staff Console</h3>
           <p style="color:var(--muted);font-size:13.5px;margin-top:0">
-            Staff mode lets you change issue statuses, post official replies, and update the top notice banner. (Demo code: <code>anthbot</code>)
+            Staff mode lets engineers post official replies, update OTA statuses, and edit the top announcement banner. (Code: <code>anthbot</code>)
           </p>
           <div style="display:flex;align-items:center;gap:10px">
-            <span class="chip ${isAdmin ? 'chip-ok' : 'chip-muted'}">${isAdmin ? '✓ Staff Mode Active' : 'Tester Mode'}</span>
-            <button class="btn btn-sm" id="staffToggleBtn">${isAdmin ? 'Exit Staff Mode' : 'Unlock Staff Mode'}</button>
+            <span class="chip ${isAdmin ? 'chip-brand' : 'chip-muted'}">${isAdmin ? '✓ Staff Mode Active' : 'Pioneer Tester'}</span>
+            <button class="btn btn-sm" id="staffToggleBtn">${isAdmin ? 'Lock Staff Mode' : 'Unlock Staff Mode'}</button>
           </div>
 
           ${isAdmin ? `
             <div style="margin-top:16px;padding-top:14px;border-top:1px solid var(--line)">
-              <label class="field-label">Top Banner Notice</label>
-              <input type="text" id="noticeInput" value="${esc(S.notice)}" placeholder="Leave blank to hide banner">
-              <button class="btn btn-sm btn-primary" id="saveNoticeBtn" style="margin-top:8px">Update Banner</button>
+              <label class="field-label">Announcement Banner</label>
+              <input type="text" id="noticeInput" value="${esc(S.notice)}" placeholder="Leave empty to hide">
+              <button class="btn btn-sm btn-brand" id="saveNoticeBtn" style="margin-top:8px">Save Banner</button>
             </div>
           ` : ''}
         </div>
@@ -1238,7 +1475,7 @@ function renderMower(el) {
     p.serial = $('#profSerial').value.trim();
     p.firmware = $('#profFw').value.trim() || '2.4.1';
     saveState();
-    toast('Tester details saved!');
+    toast('M9 Pro profile saved!');
     renderApp();
   };
 
@@ -1247,11 +1484,11 @@ function renderMower(el) {
     const blob = new Blob([JSON.stringify(S, null, 2)], { type: 'application/json' });
     const a = document.createElement('a');
     a.href = URL.createObjectURL(blob);
-    a.download = 'anthbot-m9-reports.json';
+    a.download = 'anthbot-m9pro-beta.json';
     a.click();
   };
   $('#resetDemoBtn').onclick = () => {
-    if (!confirm('Reset everything back to the original demo reports?')) return;
+    if (!confirm('Reset back to the default demo reports?')) return;
     S = seedData();
     saveState();
     renderApp();
@@ -1264,14 +1501,14 @@ function renderMower(el) {
       saveState();
       renderApp();
     } else {
-      const code = prompt('Enter Anthbot staff code (hint: anthbot):');
+      const code = prompt('Enter ANTHBOT Staff Code (anthbot):');
       if (code && code.trim().toLowerCase() === 'anthbot') {
         p.role = 'admin';
         saveState();
         renderApp();
-        toast('Staff mode unlocked');
+        toast('ANTHBOT Staff Mode unlocked');
       } else if (code !== null) {
-        toast('Incorrect staff code');
+        toast('Invalid code');
       }
     }
   };
@@ -1291,7 +1528,7 @@ function renderMower(el) {
 function openReportModal(prefill = {}) {
   const draft = {
     kind: prefill.kind || 'bug',
-    part: prefill.part || 'Mowing & Navigation',
+    part: prefill.part || M9_SYSTEMS[0],
     severity: prefill.severity || 'high',
     title: prefill.title || '',
     notes: prefill.notes || '',
@@ -1304,14 +1541,17 @@ function openReportModal(prefill = {}) {
     const isWish = draft.kind === 'wish';
     box.innerHTML = `
       <div class="modal-head">
-        <h3>🛑 Quick Report to Anthbot</h3>
-        <button class="close-btn" id="closeModal">×</button>
+        <div style="display:flex;align-items:center;gap:10px">
+          <div class="brand-mark" style="width:30px;height:30px;font-size:14px;border-radius:9px">A</div>
+          <h3>Report to ANTHBOT Engineering</h3>
+        </div>
+        <button class="close-x" id="closeModal">×</button>
       </div>
 
       <div class="modal-body">
-        <!-- 1. What happened -->
+        <!-- 1. Category -->
         <div>
-          <label class="field-label">1. What kind of issue is it?</label>
+          <label class="field-label">1. What is this about?</label>
           <div class="tap-grid">
             ${KINDS.map(k => `
               <button type="button" class="tap-tile ${draft.kind === k.id ? 'selected' : ''}" data-k="${k.id}">
@@ -1321,28 +1561,28 @@ function openReportModal(prefill = {}) {
           </div>
         </div>
 
-        <!-- 2. Short summary + instant duplicate detector -->
+        <!-- 2. Summary + Live Duplicate Detector -->
         <div>
-          <label class="field-label">2. In one line, what happened?</label>
-          <input type="text" id="repTitle" placeholder="${isWish ? 'e.g. Add a rain delay button on the home screen' : 'e.g. Mower stops in wet grass with error E-217'}" value="${esc(draft.title)}">
+          <label class="field-label">2. Short one-line summary</label>
+          <input type="text" id="repTitle" placeholder="${isWish ? 'e.g. Set different blade height for each zone' : 'e.g. Stops near wet flower bed border with E-217'}" value="${esc(draft.title)}">
           <div id="dupMatches"></div>
         </div>
 
-        <!-- 3. Which part -->
+        <!-- 3. M9 Pro System -->
         <div>
-          <label class="field-label">3. Area of the mower</label>
+          <label class="field-label">3. M9 Pro System</label>
           <select id="repPart">
-            ${PARTS.map(p => `<option ${draft.part === p ? 'selected' : ''}>${esc(p)}</option>`).join('')}
+            ${M9_SYSTEMS.map(p => `<option ${draft.part === p ? 'selected' : ''}>${esc(p)}</option>`).join('')}
           </select>
         </div>
 
-        <!-- 4. How bad (hidden for wishes) -->
+        <!-- 4. Severity -->
         ${!isWish ? `
           <div>
-            <label class="field-label">4. How bad is it?</label>
+            <label class="field-label">4. How severe is it?</label>
             <div class="tap-grid">
               ${SEVERITIES.map(s => `
-                <button type="button" class="tap-tile ${s.cls} ${draft.severity === s.id ? 'selected' : ''}" data-s="${s.id}">
+                <button type="button" class="tap-tile ${draft.severity === s.id ? 'selected' : ''}" data-s="${s.id}">
                   <span>${s.emo}</span> <span>${esc(s.label)}</span>
                 </button>
               `).join('')}
@@ -1350,22 +1590,22 @@ function openReportModal(prefill = {}) {
           </div>
         ` : ''}
 
-        <!-- 5. Extra notes & photos -->
+        <!-- 5. Notes & Photos -->
         <div>
-          <label class="field-label">Details or steps <span>(Optional)</span></label>
-          <textarea id="repNotes" placeholder="Where on the lawn, weather conditions, or how to make it happen again...">${esc(draft.notes)}</textarea>
+          <label class="field-label">Extra details <span>(Optional — lawn conditions, steps, error code)</span></label>
+          <textarea id="repNotes" placeholder="Tell us what the mower was doing...">${esc(draft.notes)}</textarea>
         </div>
 
         <div>
-          <label class="field-label">Photos <span>(Optional — auto-compressed)</span></label>
+          <label class="field-label">Photos <span>(Optional — auto-shrunk)</span></label>
           <label class="photo-drop">
             <input type="file" id="repPhotos" accept="image/*" multiple hidden>
-            📷 Tap to add photos of the mower or app screen
+            📷 Tap to attach photos of your M9 Pro or App screen
           </label>
-          <div class="thumb-row" id="photoThumbs">
+          <div class="thumb-row">
             ${draft.photos.map((src, idx) => `
               <div class="thumb">
-                <img src="${src}" alt="attachment">
+                <img src="${src}" alt="photo">
                 <button type="button" data-rm-photo="${idx}">×</button>
               </div>
             `).join('')}
@@ -1374,17 +1614,17 @@ function openReportModal(prefill = {}) {
 
         ${!S.profile.name ? `
           <div>
-            <label class="field-label">Your Name <span>(Saved for next time)</span></label>
+            <label class="field-label">Your Name <span>(Saved for future reports)</span></label>
             <input type="text" id="repUserName" placeholder="e.g. Lasse K.">
           </div>
         ` : ''}
       </div>
 
       <div class="modal-foot">
-        <span class="mono">Firmware ${esc(S.profile.firmware || '2.4.1')}</span>
+        <span class="mono">M9 Pro FW ${esc(S.profile.firmware || '2.4.1')}</span>
         <div style="display:flex;gap:8px">
           <button class="btn" id="cancelModal">Cancel</button>
-          <button class="btn btn-stop" id="submitReportBtn">Send Report</button>
+          <button class="btn btn-brand" id="submitReportBtn">Send Report</button>
         </div>
       </div>
     `;
@@ -1392,39 +1632,29 @@ function openReportModal(prefill = {}) {
     $('#closeModal').onclick = closeModal;
     $('#cancelModal').onclick = closeModal;
 
-    const syncInputs = () => {
+    const sync = () => {
       draft.title = $('#repTitle').value;
       draft.part = $('#repPart').value;
       draft.notes = $('#repNotes').value;
     };
 
-    $$('[data-k]', box).forEach(b => b.onclick = () => { syncInputs(); draft.kind = b.dataset.k; paint(); });      $$
-('[data-s]', box).forEach(b => b.onclick = () => {
-      syncInputs();
-      draft.severity = b.dataset.s;
-      paint();
-    });
+    $$('[data-k]', box).forEach(b => b.onclick = () => { sync(); draft.kind = b.dataset.k; paint(); });$$
+('[data-s]', box).forEach(b => b.onclick = () => { sync(); draft.severity = b.dataset.s; paint(); });
 
-    // Live duplicate detector
+    // Live Duplicate Catcher
     $('#repTitle').oninput = e => {
       draft.title = e.target.value;
       const words = draft.title.toLowerCase().split(/\s+/).filter(w => w.length > 3);
-      if (words.length === 0) {
-        $('#dupMatches').innerHTML = '';
-        return;
-      }
+      if (!words.length) { $('#dupMatches').innerHTML = ''; return; }
       const matches = S.issues.filter(i => words.some(w => (i.title + ' ' + i.notes).toLowerCase().includes(w))).slice(0, 2);
-      if (!matches.length) {
-        $('#dupMatches').innerHTML = '';
-        return;
-      }
+      if (!matches.length) { $('#dupMatches').innerHTML = ''; return; }
       $('#dupMatches').innerHTML = `
         <div class="dup-box">
-          <div style="font-size:12px;font-weight:700;color:var(--bronze);margin-bottom:4px">💡 Already reported? Tap "+1 Same Here" instead:</div>
+          <div style="font-size:12px;font-weight:700;margin-bottom:4px">💡 Similar report already exists — tap "+1 Me Too" instead:</div>
           ${matches.map(m => `
-            <div class="dup-item">
+            <div class="dup-row">
               <span><b>${esc(m.key)}</b>:${esc(m.title)}</span>
-              <button type="button" class="btn btn-sm btn-primary" data-dup-vote="${m.id}">+1 Same Here (${m.votes.length})</button>
+              <button type="button" class="btn btn-sm btn-brand" data-dup-vote="${m.id}">+1 Me Too (${m.votes.length})</button>
             </div>
           `).join('')}
         </div>
@@ -1437,21 +1667,19 @@ function openReportModal(prefill = {}) {
       });
     };
 
-    // Photo handling
-    $('#repPhotos').onchange = async e => { syncInputs(); for (const file of [...e.target.files].slice(0, 4)) { const dataUrl = await compressPhoto(file); draft.photos.push(dataUrl); } paint(); }; $$('[data-rm-photo]', box).forEach(btn => {
+    $('#repPhotos').onchange = async e => { sync(); for (const file of [...e.target.files].slice(0, 4)) { draft.photos.push(await compressPhoto(file)); } paint(); }; $$('[data-rm-photo]', box).forEach(btn => {
       btn.onclick = () => {
-        syncInputs();
+        sync();
         draft.photos.splice(Number(btn.dataset.rmPhoto), 1);
         paint();
       };
     });
 
-    // Submit report
     $('#submitReportBtn').onclick = () => {
-      syncInputs();
+      sync();
       if (!draft.title.trim()) {
         $('#repTitle').focus();
-        toast('Please enter a short one-line summary');
+        toast('Please write a short one-line summary');
         return;
       }
       if (!S.profile.name && $('#repUserName')) {
@@ -1468,7 +1696,7 @@ function openReportModal(prefill = {}) {
         status: 'open',
         notes: draft.notes.trim(),
         reply: '',
-        reporter: S.profile.name || 'Tester',
+        reporter: S.profile.name || 'Pioneer Tester',
         serial: S.profile.serial || '—',
         firmware: S.profile.firmware || '2.4.1',
         votes: [S.profile.id],
@@ -1480,7 +1708,7 @@ function openReportModal(prefill = {}) {
       saveState();
       closeModal();
       renderApp();
-      toast(`Submitted ${newIssue.key} — thank you!`);
+      toast(`Sent ${newIssue.key} to ANTHBOT!`);
     };
   }
 
@@ -1489,14 +1717,13 @@ function openReportModal(prefill = {}) {
 }
 
 /* ==========================================================
-   ISSUE DETAIL & COMMENTS MODAL
+   DETAIL & DISCUSSION MODAL
    ========================================================== */
 function openDetailModal(id) {
   const item = S.issues.find(x => x.id === id);
   if (!item) return;
 
   const k = KINDS.find(x => x.id === item.kind) || KINDS[0];
-  const sev = SEVERITIES.find(x => x.id === item.severity) || SEVERITIES[2];
   const st = STATUSES[item.status] || STATUSES.open;
   const voted = item.votes.includes(S.profile.id);
   const isAdmin = S.profile.role === 'admin';
@@ -1509,25 +1736,24 @@ function openDetailModal(id) {
         <span class="chip ${k.chip}">${k.emo} ${esc(k.label)}</span>
         <span class="chip ${st.chip}">${esc(st.label)}</span>
       </div>
-      <button class="close-btn" id="closeModal">×</button>
+      <button class="close-x" id="closeModal">×</button>
     </div>
 
     <div class="modal-body">
       <h2 style="font-size:21px;line-height:1.25">${esc(item.title)}</h2>
-
       <div class="mono">
-        Reported by <b>${esc(item.reporter)}</b> · Part: <b>${esc(item.part)}</b> · Firmware ${esc(item.firmware)} · ${ago(item.createdAt)}
+        By <b>${esc(item.reporter)}</b> · ${esc(item.part)} · FW ${esc(item.firmware)} · ${ago(item.createdAt)}
       </div>
 
       ${item.reply ? `
-        <div style="background:var(--violet-tint);border-left:4px solid var(--violet);padding:14px;border-radius:8px">
-          <div style="font-size:12px;font-weight:700;color:var(--violet);text-transform:uppercase">Official Anthbot Response</div>
-          <div style="margin-top:4px">${esc(item.reply)}</div>
+        <div style="background:var(--brand-tint);border-left:4px solid var(--brand);padding:14px 16px;border-radius:10px">
+          <div style="font-size:11.5px;font-weight:800;color:var(--brand-dark);text-transform:uppercase;letter-spacing:0.05em">🌱 Official ANTHBOT Response</div>
+          <div style="margin-top:4px;color:var(--ink)">${esc(item.reply)}</div>
         </div>
       ` : ''}
 
       ${item.notes ? `
-        <div style="background:var(--bg);padding:14px;border-radius:10px;white-space:pre-wrap">${esc(item.notes)}</div>
+        <div style="background:var(--bg);padding:15px;border-radius:12px;white-space:pre-wrap;border:1px solid var(--line)">${esc(item.notes)}</div>
       ` : ''}
 
       ${item.photos && item.photos.length ? `
@@ -1537,18 +1763,18 @@ function openDetailModal(id) {
       ` : ''}
 
       ${item.status === 'fixed' ? `
-        <div style="background:var(--ok-tint);border:1px solid var(--ok);padding:14px;border-radius:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
-          <div><b>Anthbot marked this fixed!</b> Did it work on your mower?</div>
+        <div style="background:var(--brand-tint);border:1px solid var(--brand);padding:14px 16px;border-radius:12px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+          <div><b>Fixed in latest OTA!</b> Does it work properly on your M9 Pro now?</div>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-sm btn-primary" id="verifyOkBtn">✓ Yes, Fixed</button>
-            <button class="btn btn-sm btn-stop" id="verifyFailBtn">✕ Still Broken</button>
+            <button class="btn btn-sm btn-brand" id="verifyOkBtn">✓ Confirm Fixed</button>
+            <button class="btn btn-sm" id="verifyFailBtn">✕ Still Happening</button>
           </div>
         </div>
       ` : ''}
 
       ${isAdmin ? `
-        <div style="border:1px dashed var(--violet);padding:14px;border-radius:10px;background:var(--bg)">
-          <div class="field-label" style="color:var(--violet)">Staff Controls</div>
+        <div style="border:1.5px dashed var(--brand);padding:16px;border-radius:12px;background:var(--bg)">
+          <div class="field-label" style="color:var(--brand-dark)">🛡️ ANTHBOT Staff Triage</div>
           <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px">
             <div>
               <label class="field-label">Status</label>
@@ -1563,62 +1789,57 @@ function openDetailModal(id) {
               </select>
             </div>
           </div>
-          <label class="field-label">Official Answer</label>
+          <label class="field-label">Official ANTHBOT Reply</label>
           <textarea id="admReply" style="min-height:60px">${esc(item.reply || '')}</textarea>
           <div style="display:flex;justify-content:space-between;margin-top:10px">
-            <button class="btn btn-sm btn-primary" id="admSaveBtn">Save Staff Update</button>
-            <button class="btn btn-sm" id="admDeleteBtn" style="color:var(--stop)">Delete Report</button>
+            <button class="btn btn-sm btn-brand" id="admSaveBtn">Save Update</button>
+            <button class="btn btn-sm" id="admDeleteBtn" style="color:var(--danger)">Delete</button>
           </div>
         </div>
       ` : ''}
 
-      <!-- Comments -->
-      <div style="border-top:1px solid var(--line);padding-top:14px">
-        <label class="field-label">Tester Comments (${item.comments.length})</label>
+      <div style="border-top:1px solid var(--line);padding-top:16px">
+        <label class="field-label">Tester Notes & Workarounds (${item.comments.length})</label>
         <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px">
           ${item.comments.map(c => `
-            <div style="background:var(--bg);padding:10px 12px;border-radius:8px;font-size:13.5px">
+            <div style="background:var(--bg);padding:10px 14px;border-radius:10px;font-size:13.5px;border:1px solid var(--line)">
               <b>${esc(c.by)}</b> <span class="mono">· ${ago(c.at)}</span>
               <div style="margin-top:3px">${esc(c.text)}</div>
             </div>
-          `).join('') || '<div class="mono">No comments yet. Add your experience or workaround below.</div>'}
+          `).join('') || '<div class="mono">No comments yet. Share if you found a workaround!</div>'}
         </div>
         <div style="display:flex;gap:8px">
-          <input type="text" id="newCommentInput" placeholder="Write a quick comment...">
-          <button class="btn btn-sm btn-primary" id="postCommentBtn">Post</button>
+          <input type="text" id="newCommentInput" placeholder="Add a comment or workaround...">
+          <button class="btn btn-sm btn-brand" id="postCommentBtn">Post</button>
         </div>
       </div>
     </div>
 
     <div class="modal-foot">
-      <button class="btn ${voted ? 'btn-primary' : ''}" id="modalVoteBtn">
-        ${voted ? '✓ Happens to Me Too' : '+1 Happens to Me Too'} (${item.votes.length})
+      <button class="btn ${voted ? 'btn-brand' : ''}" id="modalVoteBtn">
+        ${voted ? '✓ Happens on My M9 Pro' : '+1 Happens on My M9 Pro'} (${item.votes.length})
       </button>
-      <button class="btn" id="closeModalFoot">Close</button>
+      <button class="btn" id="closeModalFoot">Done</button>
     </div>
   `;
 
   $('#closeModal').onclick = closeModal;
   $('#closeModalFoot').onclick = closeModal;
-
-  $('#modalVoteBtn').onclick = () => {
-    toggleVote(item.id);
-    openDetailModal(item.id);
-  };
+  $('#modalVoteBtn').onclick = () => { toggleVote(item.id); openDetailModal(item.id); };
 
   if ($('#verifyOkBtn')) {
     $('#verifyOkBtn').onclick = () => {
       item.status = 'verified';
       saveState();
-      toast('Marked as Confirmed Fixed!');
+      toast('Confirmed fixed!');
       openDetailModal(item.id);
       renderApp();
     };
     $('#verifyFailBtn').onclick = () => {
       item.status = 'open';
-      item.comments.push({ by: S.profile.name || 'Tester', text: 'Tested the fix — still happening on my mower.', at: Date.now() });
+      item.comments.push({ by: S.profile.name || 'Tester', text: 'Tested on my M9 Pro — still happening.', at: Date.now() });
       saveState();
-      toast('Re-opened issue');
+      toast('Re-opened report');
       openDetailModal(item.id);
       renderApp();
     };
@@ -1630,7 +1851,7 @@ function openDetailModal(id) {
       item.severity = $('#admSev').value;
       item.reply = $('#admReply').value.trim();
       saveState();
-      toast('Updated ' + item.key);
+      toast('Saved ' + item.key);
       openDetailModal(item.id);
       renderApp();
     };
@@ -1648,7 +1869,7 @@ function openDetailModal(id) {
     const txt = $('#newCommentInput').value.trim();
     if (!txt) return;
     item.comments.push({
-      by: S.profile.name || (isAdmin ? 'Anthbot Staff' : 'Tester'),
+      by: S.profile.name || (isAdmin ? 'ANTHBOT Team' : 'Pioneer Tester'),
       text: txt,
       at: Date.now()
     });
@@ -1670,7 +1891,7 @@ function closeModal() {
    CSV EXPORT
    ========================================================== */
 function exportCSV() {
-  const headers = ['ID', 'Title', 'Kind', 'Area', 'Severity', 'Status', 'Votes', 'Reporter', 'Serial', 'Firmware', 'Notes', 'Anthbot Reply'];
+  const headers = ['ID', 'Title', 'Category', 'M9 Pro System', 'Severity', 'Status', 'Votes', 'Reporter', 'Serial', 'Firmware', 'Notes', 'ANTHBOT Reply'];
   const escCSV = val => `"${String(val ?? '').replace(/"/g, '""')}"`;
   const rows = S.issues.map(i => [
     i.key, i.title, i.kind, i.part, i.severity, i.status, i.votes.length,
@@ -1680,18 +1901,18 @@ function exportCSV() {
   const blob = new Blob([headers.join(',') + '\n' + rows.join('\n')], { type: 'text/csv' });
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob);
-  a.download = `anthbot-m9-issues-${new Date().toISOString().slice(0,10)}.csv`;
+  a.download = `anthbot-m9pro-reports-${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   toast('CSV downloaded');
 }
 
 /* ==========================================================
-   GLOBAL EVENTS & BOOT
+   GLOBAL EVENTS & INIT
    ========================================================== */
 $('#topReportBtn').onclick = () => openReportModal();
 $('#goHomeLogo').onclick = () => { UI.tab = 'home'; renderApp(); };
 $('#themeBtn').onclick = () => {
-  S.profile.theme = S.profile.theme === 'night' ? 'day' : 'night';
+  S.profile.theme = S.profile.theme === 'dark' ? 'light' : 'dark';
   saveState();
   applyTheme();
 };
